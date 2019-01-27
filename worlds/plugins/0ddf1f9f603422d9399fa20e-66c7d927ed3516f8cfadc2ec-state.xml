@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE muclient>
+<!-- Saved on 2019Äê Ò»ÔÂ 24ÈÕ ÐÇÆÚËÄ, ÏÂÎç 11:29 -->
+<!-- MuClient version 4.84 -->
+<!-- Written by Nick Gammon -->
+<!-- Home Page: http://www.mushclient.com/ -->
+
+<!-- ²å¼þ×´Ì¬ÒÑ±»±£´æ¡£²å¼þ:¡°pkuxkx_infobox¡±£¬ÓÎÏ·:¡°tj.sjever.net¡±¡£ -->
+
+<muclient>
+
+<!-- variables -->
+
+<variables
+   muclient_version="4.84"
+   world_file_version="15"
+   date_saved="2019-01-24 23:29:16"
+  >
+  <variable name="enabled">true</variable>
+  <variable name="mw_hp_window_windowflags">2</variable>
+  <variable name="mw_hp_window_windowmode">0</variable>
+  <variable name="mw_hp_window_windowx">985</variable>
+  <variable name="mw_hp_window_windowy">64</variable>
+  <variable name="mw_skill_window_windowflags">2</variable>
+  <variable name="mw_skill_window_windowmode">4</variable>
+  <variable name="mw_skill_window_windowx">0</variable>
+  <variable name="mw_skill_window_windowy">0</variable>
+</variables>
+</muclient>
