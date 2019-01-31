@@ -1745,11 +1745,14 @@ Room {
 	name = "聚豪客栈",
 	no_fight = true,
 	ways = {
-		["east"] = "changan/northjie1",
-		-- ["up"] = "changan/kezhan2",
+		["#jhkzout"] = "changan/northjie1",
+		["#jhkz"] = "changan/kezhan2",
 	},
 	nolooks = {
 		["up"] = true,
+	},
+	lengths ={
+	    ["#jhkz"] = 5,
 	},
 }
 Room {
@@ -4028,8 +4031,11 @@ Room {
 	no_fight = true,
 	ways = {
 		["east"] = "city/kedian/pianting",
-		["west"] = "city/beidajie2",
-		-- ["up"] = "city/kedian2",
+		["#bckzout"] = "city/beidajie2",
+	    ["#bckz"] = "city/kedian2",
+	},
+	lengths = {
+		["#bckz"] = 5,
 	},
 	nolooks = {
 		["up"] = true,
@@ -13909,13 +13915,13 @@ Room {
 	},
 }
 Room {
-        id = "huashan/fanting",
-        name = "饭厅",
-        ways = {
-                ["eat ricc;drop rice;drop bao zi;drop douhua;drop jitui;drop doufu;drop kousansi;drop cuishan;drop liji;drop huasheng;drop niurou;drop liyu;drop yaoliu;drop rou pian;north"] = "huashan/yaofang",
-                ["eat ricc;drop rice;drop douhua;drop bao zi;drop jitui;drop doufu;drop kousansi;drop cuishan;drop liji;drop huasheng;drop niurou;drop liyu;drop yaoliu;drop rou pian;east"] = "huashan/celang3",
-        },
-        objs = {
+	id = "huashan/fanting",
+	name = "饭厅",
+	ways = {
+		["north"] = "huashan/yaofang",
+		["east"] = "huashan/celang3",
+	},
+	objs = {
           ["清水葫芦"] = "qingshui hulu",
            },
 }
@@ -16227,11 +16233,11 @@ Room {
 	id = "lanzhou/kedian",
 	name = "客店",
 	ways = {
-		["east"] = "lanzhou/yongdeng",
-		-- ["up"] = "lanzhou/kedian2",
+		["#lzkedianoutgosleep"] = "lanzhou/yongdeng",
+		["#lanzhoukedian"] = "lanzhou/kedian2",
 	},
-	nolooks = {
-		["up"] = true,
+	lengths = {
+		["#lanzhoukedian"] = 5,	
 	},
 }
 Room {
@@ -16842,12 +16848,7 @@ Room {
 	id = "meizhuang/plum_maze",
 	name = "梅林",
 	ways = {
-		["#mlIn"] = "meizhuang/road3",
-		["#mlOut"] = "meizhuang/road2",
-	},
-	lengths = {
-		["#mlIn"] = 1000,
-		["#mlOut"] = 1000,
+		["#mlOutt"] = "meizhuang/road2",
 	},
 }
 Room {
@@ -16877,11 +16878,12 @@ Room {
 	id = "meizhuang/road2",
 	name = "小路",
 	ways = {
-		--["south"] = "meizhuang/plum_maze",
+		["#inmz"] = "meizhuang/plum_maze",
 		["north"] = "meizhuang/road1",
 	},
+	room_relative="小路｜小路｜梅林小路",
 	lengths = {
-		["south"] = 10000,
+		["south"] = 3,
 	},
 }
 Room {
@@ -25127,11 +25129,14 @@ Room {
 	id = "suzhou/kedian",
 	name = "客店",
 	ways = {
-		["west"] = "suzhou/beidajie1",
-		-- ["up"] = "suzhou/kedian2",
+		["#szkdout"] = "suzhou/beidajie1",
+		["#szkedian"] = "suzhou/kedian2",
 	},
 	nolooks = {
-		["up"] = true,
+		["#szkedian"] = true,
+	},
+	lengths = {
+		["#szkedian"] = 3,
 	},
 }
 Room {
@@ -26028,11 +26033,11 @@ Room {
 	name = "喜发客栈",
 	no_fight = true,
 	ways = {
-		["north"] = "tanggu/stxijie1",
-		-- ["up"] = "tanggu/kedian2",
+		["#xfkzoutgosleep"] = "tanggu/stxijie1",
+		["#xfkz"] = "tanggu/kedian2",
 	},
-	nolooks = {
-		["up"] = true,
+	lengths = {
+		["#xfkz"] = 5,
 	},
 }
 Room {
@@ -28272,7 +28277,7 @@ Room {
 	name = "客店",
 	ways = {
 		["east"] = "tiezhang/lx",
-		-- ["up"] = "tiezhang/kedian2",
+		["give xiao 5 silver;up"] = "tiezhang/kedian2",
 	},
 	nolooks = {
 		["up"] = true,

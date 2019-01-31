@@ -136,6 +136,19 @@ function huashan_trigger()
     create_trigger_t("huashanQuest1", "^(> )*岳不群说道：「" .. score.name .. "你杀了不少恶人，未免杀气过重不如上思过崖面壁忏悔吧", "", "huashanDgjj")
     SetTriggerOption("huashanQuest1", "group", "huashanQuest")
     EnableTriggerGroup("huashanQuest", false)
+    -- 临时隐藏可能flood的文字触发器
+    local TempMsgHideTriggerList =
+    {
+        "^(> )*岳不群说道：「还望.*多加努力，日后必有重谢。」",
+        "^(> )*岳不群对着.*点了点头。",
+        "^(> )*岳不群对着.*竖起了右手大拇指，好样的。",
+        "^(> )*岳灵珊说道：「我华山派不喜滥杀，(.*)下次不可如此好勇斗狠了。」",
+        "^$",
+    }
+	for i=1,#TempMsgHideTriggerList do
+		Fun_AddTriggerHide("trigger_huashanJob_temp_hd_"..i, TempMsgHideTriggerList[i], "huashanJob_temp", "")
+	end
+    EnableGroup("huashanJob_temp", true)
 end
 
 function huashan_triggerDel()
@@ -150,6 +163,7 @@ function huashan_triggerDel()
     DeleteTriggerGroup("huashan_yls_ask")
     DeleteTriggerGroup("huashan_over")
     DeleteTriggerGroup("huashanQuest")
+    DeleteTriggerGroup("huashanJob_temp")
 end
 
 function huashan_ask()

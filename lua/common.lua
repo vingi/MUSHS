@@ -333,3 +333,119 @@ function create_timer(t_name, t_time, t_com, t_function)
   )
 end
 
+
+
+-- ------------------------------------
+-- 描述: 自定义AddAlias函数
+-- ------------------------------------
+function Fun_AddAlias(name,match,group,script)
+	local value = AddAlias(name, match, "", alias_flag.Enabled + alias_flag.Replace + alias_flag.Temporary + alias_flag.RegularExpression, script)
+	SetAliasOption(name,"group",group)
+	
+	if value ~= 0 then
+		ColourNote("red", "black", name.." Fun_AddAlias false")
+	end
+	
+	return value
+end
+
+-- ------------------------------------
+-- 描述: 自定义AddAlias函数(带正则表达式)
+-- ------------------------------------
+function Fun_AddAliasRE(name,match,group,script)
+	local value = AddAlias(name, match, "", alias_flag.Enabled + alias_flag.Replace + alias_flag.Temporary + alias_flag.RegularExpression, script)
+	SetAliasOption(name,"group",group)
+	
+	if value ~= 0 then
+		ColourNote("red", "black", name.." Fun_AddAlias false")
+	end
+	
+	return value
+end
+
+-- ------------------------------------
+-- 描述: 自定义AddTrigger函数，同时会加入组
+-- ------------------------------------
+function Fun_AddTrigger(name,match,group,script)
+	local value = AddTrigger(name, match, "", trigger_flag.KeepEvaluating + trigger_flag.RegularExpression + trigger_flag.Replace + trigger_flag.Temporary, custom_colour.NoChange, 0, "", script)
+	SetTriggerOption(name,"group",group)
+
+	if value ~= 0 then
+		ColourNote("red", "black", name.." Fun_AddTrigger false")
+	end
+	
+	return value
+end
+
+-- ------------------------------------
+-- 描述: 隐藏某些显示，同时会加入组
+-- ------------------------------------
+function Fun_AddTriggerHide(name,match,group,script)
+	local value = AddTrigger(name, match, "", trigger_flag.KeepEvaluating + trigger_flag.RegularExpression + trigger_flag.Replace + trigger_flag.Temporary + trigger_flag.OmitFromOutput, custom_colour.NoChange, 0, "", script)
+	SetTriggerOption(name,"group",group)
+
+	if value ~= 0 then
+		ColourNote("red", "black", name.." Fun_AddTriggerHide false")
+	end
+	
+	return value
+end
+
+-- ------------------------------------
+-- 描述: 自定义AddTime函数 注意是正则表达式模式
+-- ------------------------------------
+function Fun_AddTimer(name,time,group,script)
+	local Hour = math.floor(time / 3600)
+	time = time - Hour * 3600
+	local Min = math.floor(time / 60)
+	time = time - Min * 60
+	local value = AddTimer(name, Hour, Min, time, "", timer_flag.Replace + timer_flag.Temporary, script)
+	SetTimerOption(name,"group",group)
+	
+	if value ~= 0 then
+		ColourNote("red", "black", name.." Fun_AddTimer false")
+		ColourNote("red", "black", "Hour "..Hour.." Min "..Min.." Time "..time)
+	end
+	
+	return value
+end
+
+-- ------------------------------------
+-- 描述: 设置触发器行数
+-- ------------------------------------
+function Fun_SetTriggerLine(name, line)
+	local value = SetTriggerOption(name, "multi_line", "y")
+	if value ~= 0 then
+		ColourNote("red", "black", name.." Fun_SetTriggerLine false")
+	end
+	value = SetTriggerOption(name, "lines_to_match", line)
+	if value ~= 0 then
+		ColourNote("red", "black", name.." Fun_SetTriggerLine false")
+	end
+end
+-- ------------------------------------
+-- 描述: 自定义绘制进度条
+-- ------------------------------------
+function Fun_DrawGrid(win, cur, max, left, top, width, height, curcolor, maxcolor)
+	gauge (win, "", cur, max,
+			left, top, width, height,
+			curcolor, maxcolor,
+			0, 0x000000, 0x000000, 0x000000)
+end
+-- ------------------------------------
+-- 描述: 自定义绘制进度条2个进度
+-- ------------------------------------
+function Fun_DrawGrid2(win, cur, curmax, max, left, top, width, height, curcolor, curmaxcolor, maxcolor)
+	gauge (win, "", cur, max,
+			left, top, width, height,
+			curcolor, maxcolor,
+			0, 0x000000, 0x000000, 0x000000)
+
+	if curmax < max then
+		local lenght = math.floor((max - curmax) * width / max)
+		if lenght < 1 then
+			lenght = 1
+		end
+		WindowRectOp (win, 2, left + width - lenght - 1, top + 1, left + width + 1, top + height - 1, curmaxcolor)
+	end
+end
