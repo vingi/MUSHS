@@ -871,7 +871,7 @@ end
 local TempTimeHideTriggerList =
 {
 	"^北大侠客行已经执行了.*",
-	"^(> )*\\s悉尼时间是 星期.*",
+	"^(> )*\\s*悉尼时间是 星期.*",
 	"^(> )*\\s*奥克兰、惠灵顿时间是 星期.*",
 	"^(> )*\\s*温哥华、洛杉矶时间是 星期.*",
 	"^(> )*\\s*多伦多、纽约时间是 星期(.*)",
@@ -1000,7 +1000,8 @@ function Init()
 	-- AddTriggerList()
 	-- AddStatus_Bar_Timer()
 	-- AddHideTriggerList()
-	-- AddTempTimeHideTrigger()
+	AddTempTimeHideTrigger()
+    EnableGroup("week_temp", true)
 	-- hp_hpbrief(stus)
 end
 
