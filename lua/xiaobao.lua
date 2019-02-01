@@ -18,8 +18,8 @@ require "xiaobao"
 xiaobao = { }
 
 --------------------------------------------------------------------默认的变量-----------------------------------------------------------------------------------------
-local askwcf = 1
-local pokeweixiaobao = 1
+-- local askwcf = 1
+-- local pokeweixiaobao = 1
 -- local findweixiaobao = 1
 ---------------------------------------------------------------------主模块------------------------------------------------------------------------------------------------
 -- 启动函数
@@ -70,6 +70,15 @@ function xiaobao.fdxb()
     SetTriggerOption("xiaobao_b1", "group", "buyxiaobao")
     SetTriggerOption("xiaobao_b2", "group", "buyxiaobao")
     SetTriggerOption("xiaobao_b3", "group", "buyxiaobao")
+    -- 临时隐藏time文字触发器
+    local TempTimeHideTriggerList =
+    {
+        "^(> )*\\s*韦小宝说道：「你想买的东西我这里没有。」",
+    }
+    for i = 1, #TempTimeHideTriggerList do
+        Fun_AddTriggerHide("trigger_xiaobao_temp_hd_" .. i, TempTimeHideTriggerList[i], "xiaobao_temp", "")
+    end
+    EnableGroup("xiaobao_temp", true)
 end
 
 local switch_xiaobaolocation = {
@@ -135,10 +144,11 @@ end
 
 function xiaobao.stopbuy()
     --    findweixiaobao = 1
-    pokeweixiaobao = 1
-    askwcf = 1
+    --    pokeweixiaobao = 1
+    --    askwcf = 1
     DeleteTriggerGroup("findxiaobao")
     DeleteTriggerGroup("buyxiaobao")
+    DeleteTriggerGroup("xiaobao_temp")
     return check_jobx()
 end
 
