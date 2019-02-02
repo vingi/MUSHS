@@ -437,10 +437,14 @@ function main()
     Openfpk()
     map.rooms["sld/lgxroom"].ways["#outSld"] = "huanghe/huanghe8"
     exe("down;alias askk ask $*;stand;halt;uweapon;score;cha;hp;jifa all;jiali max;unset no_kill_ap;cond;pfmset")
-    if not perform.skill or not perform.pre or not job.zuhe or countTab(job.zuhe) < 2 then
-        return shujian_set()
+    if GetRoleConfig("AutoBuy_Xiaobao_Longquan") and not Bag["ÁúÈª½£"] then
+        xiaobao.buy()
     else
-        return check_bei(hp_dazuo_count)
+        if not perform.skill or not perform.pre or not job.zuhe or countTab(job.zuhe) < 2 then
+            return shujian_set()
+        else
+            return check_bei(hp_dazuo_count)
+        end
     end
 end
 function login_choose()
