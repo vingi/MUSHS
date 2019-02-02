@@ -22,7 +22,8 @@ require "check
 module("redmoon", package.seeall)
 
 settings= {
-    test = "redmoon11111"
+    -- 是否每天自动洪七公作菜10次
+    Auto_hqgzc_10times = true
 }
 
 

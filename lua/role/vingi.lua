@@ -22,7 +22,8 @@ require "check
 module("vingi", package.seeall)
 
 settings= {
-    test = "vingi22222"
+    -- 是否每天自动洪七公作菜10次
+    Auto_hqgzc_10times = true
 }
 
 

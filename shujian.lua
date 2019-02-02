@@ -2,6 +2,7 @@ require "common"
 require "wait"
 require "tprint"
 require "Entity"
+require "role"
 require "lujing"
 require "chat"
 require "job"
@@ -27,10 +28,8 @@ require "kezhiwugong"
 require "armor"
 require "study"
 require "xiaobao"
-require "role"
 statusbar = require "StatusBar"  -- hp状态栏插件
 statusbar.Init()
-
 
 
 
@@ -982,13 +981,27 @@ function checkPrepare()
         end
     end
     local l_cut = false
-    for p in pairs(Bag) do
-        if weaponKind[Bag[p].kind] and weaponKind[Bag[p].kind] == "cut" then
-            l_cut = true
+    local bagItemCount = 0
+    local itemNameList = ''
+    for k, v in pairs(Bag) do
+        bagItemCount = bagItemCount + 1
+        -- itemNameList=itemNameList ..'|' .. k
+    end
+    -- Note('---------checkCutWeapon start  BagItemCount=' .. bagItemCount ..'---------')
+    if (bagItemCount > 0) then
+        -- ColourNote('blue','white',itemNameList)
+        for p in pairs(Bag) do
+            if weaponKind[Bag[p].kind] and weaponKind[Bag[p].kind] == "cut" then
+                l_cut = true
+                break
+            end
         end
+    else
+        l_cut = true
     end
     if not l_cut and not Bag["木剑"] then
-        weaponPrepare["木剑"] = true
+        -- 这是让robot认定木剑为常备武器的语句，我注释了，还是通过检测是否有cut武器来买即可
+        -- weaponPrepare["木剑"] = true
         return checkWeapon("木剑")
     end
 
@@ -1208,6 +1221,24 @@ function check_jobx()
     end
 end
 function checkJob()
+    if GetRoleConfig("Auto_hqgzc_10times") then
+        if job.last ~= 'hqgzc' then
+            local fn = 'logs\\hqgzc_mark_' .. score.id .. '.log'
+            local f = io.open(fn, "r")
+            if not f then
+                return hqgzc()
+            else
+                local s = f:read()
+                f:close()
+                if s ~= os.date("%Y%m%d%H") then
+                    if os.date("%Y%m%d%H") - s >= 100 then
+                        return hqgzc()
+                    end
+                end
+            end
+        end
+    end
+
     -- if hp.exp>2000000 then job.zuhe["zhuoshe"]=nil end
     -- if hp.shen>0 or hp.exp>6000000 then job.zuhe["songshan"]=nil end
     if job.zuhe["songxin2"] then

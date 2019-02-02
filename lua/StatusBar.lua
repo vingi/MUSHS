@@ -870,7 +870,7 @@ end
 -- 临时隐藏time文字触发器
 local TempTimeHideTriggerList =
 {
-	"^北大侠客行已经执行了.*",
+	"^书剑已经执行了.*",
 	"^(> )*\\s*悉尼时间是 星期.*",
 	"^(> )*\\s*奥克兰、惠灵顿时间是 星期.*",
 	"^(> )*\\s*温哥华、洛杉矶时间是 星期.*",
@@ -921,7 +921,6 @@ function hp_week()
 	EnableGroup("week_temp", true)
 	SendNoEcho("time")
 	SendNoEcho("hp")
-	DoAfterSpecial(2, 'EnableGroup("week_temp", false)', 12)
 end
 function hp_fullme()
 	fullme_timer2 = utils.timer()
@@ -941,7 +940,6 @@ end
 -- fullme_timer2=fullme_timer1
 -- EnableGroup("skill", true)
 -- EnableGroup("skill_temp", false)
-EnableGroup("week_temp", false)
 EnableGroup("hp_temp", true)
 EnableGroup("hp", true)
 EnableTimer("timer_hp", false)

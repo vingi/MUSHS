@@ -409,7 +409,8 @@ function kezhiwugongAttribue(kezhiSkillName)
 	end
 end
 function kezhiwugongSetPerform(tempatt,i,targetid)
-	create_alias('kezhiwugongpfm','kezhiwugongpfm','alias pppp'..i..' '..GetVariable(kezhi_valuecmd[tempatt])..' '.. targetid)
+--	create_alias('kezhiwugongpfm','kezhiwugongpfm','alias pppp'..i..' '..GetVariable(kezhi_valuecmd[tempatt])..' '.. targetid)
+	create_alias('kezhiwugongpfm','kezhiwugongpfm','alias pppp'..i..' '..GetVariable(kezhi_valuecmd[tempatt]))
 	exe('kezhiwugongpfm')
 end
 function kezhiwugongsuccess(kezhi_cmd,k_order,npci)
