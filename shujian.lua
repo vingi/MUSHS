@@ -1979,9 +1979,6 @@ function checkBags(func)
     Bag["°×Òø"] = { }
     Bag["°×Òø"].id = { }
     Bag["°×Òø"].cnt = 0
-    Bag["Ã¶·ÉïÚ"] = { }
-    Bag["Ã¶·ÉïÚ"].id = { }
-    Bag["Ã¶·ÉïÚ"].cnt = 0
     tmp.bags = func
     weaponUsave = { }
     exe("id")
@@ -2104,11 +2101,12 @@ function checkBagsW(n, l, w)
     Bag["ENCB"].value = t
 end
 function checkBagsDart(n, l, w)
+    local l_name = 'Ã¶·ÉïÚ'
+    Bag[l_name] = { }
+    Bag[l_name].id = { }
+    Bag[l_name].cnt = 0
     local l_cnt = trans(Trim(w[2]))
-    local l_name = "Ã¶·ÉïÚ"
-    if Bag[l_name] then
-        Bag[l_name].cnt = l_cnt
-    end
+    Bag[l_name].cnt = l_cnt
 end
 --[[function checkBagsYao(n,l,w)
    local l_cnt=trans(Trim(w[2]))
