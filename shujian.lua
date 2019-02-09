@@ -29,8 +29,8 @@ require "armor"
 require "study"
 require "xiaobao"
 statusbar = require "StatusBar"  -- hp状态栏插件
+-- 状态栏启用
 statusbar.Init()
-
 
 
 skills = { }
@@ -93,7 +93,7 @@ smyall = 2
 lostno = 10
 vippoison = 0
 ptbxvip = 1
-kdummy = 1
+kdummy = 0
 mydummy = false
 double_kill = nil
 ypt_lianskills = 0
@@ -105,7 +105,7 @@ dohs2 = 0
 hsjob2 = 0
 dzxy_level = 0
 need_dzxy = "yes"
-hqgzcjl = 0
+hqgzcjl = 0  -- 洪七公作菜,拿gold (0) 还是拿 pot(1), ps(10次任务后洪七公不再给gold,只会给pot)
 cty_cur = 0
 nxw_cur = 0
 hxd_cur = 0
@@ -433,6 +433,7 @@ function main()
     getVariable()
     userGet()
     hpheqi()
+
     -- ain
     Openfpk()
     map.rooms["sld/lgxroom"].ways["#outSld"] = "huanghe/huanghe8"
@@ -512,6 +513,7 @@ function dis_all()
     EnableTriggerGroup("count", true)
     EnableTriggerGroup("fight", true)
     EnableTriggerGroup("job_exp", true)
+    EnableTriggerGroup("week_ignore", true)
     EnableTrigger("hp12", false)
     if lookxin == 1 then
         sendXin()
@@ -2080,14 +2082,17 @@ function checkBagsId(n, l, w)
         Bag[l_name].cnt = 1
     end
 end
-function checkBagsU(n,l,w)
+function checkBagsU(n, l, w)
     local t = Trim(w[3])
-    local s = utils.split(t,',')
-    for p,q in pairs(s) do
-        if string.find(q,'⊕') then 
-            q = string.sub(q,3,-1)
-        end                
-        weaponUsave[q] = true
+    local s = utils.split(t, ',')
+    for p, q in pairs(s) do
+        if string.find(q, '⊕') then
+            q = string.sub(q, 3, -1)
+        end
+        -- 加入精血判断,若精血小于2000, 很可能修不了武器,造成一直尝试修武器的死循环
+        if hp.jingxue > 2000 then
+            weaponUsave[q] = true
+        end
     end
 end
 function checkBagsMoney(n, l, w)

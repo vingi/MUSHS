@@ -71,28 +71,6 @@ local actorname = ""--GetVariable("actorname") or utils.inputbox("输入你的角色名
 ]]	
 
 
--- ------------------------------------
--- 描述: HPBrief发送
--- ------------------------------------
-Common = Common or nil;
-Common_tInstanceVoid = {};
-Common_InstanceRun = function(pVoid, nTime, vParam)
-	local strKey = tostring(pVoid);
-	if strKey == nil or strKey == "" then return false; end
-	if Common_tInstanceVoid[strKey] ~= nil then return false; end
-	if nTime == nil then nTime = 2; end
-	Common_tInstanceVoid[strKey] = 1;
-	pVoid(vParam);
-	DoAfterSpecial(nTime, "Common_InstanceReset(\"" .. strKey .. "\")", 12);
-	return true;
-end
-Common_InstanceReset = function(strKey)
-	if strKey == nil or strKey == "" then return; end
-	Common_tInstanceVoid[strKey] = nil;
-end
-Common_Hpbrief = function()
-	Common_InstanceRun(hp_ontime, 1);
-end
 
 local nPluginIDStatus = "";
 function GetPluginVariableSave(strKey)
@@ -880,7 +858,7 @@ local TempTimeHideTriggerList =
 }
 function AddTempTimeHideTrigger()
 	for i=1,#TempTimeHideTriggerList do
-		Fun_AddTriggerHide("trigger_time_temp_hd_"..i, TempTimeHideTriggerList[i], "week_temp", "")
+		Fun_AddTriggerHide("trigger_time_temp_hd_"..i, TempTimeHideTriggerList[i], "week_ignore", "")
 	end
 end
 
@@ -918,7 +896,7 @@ function hp_ontime()
 	SendNoEcho("hp")
 end
 function hp_week()
-	EnableGroup("week_temp", true)
+	EnableGroup("week_ignore", true)
 	SendNoEcho("time")
 	SendNoEcho("hp")
 end
@@ -999,7 +977,7 @@ function Init()
 	-- AddStatus_Bar_Timer()
 	-- AddHideTriggerList()
 	AddTempTimeHideTrigger()
-    EnableGroup("week_temp", true)
+    EnableGroup("week_ignore", true)
 	-- hp_hpbrief(stus)
 end
 
