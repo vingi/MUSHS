@@ -2080,10 +2080,13 @@ function checkBagsId(n, l, w)
         Bag[l_name].cnt = 1
     end
 end
-function checkBagsU(n, l, w)
+function checkBagsU(n,l,w)
     local t = Trim(w[3])
-    local s = utils.split(t, ",")
-    for p, q in pairs(s) do
+    local s = utils.split(t,',')
+    for p,q in pairs(s) do
+        if string.find(q,'¨’') then 
+            q = string.sub(q,3,-1)
+        end                
         weaponUsave[q] = true
     end
 end
