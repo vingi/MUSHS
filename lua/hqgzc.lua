@@ -172,6 +172,7 @@ function hqgzcNotHungry()
         if job.last == "clb" then
             return check_bei(_G[p])
         else
+            -- 洪七公任务作菜busy时,只能作长乐帮任务, 其它任务不可作, 所以写死长乐帮任务
             return clb()
         end
     end
@@ -478,6 +479,8 @@ function hqgzcFinish(n, l, w)
     job.time.over = job.time.e - job.time.b
     messageShow("做菜任务：完成！获得【" .. w[2] .. "】点潜能！")
     messageShowT("做菜任务：任务完成，用时:【" .. job.time.over .. "】秒。")
+    quest.desc = ""
+    quest.update()
     job.zctime = 0
     flag.idle = 0
     dis_all()
@@ -496,6 +499,8 @@ function hqgzcFinishGold(n, l, w)
         job.time.over = job.time.e - job.time.b
         messageShow("做菜任务：完成！获得【" .. w[2] .. "】锭黄金！")
         messageShowT("做菜任务：任务完成，用时:【" .. job.time.over .. "】秒。")
+        quest.desc = ""
+        quest.update()
         if hqgzcCnt >= 10 then
             hqgzcFinish_Over10TimesHandle()
         end
@@ -509,6 +514,8 @@ function hqgzcFinishGold(n, l, w)
         job.time.over = job.time.e - job.time.b
         messageShow("做菜任务：完成！获得【" .. w[2] .. "】锭黄金！")
         messageShowT("做菜任务：任务完成，用时:【" .. job.time.over .. "】秒。")
+        quest.desc = ""
+        quest.update()
         job.zctime = 0
         flag.idle = 0
         dis_all()
@@ -521,6 +528,8 @@ function hqgzcFinish1(n, l, w)
     job.time.over = job.time.e - job.time.b
     messageShow("做菜任务：失败！")
     messageShowT("做菜任务：任务失败，用时:【" .. job.time.over .. "】秒。")
+    quest.desc = ""
+    quest.update()
     job.zctime = 0
     flag.idle = 0
     dis_all()

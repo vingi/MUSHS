@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE muclient>
-<!-- Saved on 2019Äê ¶þÔÂ 09ÈÕ ÐÇÆÚÁù, ÏÂÎç 5:35 -->
+<!-- Saved on 2019Äê ¶þÔÂ 11ÈÕ ÐÇÆÚÒ», ÏÂÎç 10:12 -->
 <!-- MuClient version 4.84 -->
 <!-- Written by Nick Gammon -->
 <!-- Home Page: http://www.mushclient.com/ -->
@@ -14,11 +14,11 @@
 <variables
    muclient_version="4.84"
    world_file_version="15"
-   date_saved="2019-02-09 17:35:05"
+   date_saved="2019-02-11 22:12:59"
   >
   <variable name="mw_391192793248409895090099_windowflags">2</variable>
   <variable name="mw_391192793248409895090099_windowmode">0</variable>
-  <variable name="mw_391192793248409895090099_windowx">1020</variable>
+  <variable name="mw_391192793248409895090099_windowx">1029</variable>
   <variable name="mw_391192793248409895090099_windowy">0</variable>
 </variables>
 </muclient>

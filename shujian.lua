@@ -27,6 +27,7 @@ require "dolost"
 require "kezhiwugong"
 require "armor"
 require "study"
+require "MissionPunishment"
 require "xiaobao"
 statusbar = require "StatusBar"  -- hp状态栏插件
 -- 状态栏启用
@@ -353,6 +354,7 @@ score_busy_check = function(n, l, w)
         end
         if w[1] == "任务繁忙状态" then
             condition.busy = l_cnt * 60
+            MissionPunishment.PunishmentHandle(condition.busy)
         end
         if w[1] == "福州镖局护镖倒计时" then
             condition.hubiao = l_cnt * 60
@@ -387,6 +389,7 @@ score_busy_check = function(n, l, w)
         end
         if w[1] == "任务繁忙状态" then
             condition.busy = l_cnt
+            MissionPunishment.PunishmentHandle(condition.busy)
         end
         if w[1] == "福州镖局护镖倒计时" then
             condition.hubiao = l_cnt
@@ -1036,10 +1039,7 @@ function checkPrepareOver()
     if lostletter == 1 and needdolost == 1 then
         return letterLost()
     end
-    if
-        not job.last or job.last == "songxin" or needdolost == 1 or job.last == "tdh" or job.last == "songmoya" or
-        job.last == "huashan" or
-        job.zuhe["hqgzc"]
+    if not job.last or job.last == "songxin" or needdolost == 1 or job.last == "tdh" or job.last == "songmoya" or job.last == "huashan" or job.zuhe["hqgzc"]
     then
         return check_xuexi()
     else
@@ -1175,7 +1175,6 @@ function check_job()
         kdummy = 0
         return xunCheng()
     end
-
     if score.party == "桃花岛" and(hp.shen > 150000 or hp.shen < -150000) then
         return thdJiaohui()
     end
@@ -1215,8 +1214,7 @@ function check_jobx()
     if job.zuhe["songmoya"] and job.last ~= "songmoya" and mytime <= os.time() then
         return songmoya()
     end
-    if
-        job.zuhe["hubiao"] and job.last ~= "hubiao" and job.teamname and
+    if job.zuhe["hubiao"] and job.last ~= "hubiao" and job.teamname and
         ((not condition.hubiao) or(condition.hubiao and condition.hubiao <= 0))
     then
         return hubiao()
@@ -1259,10 +1257,7 @@ function checkJob()
             job.zuhe[job.last] = 1
         end
     end
-    if
-        countTab(job.zuhe) > 2 and not skills["xixing-dafa"] and job.zuhe["huashan"] and job.zuhe["wudang"] and
-        jobtimes["华山岳不群惩恶扬善"] and
-        jobtimes["武当宋远桥杀恶贼"]
+    if countTab(job.zuhe) > 2 and not skills["xixing-dafa"] and job.zuhe["huashan"] and job.zuhe["wudang"] and jobtimes["华山岳不群惩恶扬善"] and jobtimes["武当宋远桥杀恶贼"]
     then
         local t_hs = jobtimes["华山岳不群惩恶扬善"]
         local t_wd = jobtimes["武当宋远桥杀恶贼"]
@@ -1280,10 +1275,7 @@ function checkJob()
             end
         end
     end
-    if
-        score.party and score.party == "华山派" and countTab(job.zuhe) > 2 and not skills["dugu-jiujian"] and
-        job.zuhe["huashan"] and
-        job.zuhe["songxin"]
+    if score.party and score.party == "华山派" and countTab(job.zuhe) > 2 and not skills["dugu-jiujian"] and job.zuhe["huashan"] and job.zuhe["songxin"]
     then
         local t_hs, t_sx, t_gb
 
@@ -1851,16 +1843,16 @@ function idle_set()
         flag.idle = 0
     end
     flag.idle = flag.idle + 1
-    if flag.idle < 14 then
+    if flag.idle < 8 then
         return
     end
-    if flag.idle < 16 then
+    if flag.idle < 10 then
         chats_log("ROBOT 可能已发呆" .. flag.idle / 2 .. "分钟!", "deepskyblue")
         return
     end
     scrLog()
     dis_all()
-    chats_locate("定位系统：发呆8分钟后，于【" .. locl.area .. locl.room .. "】重新启动系统！", "red")
+    chats_locate("定位系统：发呆5分钟后，于【" .. locl.area .. locl.room .. "】重新启动系统！", "red")
     Disconnect()
     Connect()
 end
@@ -2762,10 +2754,8 @@ function check_pot(p_cmd)
             end
         end
     end
-    if
-        score.party == "普通百姓" and hp.pot >= l_pot and score.gold and skills["literate"] and score.gold > 3000 and
-        skills["literate"].lvl < hp.pot_max - 100
-    then
+    if score.party == "普通百姓" and hp.pot >= l_pot and score.gold and skills["literate"] and score.gold > 3000 and
+        skills["literate"].lvl < hp.pot_max - 100 then
         return literate()
     end
     if

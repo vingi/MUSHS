@@ -25,7 +25,7 @@ function literate()
    messageShow("Ñ§Ï°¶ÁÊéĞ´×Ö£¡")
    DeleteTemporaryTriggers()
    if hp.exp < 151000 then
-      master.times = 3
+      master.times = 5
    else
       master.times = math.modf(hp.jingxue / 120)
       master.times = common.GetValueByRange(master.times, learnTime_min, learntime_max)

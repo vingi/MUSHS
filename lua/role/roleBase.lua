@@ -27,7 +27,11 @@ function GetRoleConfig(arg)
     if rolename ~= nil and string.len(rolename) > 0 then
         rolename = "role."..rolename
         local role = require(rolename)
-        return role.settings[arg]
+        if role.settings[arg] ~= nil then
+            return role.settings[arg]
+        else
+            return ""
+        end
     end
 end
 
@@ -49,9 +53,9 @@ local function findfunction(x)
 end
 ----------------------------------------------------------------
 -- 根据 角色的配置文件 返回该角色的特定方法, 参数为该方法的名称
--- 如: 想要返回角色 vingi 的配置文件里的 autokill 的值
--- eg. GetRoleConfig("autokill") 无参数方法
--- eg. GetRoleConfig("autokill","参数值") 有参数方法
+-- 如: 想要执行角色 vingi 的配置文件里autokill的function
+-- eg. GetRoleFunction("autokill") 无参数方法
+-- eg. GetRoleFunction("autokill","参数值") 有参数方法
 ----------------------------------------------------------------
 function GetRoleFunction(arg,func_arg)
     local rolename = GetVariable("id")
