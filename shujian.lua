@@ -1009,8 +1009,8 @@ function checkPrepare()
         l_cut = true
     end
     if not l_cut and not Bag["木剑"] then
-        -- 这是让robot认定木剑为常备武器的语句，我注释了，还是通过检测是否有cut武器来买即可
-        -- weaponPrepare["木剑"] = true
+        -- 让robot认定木剑为常备武器的语句
+        weaponPrepare["木剑"] = true
         return checkWeapon("木剑")
     end
 
