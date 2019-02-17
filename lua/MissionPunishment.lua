@@ -20,6 +20,20 @@ require "check
 MissionPunishment = { }
 
 function MissionPunishment.PunishmentHandle(busySecond)
-  print("call punishmenthandle successfully")
+  if hp.pot > 100 then
+    print("Mission Punishment Gap, going to Study")
+    beihook = checkxue
+  else
+    print("Mission Punishment Gap, going to Check_Food")
+    beihook = function()
+        check_food(true) -- 强制 full 饮食
+    end
+  end
+  beiok()
+  -- 给 beihook 赋值, 即赋值后续要执行的function
+  -- beihook = function xxx()
+  -- 执行 beiok 停止bei,执行后续
+  -- beiok()
+  -- switch study/prepare/food/repair/doing LL
 end -- function check
 
