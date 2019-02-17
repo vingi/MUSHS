@@ -59,9 +59,9 @@ function huashan()
     return huashan_start()
 end
 
-jobFindAgain = jobFindAgain or {}
+jobFindAgain = jobFindAgain or { }
 jobFindAgain["huashan"] = "huashanFindAgain"
-jobFindFail = jobFindFail or {}
+jobFindFail = jobFindFail or { }
 jobFindFail["huashan"] = "huashanFindFail"
 
 function huashanFindAgain()
@@ -122,10 +122,10 @@ function huashan_trigger()
     DeleteTriggerGroup("huashan_npc")
     create_trigger_t("huashan_npc1", "^(> )*(冷不防|突然|猛地|忽然|冷不丁)从树林\\D*你的令牌，向(\\D*)(处|方向)\\D*逃去。$", "", "huashan_where")
     create_trigger_t(
-        "huashan_npc2",
-        "^(> )*你一把抓向蒙面人试图抢回令牌，但被蒙面人敏捷得躲了过去，你顺手扯下蒙面人的面罩，发现原来是曾经名震江湖的(\\D*)。",
-        "",
-        "huashan_find"
+    "huashan_npc2",
+    "^(> )*你一把抓向蒙面人试图抢回令牌，但被蒙面人敏捷得躲了过去，你顺手扯下蒙面人的面罩，发现原来是曾经名震江湖的(\\D*)。",
+    "",
+    "huashan_find"
     )
     create_trigger_t("huashan_npc3", '^(> )*你把 "hsjob" 设定为 "闲逛中" 成功完成。', "", "huashan_npc_goon")
     SetTriggerOption("huashan_npc1", "group", "huashan_npc")
@@ -136,19 +136,6 @@ function huashan_trigger()
     create_trigger_t("huashanQuest1", "^(> )*岳不群说道：「" .. score.name .. "你杀了不少恶人，未免杀气过重不如上思过崖面壁忏悔吧", "", "huashanDgjj")
     SetTriggerOption("huashanQuest1", "group", "huashanQuest")
     EnableTriggerGroup("huashanQuest", false)
-    -- 临时隐藏可能flood的文字触发器
-    local TempMsgHideTriggerList =
-    {
-        "^(> )*岳不群说道：「还望.*多加努力，日后必有重谢。」",
-        "^(> )*岳不群对着.*点了点头。",
-        "^(> )*岳不群对着.*竖起了右手大拇指，好样的。",
-        "^(> )*岳灵珊说道：「我华山派不喜滥杀，(.*)下次不可如此好勇斗狠了。」",
-        "^$",
-    }
-	for i=1,#TempMsgHideTriggerList do
-		Fun_AddTriggerHide("trigger_huashanJob_temp_hd_"..i, TempMsgHideTriggerList[i], "huashanJob_temp", "")
-	end
-    EnableGroup("huashanJob_temp", true)
 end
 
 function huashan_triggerDel()
@@ -201,9 +188,9 @@ function huashan_fangqi()
     huashan_triggerDel()
     job.last = "huashan"
     hsjob2 = 0
-    --if job.zuhe["wudang"] then
+    -- if job.zuhe["wudang"] then
     --   job.last='wudang'
-    --end
+    -- end
     return check_halt(check_food)
 end
 
@@ -250,7 +237,7 @@ end
 function huashan_npc_goon()
     quest.status = "闲逛中"
     quest:update()
-    exe("n;e;e")
+    exe("n;e;e;e;e;e;")
     locate()
     return check_busy(huashan_ssl, 1)
 end
@@ -269,14 +256,14 @@ end
 
 function huashan_where(n, l, w)
     job.where = tostring(w[3])
-    --print("1"..job.where)
+    -- print("1"..job.where)
 end
 
 function huashan_find(n, l, w)
     local flag_huashan = 0
     dis_all()
     job.target = tostring(w[2])
-    job.killer = {}
+    job.killer = { }
     job.killer[job.target] = true
     quest.target = job.target
     quest:update()
@@ -291,7 +278,7 @@ function huashan_find(n, l, w)
         messageShow("华山任务②：任务地点【" .. job.where .. "】不可到达，任务放弃。")
         return check_halt(huashanFindFail)
     end
-    --print("2"..job.where)
+    -- print("2"..job.where)
     if huashanArea1[job.where] then
         job.room = job.where
         job.area = huashanArea1[job.where]
@@ -304,17 +291,29 @@ function huashan_find(n, l, w)
         messageShow("华山任务：任务地点【" .. job.where .. "】不可到达，任务放弃。", "Plum")
         return check_halt(huashanFindFail)
     end
-    print(dest.room, dest.area, job.room, job.area)
     messageShow("华山任务：追杀逃跑到【" .. job.where .. "】的【" .. job.target .. "】。")
     locl.room = "树林"
-    return go(huashanFindAct, job.area, job.room, "huashan/shulin")
+    -- 优化华山任务路径(由于当前处于树林迷宫)
+    -- 这里的目标有两种可能 1. 目标在当前迷宫里  2. 目标在当前迷宫之外
+    if dest.room == "树林" or dest.room == "松树林" or dest.room == "空地" then
+        return go(huashanFindAct, job.area, job.room, "huashan/shulin")
+    else
+        -- 分为两步行走
+        go_setting(huashanFindAct, job.area, job.room, "huashan/shulin")
+        -- 因rooms.lua中关于"华山-树林/松树林" 有异常, 故跳过路径中的第一步(包含#10 west), 直接从跳二步(west 从'树林'进入'松树林'),然后第三跳call #hsssl
+        return path_consider(1)
+    end
 end
 
 function huashan_debug_fight()
-    --dis_all()
+    -- dis_all()
     EnableTrigger("huashan_find1", true)
     exe("look")
 end
+
+-- function huashan_optimize_path()
+--    go(huashanFindAct, job.area, job.room, "huashan/shiwu")
+-- end
 
 function huashanFindAct()
     EnableTriggerGroup("huashan_find", true)
@@ -346,7 +345,7 @@ function huashan_fight(n, l, w)
     exe("pfmwu")
     exe("set wimpy 100")
 
-    --kezhiwugong(job.target,job.id,'pfmpfm')
+    -- kezhiwugong(job.target,job.id,'pfmpfm')
     dis_all()
     kezhiwugong()
     kezhiwugongAddTarget(job.target, job.id)
@@ -377,8 +376,10 @@ function huashan_cut()
     SetTriggerOption("huashan_cut2", "group", "huashan_cut")
     -- 清空错误的road.id(临时方法)
     -- 后续考虑用 opposite path
+    exe("i")
+    -- 因战斗中使用克制武功,通常会装备不同的武器,造成weapon_unwield()的不准确, 故在此处重新读取最新的物品列表信息
     road.id = nil
-    job.killer = {}
+    job.killer = { }
     fight.time.e = os.time()
     fight.time.over = fight.time.e - fight.time.b
     messageShowT("华山任务：战斗用时:【" .. fight.time.over .. "】秒,搞定蒙面人：【" .. job.target .. "】。")
@@ -416,10 +417,10 @@ end
 function huashan_yls()
     DeleteTriggerGroup("huashan_yls")
     create_trigger_t(
-        "huashan_yls1",
-        "^(> )*(这里没有这个人。|你身上没有这样东西。|这人好象不是你杀的吧？|你的令牌呢|你还没有去找恶贼，怎么就来祭坛了？)",
-        "",
-        "huashan_yls_fail"
+    "huashan_yls1",
+    "^(> )*(这里没有这个人。|你身上没有这样东西。|这人好象不是你杀的吧？|你的令牌呢|你还没有去找恶贼，怎么就来祭坛了？)",
+    "",
+    "huashan_yls_fail"
     )
     create_trigger_t("huashan_yls2", "^(> )*岳灵珊在你的令牌上写下了一个 (一|二) 字。", "", "huashan_yls_ask")
     create_trigger_t("huashan_yls3", "^(> )*这好象不是你领的令牌吧？", "", "huashan_yls_lingpai")
@@ -512,11 +513,11 @@ function huashan_finish()
     flag.times = 1
     hsjob2 = 0
     exe("drop ling pai")
-    --jobExpTongji()
+    -- jobExpTongji()
     huashan_triggerDel()
-    --if job.zuhe["wudang"] then
+    -- if job.zuhe["wudang"] then
     --     job.last='wudang'
-    --end
+    -- end
     setLocateRoomID = "huashan/zhengqi"
     return check_halt(check_food)
 end
