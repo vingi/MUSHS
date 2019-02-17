@@ -13,6 +13,7 @@ require "skill"
 require "weapon"
 -- require "hubiao"
 require "show_switch"
+require "gag"
 require "dummy"
 require "husong"
 require "xueshan"
@@ -436,6 +437,7 @@ function main()
     getVariable()
     userGet()
     hpheqi()
+    statusbar.Activate() -- 激活 StatusBar
 
     -- ain
     Openfpk()
@@ -1008,7 +1010,7 @@ function checkPrepare()
     else
         l_cut = true
     end
-    if not l_cut and not Bag["木剑"] then
+    if not Bag["木剑"] then
         -- 让robot认定木剑为常备武器的语句
         weaponPrepare["木剑"] = true
         return checkWeapon("木剑")
@@ -2611,7 +2613,8 @@ function refineOK()
     return check_heal()
 end
 
-function check_food()
+function check_food(Force2Full)
+    Force2Full = Force2Full or false
     if score.gender == "无1" then
         -- 厂公专用，封闭房间
         map.rooms["city/mingyufang"].ways["north"] = nil
@@ -2666,7 +2669,7 @@ function check_food()
     exe("hp;unset no_kill_ap;yield no")
     if (hp.food < 60 or hp.water < 60) and hp.exp < 500000 then
         return go(dali_eat, "大理城", "茶馆")
-    elseif hp.food < 60 or hp.water < 60 then
+    elseif hp.food < 60 or hp.water < 60 or Force2Full then
         return go(wudang_eat, "武当山", "茶亭")
     else
         check_bei(check_food_over)
