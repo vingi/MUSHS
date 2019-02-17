@@ -3490,14 +3490,20 @@ Room {
 	},
 }
 Room {
-	id = "city/bingying",
-	name = "兵营",
-	ways = {
-		["east"] = "city/bingyingmen",
-	},
-	objs = {
-          ["史青山"] = "shi qingshan",
-           },
+    id = "city/bingying",
+    name = "兵营",
+    ways = {
+            ["east"] = "city/bingyingmen",
+            ["south"] = "city/bingqiku"
+    },
+    blocks = {
+            ["south"] = {
+                    {id = "guan bing", exp = 10000},
+            },
+    },
+    objs = {
+      ["史青山"] = "shi qingshan",
+    },
 }
 Room {
 	id = "city/bingyingmen",
@@ -25714,6 +25720,14 @@ Room {
 	name = "北天门",
 	ways = {
 		["southdown"] = "taishan/zhangren",
+		["up"] = "taishan/jiyizhijian",
+	},
+}
+Room {
+	id = "taishan/jiyizhijian",
+	name = "记忆之间",
+	ways = {
+		["down"] = "taishan/beitian",
 	},
 }
 Room {
@@ -35214,20 +35228,26 @@ Room {
            },
 }
 Room {
-	id = "xueshan/rimulundian",
-	name = "日木伦殿",
-	ways = {
-		["southeast"] = "xueshan/zhaitang",
-		["north"] = "xueshan/hufazhacang",
-		["east"] = "xueshan/chiyangmen",
-		["west"] = "xueshan/yueliangmen",
-		["out"] = "xueshan/xiekemen",
-	},
-	blocks = {
-		["southeast"] = {
-			{id = "hufa lama", exp = 100000, party = "大轮寺"},
-		},
-	},
+    id = "xueshan/rimulundian",
+    name = "日木伦殿",
+    ways = {
+            ["southeast"] = "xueshan/zhaitang",
+            ["north"] = "xueshan/hufazhacang",
+            ["east"] = "xueshan/chiyangmen",
+            ["west"] = "xueshan/yueliangmen",
+            ["out"] = "xueshan/xiekemen",
+    },
+    blocks = {
+            ["southeast"] = {
+                    {id = "hufa lama", exp = 100000, party = "大轮寺"},
+            },        
+            ["east"] = {
+                    {id = "hufa lama", exp = 100000, party = "大轮寺"},
+            },
+            ["west"] = {
+                    {id = "hufa lama", exp = 100000, party = "大轮寺"},
+            },
+    },
 }
 Room {
 	id = "xueshan/shanlu1",
