@@ -227,15 +227,19 @@ function weaponUnWalk()
     return walk_wait()
 end
 weaponWieldCut = function()
-    for p in pairs(Bag) do
-        if Bag[p].kind and weaponKind[Bag[p].kind] and weaponKind[Bag[p].kind] == "cut" then
-            if not(Bag[p].kind == "xiao" and weaponUsave[p]) then
-                for q in pairs(Bag) do
-                    if Bag[q].kind == "xiao" and weaponUsave[q] then
-                        exe("unwield " .. Bag[q].fullid)
+    if Bag["Ä¾½£"] then
+        exe("wield " .. Bag["Ä¾½£"].fullid)
+    else
+        for p in pairs(Bag) do
+            if Bag[p].kind and weaponKind[Bag[p].kind] and weaponKind[Bag[p].kind] == "cut" then
+                if not(Bag[p].kind == "xiao" and weaponUsave[p]) then
+                    for q in pairs(Bag) do
+                        if Bag[q].kind == "xiao" and weaponUsave[q] then
+                            exe("unwield " .. Bag[q].fullid)
+                        end
                     end
+                    exe("wield " .. Bag[p].fullid)
                 end
-                exe("wield " .. Bag[p].fullid)
             end
         end
     end
