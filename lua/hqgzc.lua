@@ -124,6 +124,7 @@ function hqgzc()
     hqgzcTrigger()
     job.name = "hqgzc"
     quest.name = "洪七公作菜"
+    quest.desc = ""
     quest.update()
     checkBags()
     return check_halt(hqgzcCheckSilver)
@@ -149,6 +150,7 @@ function hqgzcFindFail()
 end
 function hqgzcGo()
     quest.status = "去丐帮接任务"
+    quest.desc = ""
     quest.update()
     return go(hqgzcBegin, "丐帮", "后院")
 end

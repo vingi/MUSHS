@@ -189,6 +189,7 @@ function wudangFindGo()
     quest.name = "Œ‰µ±…±∂Ò‘Ù"
     quest.location = job.where
     quest.target = job.target
+    quest.desc = ""
     quest.update()
     -- pfmjineng()
     setLocateRoomID = 'wudang/sanqing'

@@ -438,6 +438,7 @@ function main()
     userGet()
     hpheqi()
     statusbar.Activate() -- 激活 StatusBar
+    gag.Activate() -- 激活 消息过滤
 
     -- ain
     Openfpk()
@@ -509,6 +510,8 @@ function dis_all()
         end
     end
     delete_all_timers()
+    -- 开启垃圾信息过滤
+    gag.Activate()
     EnableTrigger("main", true)
     EnableTrigger("main1", true)
     -- EnableTrigger('idle',true)
@@ -518,7 +521,6 @@ function dis_all()
     EnableTriggerGroup("count", true)
     EnableTriggerGroup("fight", true)
     EnableTriggerGroup("job_exp", true)
-    EnableTriggerGroup("week_ignore", true)
     EnableTrigger("hp12", false)
     if lookxin == 1 then
         sendXin()
@@ -2665,6 +2667,8 @@ function check_food(Force2Full)
     exe("nick 去武当吃喝;remove all;wear all")
     quest.name = "去武当吃喝"
     quest.status = "正在赶路中"
+    quest.target = ""
+    quest.location = ""
     quest:update()
     exe("hp;unset no_kill_ap;yield no")
     if (hp.food < 60 or hp.water < 60) and hp.exp < 500000 then

@@ -427,11 +427,11 @@ function hp_heqi_check(n,l,w)
 	if hp.neili<hp.neili_max*0.5 and nxw_cur>0 then
        exe('eat '.. drug.neili)
     end
+    if hp.neili < 1000 and hp.neili_max > 3000 and hp.heqi > 480 and GetRoleConfig("Auto_hqgzc_10times") ~= "" then
+       exe(GetRoleConfig("Recover_neili"))
+    end
     if hp.jingli<hp.jingli_max*0.5 or hp.jingli<500 then
        exe('yun jingli')
-    end
-   if hp.neili<hp.neili_max*0.5 and nxw_cur>0 then
-       exe('eat '.. drug.neili)
     end
  if job.name=='songmoya' then
   if hp.qixue_per<80 then
@@ -883,6 +883,9 @@ function fightHpCheck()
     end
 	if hp.neili<hp.neili_max*0.5 and nxw_cur>0 then
        exe('eat '.. drug.neili)
+    end
+    if hp.neili < 1000 and hp.neili_max > 3000 and hp.heqi > 480 and GetRoleConfig("Auto_hqgzc_10times") ~= "" then
+       exe(GetRoleConfig("Recover_neili"))
     end
     if hp.jingli<hp.jingli_max*0.5 or hp.jingli<500 then
        exe('yun jingli')

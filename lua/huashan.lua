@@ -207,7 +207,8 @@ end
 function huashan_npc()
     exe("nick 华山任务中")
     quest.name = "华山任务中"
-    quest:update()
+    quest.desc = ""
+    quest.update()
     job.time.b = os.time()
     EnableTriggerGroup("huashan_accept", false)
     job.last = "huashan"
@@ -236,7 +237,7 @@ end
 
 function huashan_npc_goon()
     quest.status = "闲逛中"
-    quest:update()
+    quest.update()
     exe("n;e;e;e;e;e;")
     locate()
     return check_busy(huashan_ssl, 1)
@@ -266,7 +267,7 @@ function huashan_find(n, l, w)
     job.killer = { }
     job.killer[job.target] = true
     quest.target = job.target
-    quest:update()
+    quest.update()
     DeleteTriggerGroup("huashan_find")
     create_trigger_t("huashan_find1", "^( )*" .. job.target .. "\\((\\D*)\\)", "", "huashan_fight")
     create_trigger_t("huashan_find2", "^(> )*看起来(\\D*)想杀死你！", "", "huashan_debug_fight")

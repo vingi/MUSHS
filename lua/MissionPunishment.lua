@@ -2,9 +2,9 @@
 -- MissionPunishment.lua
 --
 -- ----------------------------------------------------------
--- ç”¨äºŽå¤„ç† å½“å‰åœ¨ä»»åŠ¡æƒ©ç½šæœŸé—´æ—¶æ‰§è¡Œçš„äº‹æƒ…
--- é¿å…å¹²ç­‰ä»»åŠ¡æƒ©ç½šæ—¶é—´, æé«˜æ•ˆçŽ‡
--- è¯¥æƒ©ç½šå¤šå‡ºçŽ°äºŽå½“expè¾ƒä½Žæ—¶
+-- ÓÃÓÚ´¦Àí µ±Ç°ÔÚÈÎÎñ³Í·£ÆÚ¼äÊ±Ö´ÐÐµÄÊÂÇé
+-- ±ÜÃâ¸ÉµÈÈÎÎñ³Í·£Ê±¼ä, Ìá¸ßÐ§ÂÊ
+-- ¸Ã³Í·£¶à³öÏÖÓÚµ±exp½ÏµÍÊ±
 -- ----------------------------------------------------------
 --
 --[[
@@ -20,20 +20,28 @@ require "check
 MissionPunishment = { }
 
 function MissionPunishment.PunishmentHandle(busySecond)
-  if hp.pot > 100 then
-    print("Mission Punishment Gap, going to Study")
-    beihook = checkxue
-  else
-    print("Mission Punishment Gap, going to Check_Food")
-    beihook = function()
-        check_food(true) -- å¼ºåˆ¶ full é¥®é£Ÿ
+    if busySecond > 10 then
+        quest.desc = "ÈÎÎñ³Í·£ " .. busySecond .. "Ãë"
+        quest.update()
+    else
+        quest.desc = ""
+        quest.update()
     end
-  end
-  beiok()
-  -- ç»™ beihook èµ‹å€¼, å³èµ‹å€¼åŽç»­è¦æ‰§è¡Œçš„function
-  -- beihook = function xxx()
-  -- æ‰§è¡Œ beiok åœæ­¢bei,æ‰§è¡ŒåŽç»­
-  -- beiok()
-  -- switch study/prepare/food/repair/doing LL
+    if hp.pot > 100 then
+        print("Mission Punishment Gap, going to Study")
+        beihook = checkxue
+    else
+        print("Mission Punishment Gap, going to Check_Food")
+        beihook = function()
+            check_food(true)
+            -- Ç¿ÖÆ full ÒûÊ³
+        end
+    end
+    beiok()
+    -- ¸ø beihook ¸³Öµ, ¼´¸³ÖµºóÐøÒªÖ´ÐÐµÄfunction
+    -- beihook = function xxx()
+    -- Ö´ÐÐ beiok Í£Ö¹bei,Ö´ÐÐºóÐø
+    -- beiok()
+    -- switch study/prepare/food/repair/doing LL
 end -- function check
 
