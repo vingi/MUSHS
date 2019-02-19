@@ -180,6 +180,9 @@ function weapon_wield()
         if weapon.first and Bag[weapon.first] then
             exe("wield " .. Bag[weapon.first].fullid)
         end
+		if GetVariable("myweapon") and string.len(GetVariable("myweapon")) > 1 then
+			exe("wield " .. GetVariable("myweapon"))
+		end
         for p in pairs(Bag) do
             if Bag[p].kind and Bag[p].kind == skillEnable[perform.skill] and perform.skill ~= "yuxiao-jian" then
                 if not weapon.first or weapon.first ~= p then
