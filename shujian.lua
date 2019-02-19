@@ -2616,6 +2616,10 @@ function refineOK()
 end
 
 function check_food(Force2Full)
+	-- 此处应新增判断,是否已经装备回内武器
+	-- if xxx then
+	weapon_unwield()
+	weapon_wield()
     Force2Full = Force2Full or false
     if score.gender == "无1" then
         -- 厂公专用，封闭房间
