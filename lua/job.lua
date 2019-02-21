@@ -76,7 +76,6 @@ smydie=0
 nobusy=0
 hqpd=0
 damage=0
-newbie=1
 loseTj={}
 loseTj.succ=0
 loseTj.fail=0

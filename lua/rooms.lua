@@ -13924,8 +13924,8 @@ Room {
 	id = "huashan/fanting",
 	name = "·¹Ìü",
 	ways = {
-		["north"] = "huashan/yaofang",
-		["east"] = "huashan/celang3",
+		["eat ricc;drop rice;drop douhua;drop jitui;drop baozi;drop doufu;drop kousansi;drop cuishan;drop liji;drop huasheng;drop niurou;drop liyu;drop yaoliu;drop rou pian;north"] = "huashan/yaofang",
+		["eat ricc;drop rice;drop douhua;drop jitui;drop baozi;drop doufu;drop kousansi;drop cuishan;drop liji;drop huasheng;drop niurou;drop liyu;drop yaoliu;drop rou pian;east"] = "huashan/celang3",
 	},
 	objs = {
           ["ÇåË®ºùÂ«"] = "qingshui hulu",

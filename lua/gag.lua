@@ -22,6 +22,9 @@ function gag.Activate()
     DeleteTriggerGroup("Ignore_commonInfo")
     commonInfo_Ignore()
 
+    DeleteTriggerGroup("Ignore_foodInfo")
+    foodInfo_Ignore()
+
     DeleteTriggerGroup("Ignore_fightInfo")
     fightInfo_Ignore()
 
@@ -30,6 +33,9 @@ function gag.Activate()
 
     DeleteTriggerGroup("Ignore_wudang")
     wudang_Ignore()
+
+	DeleteTriggerGroup("Ignore_songxin")
+	songxin_Ignore()
 end
 
 -- 常用信息过滤
@@ -45,11 +51,11 @@ function commonInfo_Ignore()
         "^(> )*\\s*江面上远远传来一声：“等等啊，这就来了～～～”",
         "^(> )*\\s*岸边一只渡船上的老艄公说道：正等着你呢，上来吧。",
         "((?!你).+)吸了口气，一声“船家”，声音中正平和地远远传了出去。",
-        "((?!你).+)紧了紧随身物品，紧跟着长袖飘飘，飞身跃渡长江！",
+        "((?!你).+)紧了紧随身物品，紧跟着长袖飘飘，飞身跃渡(.+)！",
         "^(> )*\\s*只见(.+)长袖飘飘从对岸跃来，姿态潇洒地落在岸边。",
         "((?!你).+)面露娇羞之色，悄悄的低下头去。",
-        "((?!你).+)渴得眼冒金星，全身无力。",
         "^$",
+        "^(> )*\\s*$",
     }
     for i = 1, #TempTimeHideTriggerList do
         Fun_AddTriggerHide("trigger_common_temp_hd_" .. i, TempTimeHideTriggerList[i], "Ignore_commonInfo", "")
@@ -57,10 +63,28 @@ function commonInfo_Ignore()
     EnableGroup("Ignore_commonInfo", true)
 end
 
+-- 饮食相关信息过滤
+function foodInfo_Ignore()
+    local TempTimeHideTriggerList =
+    {
+        "((?!你).+)拿起大碗茶咕噜噜地喝了几口茶水。",
+        "((?!你).+)盯着地上的(.*)，咽了一口唾沫。",
+        "((?!你).+)将剩下的(.*)吃得干干净净。",
+        "((?!你).+)拿起(.*)咬了几口。",
+        "((?!你).+)渴得眼冒金星，全身无力。",
+    }
+    for i = 1, #TempTimeHideTriggerList do
+        Fun_AddTriggerHide("trigger_food_temp_hd_" .. i, TempTimeHideTriggerList[i], "Ignore_foodInfo", "")
+    end
+    EnableGroup("Ignore_foodInfo", true)
+end
+
 -- 战斗信息过滤
 function fightInfo_Ignore()
     local TempTimeHideTriggerList =
     {
+        "((?!你).+)往(.+)面的(.+)离开。",
+        "^(> )*\\s*(.*)的尸体开始腐烂了，发出一股难闻的恶臭。",
         "((?!你).+)「唰」的一声抽出一(.*)握在手中。",
         "((?!你).+)将手中的(.*)插回(.*)。",
         "((?!你).+)将(.+)脱了下来。",
@@ -76,8 +100,7 @@ function fightInfo_Ignore()
         "((?!你).+)将手中的(.*)一弹，电光闪耀中，已不见了(.*)的踪迹。",
         "((?!你).+)将手一挥，(.*)从身后飞出，电光一闪，已经握在了(.*)手中。",
         "((?!你).+)将(.*)随手一扔，只见(.*)突然变得火红，化做无数的火星四散飘走了！",
-        "((?!你).+)将手在风中一挥，无数的火星从四方飞来，渐渐聚在一起～～～一(.*)已经出现在他手中！",
-        "^$",
+        "((?!你).+)将手在风中一挥，无数的火星从四方飞来，渐渐聚在一起～～～一(.*)已经出现在(.+)手中！",
     }
     for i = 1, #TempTimeHideTriggerList do
         Fun_AddTriggerHide("trigger_fight_temp_hd_" .. i, TempTimeHideTriggerList[i], "Ignore_fightInfo", "")
@@ -104,7 +127,6 @@ function huashan_Ignore()
         "^(> )*岳灵珊说道：「等一会仪式结束，你就可以去师傅那里复命了。」",
         "^(> )*(.*)往外面的玉女祠离开。",
         "^(> )*(.*)给岳灵珊一颗.*的首级。",
-        "^$",
     }
     for i = 1, #TempMsgHideTriggerList do
         Fun_AddTriggerHide("trigger_huashanJob_temp_hd_" .. i, TempMsgHideTriggerList[i], "Ignore_huashan", "")
@@ -127,4 +149,19 @@ function wudang_Ignore()
         Fun_AddTriggerHide("trigger_wudangJob_temp_hd_" .. i, TempMsgHideTriggerList[i], "Ignore_wudang", "")
     end
     EnableGroup("Ignore_wudang", true)
+end
+
+-- 送信任务垃圾信息过滤
+function songxin_Ignore()
+    local TempMsgHideTriggerList =
+    {
+		"^(> )*褚万里交给(.+)一封密函。",
+		"^(> )*褚万里开始认真考虑这个问题。",
+		"^(> )*褚万里说道：「路上常有强人出没，务必小心。」",
+        "((?!你).+)向褚万里打听有关『(.*)』的消息。"
+    }
+    for i = 1, #TempMsgHideTriggerList do
+        Fun_AddTriggerHide("trigger_songxinJob_temp_hd_" .. i, TempMsgHideTriggerList[i], "Ignore_songxin", "")
+    end
+    EnableGroup("Ignore_songxin", true)
 end

@@ -180,6 +180,7 @@ function weapon_wield()
         if weapon.first and Bag[weapon.first] then
             exe("wield " .. Bag[weapon.first].fullid)
         end
+        -- 默认myweapon为回内武器
 		if GetVariable("myweapon") and string.len(GetVariable("myweapon")) > 1 then
 			exe("wield " .. GetVariable("myweapon"))
 		end
@@ -398,7 +399,6 @@ weaponRepairDo = function()
     SetTriggerOption("repair6", "group", "repair")
     weapon_unwield()
     ungeta()
-    --    exe("unwield sanqing sword;unwield xuanyuan axe;unwield xuanyuan axe;unwield fengyun whip;unwield qiankun sword")
     exe("wield tie chui")
     exe("repair " .. Bag[tmp.uweapon].fullid)
     create_timer_m("repair", 3, "weaponRepairGoCun")

@@ -186,7 +186,7 @@ function xueshan_start()
     return go(xsaskjob,'大雪山','入幽口')
 end
 function xsaskjob()
-    if newbie==1 then return zhunbeineili(job_xueshan) else return job_xueshan() end
+    if GetRoleConfig("CheckNeili_InAdvance") == true then return zhunbeineili(job_xueshan) else return job_xueshan() end
 end
 function job_xueshan()
     DeleteTriggerGroup("check_job")

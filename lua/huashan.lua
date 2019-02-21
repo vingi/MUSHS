@@ -1,4 +1,16 @@
--------华山
+-----
+-- huashan.lua
+--
+-- ----------------------------------------------------------
+-- 华山惩恶扬善任务
+-- ----------------------------------------------------------
+--
+--[[
+
+eg.
+
+--]]
+
 local huashanArea1 = {
     ["菜地"] = "华山村",
     ["杂货铺"] = "华山村",
@@ -64,6 +76,17 @@ jobFindAgain["huashan"] = "huashanFindAgain"
 jobFindFail = jobFindFail or { }
 jobFindFail["huashan"] = "huashanFindFail"
 
+-- ----------------------------------------------------------
+-- 获取华山任务阶段的中文名/符号
+-- ----------------------------------------------------------
+function Get_huashanjob_step()
+    local word_huashanjob_step = "①"
+    if hsjob2 == 1 then
+        word_huashanjob_step = "②"
+    end
+    return word_huashanjob_step
+end
+
 function huashanFindAgain()
     return go(find, dest.area, dest.room)
 end
@@ -85,7 +108,7 @@ function huashan_start()
 end
 
 function hsaskjob()
-    if newbie == 1 then
+    if GetRoleConfig("CheckNeili_InAdvance") == true then
         return zhunbeineili(job_huashan)
     else
         return job_huashan()
@@ -206,16 +229,21 @@ end
 
 function huashan_npc()
     exe("nick 华山任务中")
-    quest.name = "华山任务中"
+    if hsjob2 < 1 then 
+        quest.name = "华山任务①"
+    else
+        quest.name = "华山任务②"
+    end
     quest.desc = ""
     quest.update()
-    job.time.b = os.time()
     EnableTriggerGroup("huashan_accept", false)
     job.last = "huashan"
     if hsjob2 < 1 then
-        messageShow("华山任务：开始任务。")
+        job.time.b = os.time()
+        messageShow("华山任务①：开始任务。")
         return check_bei(huashan_npc_go)
     else
+        messageShow("华山任务②：开始任务。")
         return check_bei(huashan_npc_go2)
     end
 end
@@ -292,7 +320,7 @@ function huashan_find(n, l, w)
         messageShow("华山任务：任务地点【" .. job.where .. "】不可到达，任务放弃。", "Plum")
         return check_halt(huashanFindFail)
     end
-    messageShow("华山任务：追杀逃跑到【" .. job.where .. "】的【" .. job.target .. "】。")
+    messageShow("华山任务"..Get_huashanjob_step().."：追杀逃跑到【" .. job.where .. "】的【" .. job.target .. "】。")
     locl.room = "树林"
     -- 优化华山任务路径(由于当前处于树林迷宫)
     -- 这里的目标有两种可能 1. 目标在当前迷宫里  2. 目标在当前迷宫之外
@@ -311,10 +339,6 @@ function huashan_debug_fight()
     EnableTrigger("huashan_find1", true)
     exe("look")
 end
-
--- function huashan_optimize_path()
---    go(huashanFindAct, job.area, job.room, "huashan/shiwu")
--- end
 
 function huashanFindAct()
     EnableTriggerGroup("huashan_find", true)
@@ -383,9 +407,11 @@ function huashan_cut()
     job.killer = { }
     fight.time.e = os.time()
     fight.time.over = fight.time.e - fight.time.b
-    messageShowT("华山任务：战斗用时:【" .. fight.time.over .. "】秒,搞定蒙面人：【" .. job.target .. "】。")
+
+    messageShowT("华山任务"..Get_huashanjob_step().."：战斗用时:【" .. fight.time.over .. "】秒,搞定蒙面人：【" .. job.target .. "】。")
     return check_halt(huashan_cut_act)
 end
+
 
 function huashan_cut_act()
     DeleteTimer("perform")
@@ -411,8 +437,15 @@ function huashan_cut_con(n, l, w)
         return check_halt(huashan_cut_act)
     else
         EnableTriggerGroup("huashan_cut", false)
-        return go(huashan_yls, "华山", "祭坛")
+        return check_halt(huashan_cut_after)
     end
+end
+
+function huashan_cut_after()
+    -- 换上回内武器
+    weapon_unwield()
+    weapon_wield()
+    return go(huashan_yls, "华山", "祭坛")
 end
 
 function huashan_yls()
@@ -453,7 +486,11 @@ end
 
 function huashan_neili()
     hsjob2 = 1
-    return zhunbeineili(huashan_npc)
+    if GetRoleConfig("CheckNeili_InAdvance") == false then
+        return huashan_npc()
+    else
+        return zhunbeineili(huashan_npc)
+    end
 end
 
 function huashan_yls_lbcx()

@@ -195,27 +195,6 @@ function button_smyteam()
     -- cursor
     0)
     -- flags
-    local _mousedown_newbie = mousedown_newbie()
-    _G["at_mousedown_newbie"] = _mousedown_newbie
-    WindowAddHotspot(win2, "btn_newbie",
-    0, 180, 140, 200,
-    -- rectangle
-    "",
-    -- MouseOver
-    "",
-    -- CancelMouseOver
-    "at_mousedown_newbie",
-    -- MouseDown
-    "",
-    -- CancelMouseDown
-    "",
-    -- MouseUp
-    "左键点击开关",
-    -- tooltip text
-    cursor or 1,
-    -- cursor
-    0)
-    -- flags
     local _mousedown_go_on_smy = mousedown_go_on_smy()
     _G["at_mousedown_go_on_smy"] = _mousedown_go_on_smy
     WindowAddHotspot(win2, "btn_go_on_smy",
@@ -301,11 +280,6 @@ function button_smyteam()
     else
         switch_name9 = "华山任务②--开"
     end
-    if newbie == 0 then
-        switch_name10 = "任务检查内力-关"
-    else
-        switch_name10 = "任务检查内力-开"
-    end
     if go_on_smy == 1 then
         switch_name11 = "重启后颂摩崖-开"
     else
@@ -347,13 +321,13 @@ function button_smyteam()
     WindowText(win2, "f", switch_name9, 0, 160, 140, 180, ColourNameToRGB("gold"), false)
     -- not Unicode
 
-    WindowText(win2, "f", switch_name10, 0, 180, 140, 200, ColourNameToRGB("gold"), false)
+--    WindowText(win2, "f", switch_name10, 0, 180, 140, 200, ColourNameToRGB("gold"), false)  -- 原 任务检查内力 开关
     -- not Unicode
 
-    WindowText(win2, "f", switch_name11, 0, 200, 140, 220, ColourNameToRGB("gold"), false)
+    WindowText(win2, "f", switch_name11, 0, 180, 140, 200, ColourNameToRGB("gold"), false)
     -- not Unicode
 
-    WindowText(win2, "f", switch_name12, 0, 220, 140, 240, ColourNameToRGB("gold"), false)
+    WindowText(win2, "f", switch_name12, 0, 200, 140, 220, ColourNameToRGB("gold"), false)
     -- not Unicode
 
 
@@ -565,40 +539,6 @@ function mousedown_waitkill()
                 -- raised, filled, softer, flat 0x909090
                 WindowFont(win2, "f", "新宋体", 10, true, false, false, false)
                 WindowText(win2, "f", switch_name8, 0, 140, 140, 160, ColourNameToRGB("gold"), false)
-                -- not Unicode
-                WindowShow(win2, true)
-                -- show it
-            end
-        end
-    end
-end
-function mousedown_newbie()
-    return function(flags, hotspot_id)
-
-        if hotspot_id == 'btn_newbie' then
-            if newbie == 0 then
-                newbie = 1
-            else
-                newbie = 0
-            end
-            if flags == 16 then
-
-                if newbie == 1 then
-
-                    switch_name10 = "任务检查内力-开"
-                    Note("I am a Newbie")
-
-                else
-
-                    switch_name10 = "任务检查内力-关"
-                    Note("I Not Newbie")
-
-                end
-
-                WindowRectOp(win2, miniwin.rect_fill, 0, 180, 140, 200, ColourNameToRGB("black"))
-                -- raised, filled, softer, flat 0x909090
-                WindowFont(win2, "f", "新宋体", 10, true, false, false, false)
-                WindowText(win2, "f", switch_name10, 0, 180, 140, 200, ColourNameToRGB("gold"), false)
                 -- not Unicode
                 WindowShow(win2, true)
                 -- show it

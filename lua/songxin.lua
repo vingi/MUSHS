@@ -114,7 +114,7 @@ function songxinFindFail()
 end
 function songxin_start()
     flag.idle = nil
-	if newbie==1 then return go(sxaskjob,'大理城','马房') else return go(job_songxin,'大理城','驿站') end
+	if GetRoleConfig("CheckNeili_InAdvance") == true then return go(sxaskjob,'大理城','马房') else return go(job_songxin,'大理城','驿站') end
     return 
 end
 function sxaskjob()

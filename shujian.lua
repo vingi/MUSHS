@@ -34,6 +34,8 @@ statusbar = require "StatusBar"  -- hp状态栏插件
 -- 状态栏启用
 statusbar.Init()
 
+SJ = { }
+
 
 skills = { }
 -- if hp.exp>800000 then
@@ -420,8 +422,9 @@ function test_text()
 end
 beihook = test
 halthook = test
-function main()
-    needdolost = 0
+
+function SJ.Init()
+    SJ.Config()
     setAlias()
     delete_all_triggers()
     delete_all_timers()
@@ -437,13 +440,28 @@ function main()
     getVariable()
     userGet()
     hpheqi()
-    statusbar.Activate() -- 激活 StatusBar
-    gag.Activate() -- 激活 消息过滤
+    statusbar.Activate()
+    -- 激活 StatusBar
+    gag.Activate()
+    -- 激活 消息过滤
 
-    -- ain
     Openfpk()
+    -- ain
+
     map.rooms["sld/lgxroom"].ways["#outSld"] = "huanghe/huanghe8"
     exe("down;alias askk ask $*;stand;halt;uweapon;score;cha;hp;jifa all;jiali max;unset no_kill_ap;cond;pfmset")
+
+end
+
+function SJ.Config()
+    needdolost = 0
+
+
+end
+
+function main()
+    SJ.Init()
+
     if GetRoleConfig("AutoBuy_Xiaobao_Longquan") and not Bag["龙泉剑"] then
         xiaobao.buy()
     else
@@ -454,9 +472,11 @@ function main()
         end
     end
 end
+
 function login_choose()
     Send("n")
 end
+
 function login()
     dis_all()
     DeleteTriggerGroup("login")
@@ -1945,6 +1965,19 @@ function checkBY()
     end
 end
 
+-- ----------------------------------------------------------
+-- 根据物品英文名(fullid),获取物品中文名, 仅限身上Bag里的物品
+-- ----------------------------------------------------------
+function GetItemChineseInBagByFullID(tFullID)
+    local CN_name = ""
+    for p in pairs(Bag) do
+        if Bag[p].fullid == tFullID then
+            CN_name = tostring(p)
+        end
+    end
+    return CN_name
+end
+
 function checkBags(func)
     DeleteTriggerGroup("bags")
     create_trigger_t("bags1", "^(> )*你身上携带物品的别称如下", "", "checkBagsStart")
@@ -2616,10 +2649,11 @@ function refineOK()
 end
 
 function check_food(Force2Full)
-	-- 此处应新增判断,是否已经装备回内武器
-	-- if xxx then
-	weapon_unwield()
-	weapon_wield()
+    -- 是否已经装备回内武器
+    if itemWield[GetItemChineseInBagByFullID(GetVariable("myweapon"))] ~= true then
+        weapon_unwield()
+        weapon_wield()
+    end
     Force2Full = Force2Full or false
     if score.gender == "无1" then
         -- 厂公专用，封闭房间

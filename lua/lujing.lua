@@ -121,7 +121,7 @@ function locate_trigger()
     EnableTriggerGroup("locate", false)
     EnableTriggerGroup("locate_unknown", false)
 end
-local_start = function()
+function local_start()
     EnableTriggerGroup("locate", true)
     EnableTriggerGroup("locate_unknown", true)
     locl.area = '不知道哪里'
@@ -267,7 +267,7 @@ exit_set = function(exit)
 
     return l_set
 end
-locatee = function()
+function locatee()
     locate_trigger()
     EnableTrigger("locate5", true)
     -- exe('alias action 正在定位')
@@ -275,11 +275,11 @@ locatee = function()
     exe('id here')
     exe('set look;l;time')
 end
-locate = function()
+function locate()
     locatee()
     create_timer_s('loclWait', 0.3, 'locatecheck')
 end
-locatecheck = function()
+function locatecheck()
     locatee()
 end
 function fastLocatee()
@@ -388,7 +388,7 @@ end
 
 function go_locate() 
     locate()
-    checkWait(path_consider, 1)
+    checkWait(path_consider, 0.3)
 end
 
 function goContinue()

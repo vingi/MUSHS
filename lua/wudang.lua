@@ -111,7 +111,7 @@ function wudangGo()
     return go(wudangBegin, "武当山", "三清殿")
 end
 function wudangBegin()
-    if newbie == 1 then return zhunbeineili(wdstart) else return wdstart() end
+    if GetRoleConfig("CheckNeili_InAdvance") == true then return zhunbeineili(wdstart) else return wdstart() end
 end
 function wdstart()
     return prepare_lianxi(wudangStart)
@@ -139,6 +139,8 @@ function wudangFail()
     if job.level == '已入化境' then
         job.level = '未知'
         messageShow('武当任务：当前接到【已入化境】任务，现在开始化任务等级为【' .. job.level .. '】！', 'red')
+        quest.desc = "已入化境"
+        quest.update()
         return check_bei(wudangHuajing_GoAgain)
     end
     wudangTriggerDel()

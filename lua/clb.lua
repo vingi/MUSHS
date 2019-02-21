@@ -91,7 +91,7 @@ function clbGo()
     return go(clbaskjob,"长乐帮","小厅")
 end
 function clbaskjob()
-    if newbie==1 then return zhunbeineili(clbStart) else return clbStart() end
+    if GetRoleConfig("CheckNeili_InAdvance") == true then return zhunbeineili(clbStart) else return clbStart() end
 end
 function clbStart()
     EnableTriggerGroup("clbAsk",true)
@@ -170,7 +170,7 @@ function clbFindAct()
     DeleteTimer("clb")
     job.flag()
     exe('look')
-	messageShow('长乐帮任务：开始寻找【'..dest.area .. dest.room ..'】的'..'【'.. job.target ..'】！')
+--	messageShow('长乐帮任务：开始寻找【'..dest.area .. dest.room ..'】的'..'【'.. job.target ..'】！')
     return find()
 end
 function clbTarget(n,l,w)
@@ -236,7 +236,7 @@ function clbwho(n,l,w)
 			ColourNote ("gold","black","房间无法到达，自动返回!")
 			return check_halt(clbBack)
 		else
-			messageShow('长乐帮任务⑵：开始前往【'..job.where2..'】寻找玩家！【'..w[3]..'】，id【'..w[4]..'】')
+--			messageShow('长乐帮任务⑵：开始前往【'..job.where2..'】寻找玩家！【'..w[3]..'】，id【'..w[4]..'】')
 			return check_halt(clbFindPlayer)
 		end
 end

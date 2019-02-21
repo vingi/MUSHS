@@ -11,10 +11,6 @@
 
 eg.
 
-require "check
-  check (SetVariable ("abc", "def"))  --> works ok
-  check (SetVariable ("abc-", "def")) --> The name of this object is invalid
-
 --]]
 
 MissionPunishment = { }
