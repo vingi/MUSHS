@@ -11,6 +11,12 @@ eg.
 
 --]]
 
+huashanJob = {
+    jobStep = 0
+}
+
+huashanJob.jobStep = 0
+
 local huashanArea1 = {
     ["菜地"] = "华山村",
     ["杂货铺"] = "华山村",
@@ -63,7 +69,7 @@ local huashanArea1 = {
 job.list["huashan"] = "华山惩恶扬善"
 
 function huashan()
-    hsjob2 = 0
+    huashanJob.jobStep = 0
     dis_all()
     huashan_trigger()
     job.name = "huashan"
@@ -81,7 +87,7 @@ jobFindFail["huashan"] = "huashanFindFail"
 -- ----------------------------------------------------------
 function Get_huashanjob_step()
     local word_huashanjob_step = "①"
-    if hsjob2 == 1 then
+    if huashanJob.jobStep == 1 then
         word_huashanjob_step = "②"
     end
     return word_huashanjob_step
@@ -210,7 +216,7 @@ function huashan_fangqi()
     kezhiwugongclose()
     huashan_triggerDel()
     job.last = "huashan"
-    hsjob2 = 0
+    huashanJob.jobStep = 0
     -- if job.zuhe["wudang"] then
     --   job.last='wudang'
     -- end
@@ -229,23 +235,21 @@ end
 
 function huashan_npc()
     exe("nick 华山任务中")
-    if hsjob2 < 1 then 
-        quest.name = "华山任务①"
-    else
-        quest.name = "华山任务②"
-    end
-    quest.desc = ""
-    quest.update()
     EnableTriggerGroup("huashan_accept", false)
     job.last = "huashan"
-    if hsjob2 < 1 then
+    if huashanJob.jobStep < 1 then
         job.time.b = os.time()
         messageShow("华山任务①：开始任务。")
+        quest.name = "华山任务①"
         return check_bei(huashan_npc_go)
     else
         messageShow("华山任务②：开始任务。")
+        quest.name = "华山任务②"
         return check_bei(huashan_npc_go2)
     end
+    quest.desc = ""
+    quest.update()
+ 
 end
 
 function huashan_npc_go()
@@ -485,7 +489,7 @@ function huashan_heal()
 end
 
 function huashan_neili()
-    hsjob2 = 1
+    huashanJob.jobStep = 1
     if GetRoleConfig("CheckNeili_InAdvance") == false then
         return huashan_npc()
     else
@@ -508,7 +512,7 @@ function huashan_yls_ask(n, l, w)
     if w[2] == "二" then
         return huashan_yls_back()
     end
-    if w[2] == "一" and dohs2 == 0 then
+    if w[2] == "一" and GetRoleConfig("HuashanJob_Step2") ~= true then
         return check_bei(huashan_yls_lbcx)
     else
         return check_bei(huashan_heal)
@@ -549,7 +553,7 @@ function huashan_finish()
     EnableTriggerGroup("huashan_over", false)
     EnableTriggerGroup("huashanQuest", true)
     flag.times = 1
-    hsjob2 = 0
+    huashanJob.jobStep = 0
     exe("drop ling pai")
     -- jobExpTongji()
     huashan_triggerDel()

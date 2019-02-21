@@ -29,10 +29,13 @@ settings= {
     Auto_hqgzc_10times = true,
 
     -- 是否 作任务之前 先double内力
-    CheckNeili_InAdvance = false;
+    CheckNeili_InAdvance = false,
 
     -- 当打架无内力时(吃药在CD状态),执行的加内动作(无则可不填), 一些门派有恢复内力的内功, 如华山有yun zixia
     Recover_neili = "yun zixia",
+
+    -- 是否作华山2任务
+    HuashanJob_Step2 = true,
 }
 
 

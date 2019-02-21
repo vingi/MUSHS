@@ -174,27 +174,6 @@ function button_smyteam()
     -- cursor
     0)
     -- flags
-    local _mousedown_dohs = mousedown_dohs()
-    _G["at_mousedown_dohs"] = _mousedown_dohs
-    WindowAddHotspot(win2, "btn_dohs",
-    0, 160, 140, 180,
-    -- rectangle
-    "",
-    -- MouseOver
-    "",
-    -- CancelMouseOver
-    "at_mousedown_dohs",
-    -- MouseDown
-    "",
-    -- CancelMouseDown
-    "",
-    -- MouseUp
-    "左键点击开关",
-    -- tooltip text
-    cursor or 1,
-    -- cursor
-    0)
-    -- flags
     local _mousedown_go_on_smy = mousedown_go_on_smy()
     _G["at_mousedown_go_on_smy"] = _mousedown_go_on_smy
     WindowAddHotspot(win2, "btn_go_on_smy",
@@ -275,11 +254,6 @@ function button_smyteam()
     else
         switch_name8 = "送信等杀手--开"
     end
-    if dohs2 == 0 then
-        switch_name9 = "华山任务②--关"
-    else
-        switch_name9 = "华山任务②--开"
-    end
     if go_on_smy == 1 then
         switch_name11 = "重启后颂摩崖-开"
     else
@@ -318,16 +292,16 @@ function button_smyteam()
     WindowText(win2, "f", switch_name8, 0, 140, 140, 160, ColourNameToRGB("gold"), false)
     -- not Unicode
 
-    WindowText(win2, "f", switch_name9, 0, 160, 140, 180, ColourNameToRGB("gold"), false)
+    -- WindowText(win2, "f", switch_name9, 0, 160, 140, 180, ColourNameToRGB("gold"), false)
     -- not Unicode
 
---    WindowText(win2, "f", switch_name10, 0, 180, 140, 200, ColourNameToRGB("gold"), false)  -- 原 任务检查内力 开关
+    -- WindowText(win2, "f", switch_name10, 0, 180, 140, 200, ColourNameToRGB("gold"), false)  -- 原 任务检查内力 开关
     -- not Unicode
 
-    WindowText(win2, "f", switch_name11, 0, 180, 140, 200, ColourNameToRGB("gold"), false)
+    WindowText(win2, "f", switch_name11, 0, 160, 140, 180, ColourNameToRGB("gold"), false)
     -- not Unicode
 
-    WindowText(win2, "f", switch_name12, 0, 200, 140, 220, ColourNameToRGB("gold"), false)
+    WindowText(win2, "f", switch_name12, 0, 180, 140, 200, ColourNameToRGB("gold"), false)
     -- not Unicode
 
 
@@ -539,40 +513,6 @@ function mousedown_waitkill()
                 -- raised, filled, softer, flat 0x909090
                 WindowFont(win2, "f", "新宋体", 10, true, false, false, false)
                 WindowText(win2, "f", switch_name8, 0, 140, 140, 160, ColourNameToRGB("gold"), false)
-                -- not Unicode
-                WindowShow(win2, true)
-                -- show it
-            end
-        end
-    end
-end
-function mousedown_dohs()
-    return function(flags, hotspot_id)
-
-        if hotspot_id == 'btn_dohs' then
-            if dohs2 == 0 then
-                dohs2 = 1
-            else
-                dohs2 = 0
-            end
-            if flags == 16 then
-
-                if dohs2 == 1 then
-
-                    switch_name9 = "华山任务②--开"
-
-
-                else
-
-                    switch_name9 = "华山任务②--关"
-
-
-                end
-
-                WindowRectOp(win2, miniwin.rect_fill, 0, 160, 140, 180, ColourNameToRGB("black"))
-                -- raised, filled, softer, flat 0x909090
-                WindowFont(win2, "f", "新宋体", 10, true, false, false, false)
-                WindowText(win2, "f", switch_name9, 0, 160, 140, 180, ColourNameToRGB("gold"), false)
                 -- not Unicode
                 WindowShow(win2, true)
                 -- show it
