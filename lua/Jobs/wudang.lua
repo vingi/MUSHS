@@ -68,6 +68,12 @@ jobFindAgain["wudang"] = "wudangFindAgain"
 jobFindFail = jobFindFail or { }
 jobFindFail["wudang"] = "wudangFindFail"
 function wudangFindAgain()
+    if flag.times == 3 and dest.area == '华山村' and dest.room == '铁匠铺' then
+        return go(wudangFindAct, '华山村', '菜地')
+    end
+    if flag.times == 3 and dest.area == '襄阳城' and dest.room == '山间空地' then
+        return go(wudangFindAct, '襄阳郊外', '瀑布')
+    end
     return go(wudangFindAct, dest.area, dest.room)
 end
 function wudangFindFail()
@@ -171,9 +177,7 @@ function wudangConsider(n, l, w)
         -- Note(job.where)
     end
     job.room, job.area = getAddr(job.where)
-    -- if job.area=="明教" and string.find(job.room,"字门") then
-    -- job.room="紫杉林"
-    -- end
+    if job.area == "明教" and(job.room == "紫杉林" or string.find(job.room, "字门")) then job.room = "练武场" end
 end
 function wudangNpc(n, l, w)
     EnableTriggerGroup("wudangAccept", false)
@@ -192,6 +196,7 @@ function wudangFindGo()
     quest.location = job.where
     quest.target = job.target
     quest.desc = ""
+    quest.note = ""
     quest.update()
     -- pfmjineng()
     setLocateRoomID = 'wudang/sanqing'

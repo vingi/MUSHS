@@ -125,6 +125,7 @@ function hqgzc()
     job.name = "hqgzc"
     quest.name = "洪七公作菜"
     quest.desc = ""
+    quest.note = ""
     quest.update()
     checkBags()
     return check_halt(hqgzcCheckSilver)
@@ -151,6 +152,7 @@ end
 function hqgzcGo()
     quest.status = "去丐帮接任务"
     quest.desc = ""
+    quest.note = ""
     quest.update()
     return go(hqgzcBegin, "丐帮", "后院")
 end
@@ -482,6 +484,7 @@ function hqgzcFinish(n, l, w)
     messageShow("做菜任务：完成！获得【" .. w[2] .. "】点潜能！")
     messageShowT("做菜任务：任务完成，用时:【" .. job.time.over .. "】秒。")
     quest.desc = ""
+    quest.note = ""
     quest.update()
     job.zctime = 0
     flag.idle = 0
@@ -502,6 +505,7 @@ function hqgzcFinishGold(n, l, w)
         messageShow("做菜任务：完成！获得【" .. w[2] .. "】锭黄金！")
         messageShowT("做菜任务：任务完成，用时:【" .. job.time.over .. "】秒。")
         quest.desc = ""
+        quest.note = ""
         quest.update()
         if hqgzcCnt >= 10 then
             hqgzcFinish_Over10TimesHandle()
@@ -517,6 +521,7 @@ function hqgzcFinishGold(n, l, w)
         messageShow("做菜任务：完成！获得【" .. w[2] .. "】锭黄金！")
         messageShowT("做菜任务：任务完成，用时:【" .. job.time.over .. "】秒。")
         quest.desc = ""
+        quest.note = ""
         quest.update()
         job.zctime = 0
         flag.idle = 0
@@ -531,6 +536,7 @@ function hqgzcFinish1(n, l, w)
     messageShow("做菜任务：失败！")
     messageShowT("做菜任务：任务失败，用时:【" .. job.time.over .. "】秒。")
     quest.desc = ""
+    quest.note = ""
     quest.update()
     job.zctime = 0
     flag.idle = 0

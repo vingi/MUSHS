@@ -359,6 +359,8 @@ end
 function kezhiwugongValue(kzValue,i,kezhiwugongName)
 	kezhiwugongsuccess(kzValue,kezhi_order[kzValue],i)
 	ColourNote ("red","blue",npc_name[i].."使用武功【"..kezhiwugongName.."】,武功属性："..kzValue)
+    quest.note = npc_name[i].."使用武功【"..kezhiwugongName.."】,武功属性："..kzValue
+    quest.update()
 end
 function kezhiwugongcheck1(n,l,w)
 	kezhiwugongcheck(1,n,l,w)

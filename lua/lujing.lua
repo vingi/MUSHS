@@ -385,6 +385,37 @@ function go(job, area, room, sId)
     return check_halt(go_locate)
     -- end
 end
+-- ----------------------------------------------------------
+-- 设定当前位置, 达到简化版Locate()的效果. (复杂地型不可用, 因缺少room_relation等参数)
+-- ----------------------------------------------------------
+function go_direct_pre(localarea, localroom, sID)
+    sour.id = sID
+    locl.area = localarea
+    locl.room = localroom
+    locl.room_relation = ""
+    locl.where = locl.area..locl.room
+    road.id = nil
+end
+-- ----------------------------------------------------------
+-- 在确定当前位置的前提下, 不需要Locate直接查找路径前往, 含checkwait功能
+-- 注意 若有带sID参数,则需要sID(当前房间英文名),与localroom的中文名相匹配, 否则会造成错误
+-- 如 localroom = "解脱坡" 则当有sID时,需必须为相对应的 "emei/jietuopo"
+-- 通常sID用于某房间名有多个同名的情况下的唯一值鉴别, 如 "书房",中文同名很多,英文名可用于唯一值鉴别
+-- 注意 此为非安全方法, 使用时应避免在迷宫,树林等地使用, 复杂地型请使用安全方法 go()
+-- ----------------------------------------------------------
+function go_direct(job, localarea, localroom, destarea, destroom, sID)
+    go_direct_pre(localarea, localroom, sID)
+    go_setting(job, destarea, destroom, sId)
+    check_busy(path_consider)
+end
+-- ----------------------------------------------------------
+-- 功能同go_direct, 不含检查busy功能 
+-- ----------------------------------------------------------
+function go_direct_pure(job, localarea, localroom, destarea, destroom, sID)
+    go_direct_pre(localarea, localroom, sID)
+    go_setting(job, destarea, destroom, sId)
+    path_consider()
+end
 
 function go_locate() 
     locate()
@@ -565,10 +596,28 @@ function path_consider(skip_stepto)
         Note('Path Consider GetRooms Error!')
         return false
     end
+
+--    path_Debug()
+
     path_create()
     road.i = skip_stepto
     -- return check_halt(path_start)
     return check_bei(path_start)
+end
+
+function path_Debug()
+    if sour ~= nil then
+        print(" -- sour below: ")
+        tprint(sour)
+    end
+    if dest ~= nil then
+        print(" -- dest below: ")
+        tprint(dest)
+    end
+    if locl ~= nil then
+        print(" -- locl below: ")
+        tprint(locl)
+    end
 end
 
 function path_create()
@@ -684,10 +733,10 @@ find_nobody = function()
         chats_log('定位系统：未能在【' .. job.area .. job.room .. '】找到【' .. job.target .. '】！', 'xueshanFindFail')
     end
     if job.name == 'tdh' then
-        chats_log('定位系统：未能在【' .. job.area .. job.room .. '】找到革命同志！', 'tdhFindFail')
+        chats_log('定位系统：未能在【' .. job.area .. job.room .. '】找到【' .. job.target .. '】！', 'tdhFindFail')
     end
     if job.name == 'huashan' then
-        chats_log('定位系统：未能在【' .. dest.area .. dest.room .. '】找到革命同志！', 'huashanFindFail')
+        chats_log('定位系统：未能在【' .. dest.area .. dest.room .. '】找到【' .. job.target .. '】！', 'huashanFindFail')
     end
     if job.name == "Dummyjob" then
         chats_log('定位系统：未能在【' .. job.area .. job.room .. '】找到【' .. job.target4 .. '】！')

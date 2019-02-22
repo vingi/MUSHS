@@ -25,7 +25,7 @@ eg.
 function GetRoleConfig(arg)
     local rolename = GetVariable("id")
     if rolename ~= nil and string.len(rolename) > 0 then
-        rolename = "role."..rolename
+        rolename = "Role."..rolename
         local role = require(rolename)
         if role.settings[arg] ~= nil then
             return role.settings[arg]

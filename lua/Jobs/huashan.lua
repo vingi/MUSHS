@@ -240,24 +240,28 @@ function huashan_npc()
     if huashanJob.jobStep < 1 then
         job.time.b = os.time()
         messageShow("华山任务①：开始任务。")
-        quest.name = "华山任务①"
+        quest.name = "华山任务㈠"
+        quest.desc = ""
+        quest.note = ""
+        quest.update()
         return check_bei(huashan_npc_go)
     else
         messageShow("华山任务②：开始任务。")
-        quest.name = "华山任务②"
+        quest.name = "华山任务㈡"
+        quest.desc = ""
+        quest.note = ""
+        quest.update()
         return check_bei(huashan_npc_go2)
     end
-    quest.desc = ""
-    quest.update()
- 
+
 end
 
 function huashan_npc_go()
-    go(huashan_npc_get, "华山", "山脚下", "huashan/zhengqi")
+    go_direct(huashan_npc_get,"华山","正气堂", "华山", "山脚下", "huashan/zhengqi")
 end
 
 function huashan_npc_go2()
-    go(huashan_npc_get, "华山", "山脚下", "huashan/jitan")
+    go_direct(huashan_npc_get,"华山", "祭坛", "华山", "山脚下", "huashan/jitan")
 end
 
 function huashan_npc_get()
@@ -270,7 +274,7 @@ end
 function huashan_npc_goon()
     quest.status = "闲逛中"
     quest.update()
-    exe("n;e;e;e;e;e;")
+    exe("n;e;e;")
     locate()
     return check_busy(huashan_ssl, 1)
 end
@@ -289,6 +293,8 @@ end
 
 function huashan_where(n, l, w)
     job.where = tostring(w[3])
+    quest.location = job.where
+    quest.update()
     -- print("1"..job.where)
 end
 
@@ -324,7 +330,7 @@ function huashan_find(n, l, w)
         messageShow("华山任务：任务地点【" .. job.where .. "】不可到达，任务放弃。", "Plum")
         return check_halt(huashanFindFail)
     end
-    messageShow("华山任务"..Get_huashanjob_step().."：追杀逃跑到【" .. job.where .. "】的【" .. job.target .. "】。")
+    messageShow("华山任务" .. Get_huashanjob_step() .. "：追杀逃跑到【" .. job.where .. "】的【" .. job.target .. "】。")
     locl.room = "树林"
     -- 优化华山任务路径(由于当前处于树林迷宫)
     -- 这里的目标有两种可能 1. 目标在当前迷宫里  2. 目标在当前迷宫之外
@@ -332,6 +338,7 @@ function huashan_find(n, l, w)
         return go(huashanFindAct, job.area, job.room, "huashan/shulin")
     else
         -- 分为两步行走
+        go_direct_pre("华山", "树林", "huashan/shulin")
         go_setting(huashanFindAct, job.area, job.room, "huashan/shulin")
         -- 因rooms.lua中关于"华山-树林/松树林" 有异常, 故跳过路径中的第一步(包含#10 west), 直接从跳二步(west 从'树林'进入'松树林'),然后第三跳call #hsssl
         return path_consider(1)
@@ -412,7 +419,7 @@ function huashan_cut()
     fight.time.e = os.time()
     fight.time.over = fight.time.e - fight.time.b
 
-    messageShowT("华山任务"..Get_huashanjob_step().."：战斗用时:【" .. fight.time.over .. "】秒,搞定蒙面人：【" .. job.target .. "】。")
+    messageShowT("华山任务" .. Get_huashanjob_step() .. "：战斗用时:【" .. fight.time.over .. "】秒,搞定蒙面人：【" .. job.target .. "】。")
     return check_halt(huashan_cut_act)
 end
 

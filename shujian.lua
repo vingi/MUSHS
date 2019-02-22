@@ -2,33 +2,21 @@ require "common"
 require "wait"
 require "tprint"
 require "Entity"
-require "role"
+require "Role"
+require "rooms"
 require "lujing"
 require "chat"
-require "job"
-require "rooms"
+require "Study"
+require "Jobs"
 -- require "emoted"smyteam
-require "xuncheng"
 require "skill"
 require "weapon"
 -- require "hubiao"
 require "show_switch"
 require "gag"
 require "dummy"
-require "husong"
-require "xueshan"
-require "wudang"
-require "clb"
-require "huashan"
-require "songmoya"
-require "tdh"
-require "songxin"
-require "hqgzc"
-require "dolost"
 require "kezhiwugong"
 require "armor"
-require "study"
-require "MissionPunishment"
 require "xiaobao"
 statusbar = require "StatusBar"  -- hp×´Ì¬À¸²å¼þ
 -- ×´Ì¬À¸ÆôÓÃ
@@ -2185,6 +2173,9 @@ function checkBagsOver()
     if Bag["´ÖÉþ×Ó"] and Bag["´ÖÉþ×Ó"].cnt > 2 then
         exe("drop cu shengzi 2")
     end
+    if Bag["Ä¾½£"] and Bag["Ä¾½£"].cnt > 1 then
+        exe("drop mu jian 2")
+    end
     -- print(cty_cur,nxw_cur,hxd_cur)
     if tmp.bags ~= nil then
         return tmp.bags()
@@ -2705,6 +2696,7 @@ function check_food(Force2Full)
     quest.status = "ÕýÔÚ¸ÏÂ·ÖÐ"
     quest.target = ""
     quest.location = ""
+    quest.note = ""
     quest:update()
     exe("hp;unset no_kill_ap;yield no")
     if (hp.food < 60 or hp.water < 60) and hp.exp < 500000 then

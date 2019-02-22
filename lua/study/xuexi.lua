@@ -70,7 +70,9 @@ function xuexi()
     quest.status = ""
     quest.target = ""
     quest.location = "回门派"
-    quest:update()
+    quest.desc = ""
+    quest.note = ""
+    quest.update()
     messageShow("回门派学习")
     master = { }
     if hp.exp < 150000 then

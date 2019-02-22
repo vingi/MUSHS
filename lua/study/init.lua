@@ -16,8 +16,8 @@ require "check
 
 --]]
 
-require "/study/lingwu"
-require "/study/xuexi"
-require "/study/literate"
-require "/study/duanzhao"
-require "/study/zhizhao"
+require "/Study/lingwu"
+require "/Study/xuexi"
+require "/Study/literate"
+require "/Study/duanzhao"
+require "/Study/zhizhao"
