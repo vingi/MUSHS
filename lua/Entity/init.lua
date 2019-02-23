@@ -23,3 +23,4 @@ require "/Entity/drug"
 require "/Entity/drugBuy"
 require "/Entity/drugPoison"
 require "/Entity/flag"
+funcHook = require("/Entity/funcHook")

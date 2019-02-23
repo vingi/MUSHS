@@ -1218,7 +1218,7 @@ function check_jobx()
     if smydie * 1 >= smyall * 1 then
         job.zuhe["songmoya"] = nil
     end
-    if job.zuhe["husong"] and(score.party ~= "少林派" or hp.exp < 2000000) then
+    if job.zuhe["husong"] and (score.party ~= "少林派" or hp.exp < 2000000) then
         job.zuhe["husong"] = nil
     end
     if job.zuhe["songmoya"] and job.last ~= "songmoya" and mytime <= os.time() then
@@ -1657,6 +1657,7 @@ function halt_timer_set()
     -- EnableTriggerGroup("check_halt",true)
     exe("halt")
 end
+
 function haltok()
     haltbusy = 0
     EnableTriggerGroup("check_halt", false)
@@ -1667,7 +1668,21 @@ function haltok()
     if halthook == nil then
         halthook = test
     end
-    return halthook()
+    if type(halthook) == "table" then
+        if type(halthook.func) == "function" then
+            if halthook.arg4 ~= nil then
+                return halthook.func(halthook.arg1, halthook.arg2, halthook.arg3, halthook.arg4)
+            elseif halthook.arg3 ~= nil then
+                return halthook.func(halthook.arg1, halthook.arg2, halthook.arg3)
+            elseif halthook.arg2 ~= nil then
+                return halthook.func(halthook.arg1, halthook.arg2)
+            else
+                return halthook.func(halthook.arg1)
+            end
+        end
+    else
+        return halthook()
+    end
 end
 busyhook = test
 function check_bei(func, p_cmd)
