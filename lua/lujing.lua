@@ -1633,7 +1633,26 @@ yilidoor_over = function()
     if flag.find == 1 then return end
     return walk_wait()
 end
-
+yilicheckwds=function()
+	fastLocate()
+	if flag.find==1 then return end
+	wait.make(function()
+		wait.time(0.5)
+		return yilidoor_checkks()
+	end)
+end
+yilidoor_checkks=function()
+	if locl.room=='ÄÏ³ÇÃÅ' then
+	   return check_halt(yilidoor_overs)
+	else
+	   return go_locate()
+	end
+end
+yilidoor_overs=function()
+   exe('s')
+   if flag.find==1 then return end
+   return walk_wait()
+end
 duhe_trigger = function()
     EnableTriggerGroup("prepare_neili", false)
     DeleteTriggerGroup("prepare_neili")
