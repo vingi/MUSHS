@@ -377,6 +377,11 @@ function go_setting(job, area, room, sId)
 end
 
 function go(job, area, room, sId)
+    quest.status = "正在赶路中"
+    if area ~= nil and room ~= nil then
+        quest.location = area .. room
+    end
+    quest.update()
     go_setting(job, area, room, sId)
     -- if sour.id ~= nil then
     --   return check_busy(path_consider)
@@ -393,7 +398,7 @@ function go_direct_pre(localarea, localroom, sID)
     locl.area = localarea
     locl.room = localroom
     locl.room_relation = ""
-    locl.where = locl.area..locl.room
+    locl.where = locl.area .. locl.room
     road.id = nil
 end
 -- ----------------------------------------------------------
@@ -404,20 +409,30 @@ end
 -- 注意 此为非安全方法, 使用时应避免在迷宫,树林等地使用, 复杂地型请使用安全方法 go()
 -- ----------------------------------------------------------
 function go_direct(job, localarea, localroom, destarea, destroom, sID)
+    quest.status = "正在赶路中"
+    if area ~= nil and room ~= nil then
+        quest.location = area .. room
+    end
+    quest.update()
     go_direct_pre(localarea, localroom, sID)
     go_setting(job, destarea, destroom, sId)
     check_busy(path_consider)
 end
 -- ----------------------------------------------------------
--- 功能同go_direct, 不含检查busy功能 
+-- 功能同go_direct, 不含检查busy功能
 -- ----------------------------------------------------------
 function go_direct_pure(job, localarea, localroom, destarea, destroom, sID)
+    quest.status = "正在赶路中"
+    if area ~= nil and room ~= nil then
+        quest.location = area .. room
+    end
+    quest.update()
     go_direct_pre(localarea, localroom, sID)
     go_setting(job, destarea, destroom, sId)
     path_consider()
 end
 
-function go_locate() 
+function go_locate()
     locate()
     checkWait(path_consider, 0.3)
 end
@@ -429,7 +444,8 @@ end
 function path_consider(skip_stepto)
     -- print("call path_consider")
     -- 是否跳转
-    skip_stepto = skip_stepto or 0 -- 是否跳转至某一步... 如路径有5段, 默认从第1段开始,如想直接跳至从第3段开始,可传参 path_consider(2)
+    skip_stepto = skip_stepto or 0
+    -- 是否跳转至某一步... 如路径有5段, 默认从第1段开始,如想直接跳至从第3段开始,可传参 path_consider(2)
 
     EnableTrigger("hp12", false)
     locate_finish = 0
@@ -597,7 +613,7 @@ function path_consider(skip_stepto)
         return false
     end
 
---    path_Debug()
+    --    path_Debug()
 
     path_create()
     road.i = skip_stepto
@@ -683,10 +699,10 @@ function path_start()
     else
         exe(l_road)
         exe('yun jingli')
---        print("road.i:"..road.i)
---        tprint(road.detail)
---        print("run path_start: " .. l_road)
---        print("locl.room:"..locl.room.." dest.room:"..dest.room)
+        --        print("road.i:"..road.i)
+        --        tprint(road.detail)
+        --        print("run path_start: " .. l_road)
+        --        print("locl.room:"..locl.room.." dest.room:"..dest.room)
         return walk_wait()
     end
 end
@@ -1442,7 +1458,6 @@ function wayMl()
         else
             tmp.way = "north"
             exe(tmp.way)
-            check_step_num1 = check_step_num1 + 1
             fastLocate()
             return checkWait(wayMl, 0.07)
         end
@@ -1453,7 +1468,6 @@ function wayMl()
         else
             tmp.way = "south"
             exe('south;south')
-            check_step_num1 = check_step_num1 + 2
             locate()
             return checkWait(wayMl, 0.1)
         end
@@ -1467,7 +1481,6 @@ function wayMl()
         tmp.way = wayt[tmp.way]
     end
     exe(tmp.way)
-    check_step_num1 = check_step_num1 + 1
     fastLocate()
     return checkWait(wayMl, 0.1)
 end
@@ -1505,9 +1518,11 @@ hscaidi_out = function()
     EnableTriggerGroup("hscaidi", false)
     return walk_wait()
 end
+-----------------------吐谷浑伏俟城------------------
 eaea = function()
-    locate()
-    return check_bei(eaea_start, 1)
+    locate_finish = 0
+    fastLocate()
+    return check_bei(eaea_start, 0.5)
 end
 eaea_start = function()
     if string.find(locl.room, '吐谷浑伏俟城') then
@@ -1520,6 +1535,105 @@ end
 eaea_over = function()
     return walk_wait()
 end
+
+eaeab = function()
+    locate_finish = 0
+    fastLocate()
+    return check_bei(eaea_startb, 0.5)
+end
+eaea_startb = function()
+    if string.find(locl.room, '吐谷浑伏俟城') then
+        exe('west')
+        return eaea_overb()
+    else
+        return go(road.act)
+    end
+end
+eaea_overb = function()
+    return walk_wait()
+end
+
+eaeac = function()
+    locate_finish = 0
+    fastLocate()
+    return check_bei(eaea_startc, 0.5)
+end
+eaea_startc = function()
+    if string.find(locl.room, '吐谷浑伏俟城') then
+        exe('northwest')
+        return eaea_overc()
+    else
+        return go(road.act)
+    end
+end
+eaea_overc = function()
+    return walk_wait()
+end
+
+eaead = function()
+    locate_finish = 0
+    fastLocate()
+    return check_bei(eaea_startd, 0.5)
+end
+eaea_startd = function()
+    if string.find(locl.room, '吐谷浑伏俟城') then
+        exe('north')
+        return eaea_overd()
+    else
+        return go(road.act)
+    end
+end
+eaea_overd = function()
+    return walk_wait()
+end
+----------------------------------伊犁城门------------------------------------
+check_yilitriger = function()
+    DeleteTriggerGroup("yilidoorr")
+    -- create_trigger_t('yilidoorr1','^>*\\s*要看什么','','yilidoor_close')
+    -- create_trigger_t('yilidoorr2','^>*\\s*城中心','','yilidoor_open')
+    create_trigger_t('yilidoorr3', "^(> )*(你分开双手，黑气慢慢沉下|你将内息走满一个周天，只感到全身通泰|你感到自己和天地融为一体，全身清爽如浴春风，忍不住舒畅的呻吟了一声，缓缓睁开了眼睛)", '', 'yilicheckwd')
+    -- SetTriggerOption("yilidoorr1","group","yilidoorr")
+    -- SetTriggerOption("yilidoorr2","group","yilidoorr")
+    SetTriggerOption("yilidoorr3", "group", "yilidoorr")
+    EnableTriggerGroup("yilidoorr", false)
+end
+yilicheckwd = function()
+    -- check_yilitriger()
+    -- EnableTriggerGroup("yilidoorr",true)
+    -- exe('look north')
+    fastLocate()
+    if flag.find == 1 then return end
+    wait.make( function()
+        wait.time(0.5)
+        return yilidoor_checkk()
+    end )
+end
+yilidoor_close = function()
+    exe('lianfc;yun jingli;yun qi;dazuo ' .. hp.dazuo)
+end
+yilidoor_open = function()
+    wdyilidz = 0
+
+end
+yilidoor_checkk = function()
+    if locl.room_relation == '南城门｜伊犁河南城门' then
+        wait.make( function()
+            wait.time(1)
+            return yilicheckwd()
+        end )
+    elseif locl.room_relation == '城中心｜南城门｜伊犁河南城门' then
+        -- EnableTriggerGroup("yilidoorr",false)
+        return check_halt(yilidoor_over)
+    else
+        return go_locate()
+    end
+end
+yilidoor_over = function()
+    exe('n')
+    if flag.find == 1 then return end
+    return walk_wait()
+end
+
 duhe_trigger = function()
     EnableTriggerGroup("prepare_neili", false)
     DeleteTriggerGroup("prepare_neili")

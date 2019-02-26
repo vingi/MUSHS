@@ -307,7 +307,7 @@ weaponRepair = function(p_weapon)
     return weaponRepairGo()
 end
 weaponRepairQu = function()
-    exe("qu tiechui")
+    exe("qu tiechui;i")
     checkBags()
     return check_bei(weaponRepairQuCheck, 1)
 end

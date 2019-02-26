@@ -689,8 +689,8 @@ function hp_trigger()
     create_trigger_t('hp21', "^(> )*你必须先用 enable 选择你要用的特殊内功。", '', 'jifaOver')
     create_trigger_t('hp22', "^(> )*(\\D*)目前学过(\\D*)种技能：", '', 'show_skills')
     create_trigger_t('hp23', "^(> )*你的背囊里有：", '', 'show_beinang')
-    create_trigger_t('hp24', '^(> )*你眼中一亮看到\\D*的身边掉落一件(\\D*)。', '', 'fqyyArmorGet')
-    create_trigger_t('hp25', '^(> )*你捡起一件(\\D*)胄。', '', 'fqyyArmorCheck')
+    create_trigger_t('hp24','^(> )*你眼中一亮看到\\D*的身边掉落一(件|副|双|袭|顶|个|条|对)(\\D*)(手套|靴|甲胄|腰带|披风|彩衣|头盔)。','','fqyyArmorGet')
+    create_trigger_t('hp25','^(> )*你捡起一(件|副|双|袭|顶|个|条|对)(\\D*)(手套|靴|甲胄|腰带|披风|彩衣|头盔)。','','fqyyArmorCheck')
     SetTriggerOption("hp24", "group", "hp")
     SetTriggerOption("hp25", "group", "hp")
     SetTriggerOption("hp1", "group", "hp")
@@ -2707,8 +2707,8 @@ function check_food(Force2Full)
     end
     -- if job.zuhe["wudang"] then wait_kill='yes' end
     exe("nick 去武当吃喝;remove all;wear all")
-    quest.name = "去武当吃喝"
-    quest.status = "正在赶路中"
+    quest.name = "全面检查状态"
+    quest.status = ""
     quest.target = ""
     quest.location = ""
     quest.note = ""
@@ -4342,4 +4342,12 @@ function dzxy_finish()
     exe("unwield " .. leweapon)
     exe("jump down")
     return go(xueshan_finish_ask, "大雪山", "入幽口")
+end
+
+function recordtime()
+    messageShowT("船到岸: "..os.date("%Y-%m-%d %H:%M:%S", os.time()))
+end
+
+function recordtime_leave()
+    messageShowT("开船离岸: "..os.date("%Y-%m-%d %H:%M:%S", os.time()))
 end

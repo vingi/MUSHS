@@ -440,7 +440,7 @@ function kezhiwugongsuccess(kezhi_cmd,k_order,npci)
 		if job.name~="songmoya" then
 			kezhiwugongkill(tflag)
 		end
-		if job.name~='xueshan' and job.name~='wudang' and job.name~='Dummyjob' and job.name~='songmoya' then
+		if job.name~='xueshan' and job.name~='wudang' and job.name~='Dummyjob' and job.name~='songmoya' and job.name ~= 'diemenglou' then
 			kezhiwugongclose()
 		end
 	end

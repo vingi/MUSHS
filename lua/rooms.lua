@@ -34173,20 +34173,21 @@ Room {
 	},
 }
 Room {
-	id = "xingxiu/silk8",
-	name = "吐谷浑伏俟城",
-	ways = {
-		["northwest"] = "xingxiu/silk9",
-		["north"] = "xingxiu/silk10",
-		["west"] = "xingxiu/bank",
-		["#eaea"] = "xingxiu/silk7",
-	},
-	lengths = {
-		["#eaea"] = 10,
-	},
-	nolooks = {
-		["#eaea"] = true,
-	},
+    id = "xingxiu/silk8",
+    name = "吐谷浑伏俟城",
+    ways = {
+            ["#eaeac"] = "xingxiu/silk9",
+            ["#eaead"] = "xingxiu/silk10",
+            ["#eaeab"] = "xingxiu/bank",
+            ["#eaea"] = "xingxiu/silk7",
+            --["east"] = "xingxiu/silk7",
+    },
+    --lengths = {
+            --["#eaea"] = 10,
+    --},
+    --nolooks = {
+            --["#eaea"] = true,
+    --},
 }
 Room {
 	id = "xingxiu/silk9",
@@ -34447,18 +34448,22 @@ Room {
 	},
 }
 Room {
-	id = "yili/yili1",
-	name = "南城门",
-	ways = {
-		["south"] = "yili/yilihe",
-		["north"] = "yili/yili2",
-	},
-	nolooks = {
-		["north"] = true,
-	},
-	lengths = {
-		["north"] = "if MidNight[locl.time] then return false else return 1 end",
-	},
+    id = "yili/yili1",
+    name = "南城门",
+    ways = {
+            ["#yilicheckwds"] = "yili/yilihe",
+            --["north"] = "yili/yili2",
+            ["#yilicheckwd"] = "yili/yili2",
+    },
+    nolooks = {
+            --["north"] = true,
+            ["#yilicheckwd"] = true,
+    },
+    lengths = {
+            --["north"] = "if MidNight[locl.time] or job.name=='wudang' then return false else return 1 end",
+            --["#yilicheckwd"] = "if job.name=='wudang' then return 5 else return false end",
+            ["#yilicheckwd"] = 2,
+    },
 }
 Room {
 	id = "yili/yili2",

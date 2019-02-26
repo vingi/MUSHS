@@ -174,10 +174,11 @@ function dml_check()
     end
     DeleteTimer('idle')
     dmlTriggers()
+    EnableTrigger('dmlfight1',true)
     exe('hp')
     print('蝶梦楼全自动挑战模块已启动.........')
     messageShow('蝶梦楼全自动模块：本日蝶梦楼备战中.........', 'yellow', 'black')
-    job.name='diemenglou'--添加这句话，蝶梦楼任务就算启动了！必须放在上边的message之下！
+    job.name='diemenglou' --添加这句话，蝶梦楼任务就算启动了！必须放在上边的message之下！
     if hp.food < 40 or hp.water < 40 then
         return go(dmlEat, '武当山', '茶亭')
     else

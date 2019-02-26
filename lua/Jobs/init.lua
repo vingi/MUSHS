@@ -51,5 +51,8 @@ require "/Jobs/clb"
 -- 天地会任务
 require "/Jobs/tdh"
 
+-- 蝶梦楼
+require "/Jobs/diemenglou"
+
 -- 任务惩罚处理
 require "/Jobs/MissionPunishment"
