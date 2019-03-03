@@ -66,8 +66,8 @@ function literateXue()
         return literateBack()
     end
     if hp.neili < 100 then
-        if nxw_cur > 0 then
-            exe("eat chuanbei wan")
+        if hqd_cur > 0 then
+            exe('eat huangqi dan')
         elseif hp.exp < 800000 then
             return xuexi()
         else
@@ -75,7 +75,7 @@ function literateXue()
         end
     end
     if hp.neili < 1000 then
-        exe("eat " .. drug.neili)
+        exe("eat " .. drug.neili2)
     end
     if hp.pot > master.times - 1 then
         yunAddInt()

@@ -35,7 +35,10 @@ settings= {
     Recover_neili = "",
 
     -- 是否作华山2任务
-    HuashanJob_Step2 = true,
+    HuashanJob_Step2 = false,
+
+    -- 是否利用任务惩罚期间作单次 蝶梦楼 任务
+    Auto_DML_DuringMissionPunishment = true,
 }
 
 

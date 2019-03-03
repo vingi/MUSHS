@@ -166,8 +166,8 @@ end
 function xuexiContinue()
     flag.idle = nil
     xuefull = 0
-    if hp.neili < 1000 and nxw_cur > 0 then
-        exe("eat chuanbei wan")
+    if hp.neili < 1000 and hqd_cur > 0 then
+        exe('eat huangqi dan')
     end
     if hp.neili < 600 and nxw_cur > 0 then
         exe("eat chuanbei wan")

@@ -1,4 +1,10 @@
 -- hqgzc
+
+hqgzcJob = {
+    Over10Times = false,
+    Cnt = 0
+}
+
 function hqgzcTrigger()
     cooking = { }
     cooking.hebei = { "神龙岛", "昆仑", "黑木崖", "天山", "恒山", "回疆", "昆仑", "明教", "星宿", "伊犁", "草原", "塘沽", "沧州", "兰州" }
@@ -459,15 +465,18 @@ function hqgzcFinish_AskGoldUnavaliableHandle()
 end
 -- 洪七公不肯给gold, 说明今天已经作超过10次了, 写入记录
 function hqgzcFinish_Over10TimesHandle()
-    print("今日洪七公任务超过十次,写入记录")
-    local fn = "logs\\hqgzc_mark_" .. score.id .. ".log"
-    local f = io.open(fn, "w")
-    local s = os.date("%Y%m%d%H")
-    f:write(s)
-    f:close()
-    hqgzcCnt = 0
+    --    print("今日洪七公任务超过十次,写入记录")
+    --    local fn = "logs\\hqgzc_mark_" .. score.id .. ".log"
+    --    local f = io.open(fn, "w")
+    --    local s = os.date("%Y%m%d%H")
+    --    f:write(s)
+    --    f:close()
+    hqgzcJob.Over10Times = true
+--    hqgzcCnt = 0
 end
+-- ---------------------------------------------------------------
 -- 洪七公作菜, 要不到黄金奖励的异常情况处理
+-- ---------------------------------------------------------------
 function hqgzcFinish_AskGold_ExceptionHandle()
     wait.make(
     function()
@@ -475,6 +484,27 @@ function hqgzcFinish_AskGold_ExceptionHandle()
         return exe("ask hong qigong about finish")
     end
     )
+end
+-- ---------------------------------------------------------------
+-- 获取今天作的洪七公作菜的次数
+-- ---------------------------------------------------------------
+function hqgzcJobTimesToday()
+    local times = 0
+    local todaystr = tostring(common.date()).." 06:00:00"
+    local tsql = "SELECT count(*) FROM [ActivityRecord] where ActivityName = '洪七公作菜' and CreateTime > '" .. todaystr .. "'"
+    local db = DBHelper:new()
+    times = db:GetRowAmount(tsql)
+    return times
+end
+-- ---------------------------------------------------------------
+-- 完成一次洪七公作菜, 将记录写入数据库
+-- ---------------------------------------------------------------
+function hqgzcFinishDBRecord()
+    if GetRoleConfig("Auto_hqgzc_10times") then
+        local tsql = "INSERT INTO [ActivityRecord] ([RoleID],[RoleName],[ActivityName],[Note]) VALUES ('" .. GetVariable("id") .. "', '" .. score.name .. "', '洪七公作菜', NULL)"
+        local db = DBHelper:new()
+        local val = db:Insert(tsql)
+    end
 end
 function hqgzcFinish(n, l, w)
     DeleteTriggerGroup("hqgzcFinish_Exception")
@@ -494,11 +524,8 @@ end
 function hqgzcFinishGold(n, l, w)
     DeleteTriggerGroup("hqgzcFinish_Exception")
     if GetRoleConfig("Auto_hqgzc_10times") then
-        if not hqgzcCnt then
-            hqgzcCnt = 0
-        end
         job.last = "hqgzc"
-        hqgzcCnt = hqgzcCnt + 1
+        hqgzcJob.Cnt = hqgzcJob.Cnt + 1
         EnableTriggerGroup("hqgzcFinish", false)
         job.time.e = os.time()
         job.time.over = job.time.e - job.time.b
@@ -507,9 +534,11 @@ function hqgzcFinishGold(n, l, w)
         quest.desc = ""
         quest.note = ""
         quest.update()
-        if hqgzcCnt >= 10 then
+        if hqgzcJob.Cnt >= 10 then
             hqgzcFinish_Over10TimesHandle()
         end
+        -- 记录DB
+        hqgzcFinishDBRecord()
         job.zctime = 0
         flag.idle = 0
         dis_all()
@@ -523,6 +552,11 @@ function hqgzcFinishGold(n, l, w)
         quest.desc = ""
         quest.note = ""
         quest.update()
+        if hqgzcJob.Cnt >= 10 then
+            hqgzcFinish_Over10TimesHandle()
+        end
+        -- 记录DB
+        hqgzcFinishDBRecord()
         job.zctime = 0
         flag.idle = 0
         dis_all()

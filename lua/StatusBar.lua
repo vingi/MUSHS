@@ -448,20 +448,27 @@ function hp_draw_win()
     -- Title & Bank account information
     local win_title = GetPluginVariable("", "id_ch")
     if win_title == nil then win_title = "" end
-    win_title = win_title .. "当前状态"
-    if bank_info == nil then bank_info = "0(0%)" end
+    if score.id ~= nil and score.name ~= nil then
+        win_title = win_title .. score.name .. "(" .. score.id .. ")"
+    else
+        win_title = win_title .. "当前状态"
+    end
+    if lv_info == nil then lv_info = "Lv. 10" end
+    if score.level ~= nil then
+        lv_info = "Lv. " .. score.level
+    end
     local win_title_left = 0
-    if (hp_win_width / 2 - WindowTextWidth(hp_win, FONT_NAME, win_title) / 2 - 45) < WindowTextWidth(hp_win, FONT_NAME, bank_info) then
-        win_title_left = hp_win_width - WindowTextWidth(hp_win, FONT_NAME, win_title) -45 - WindowTextWidth(hp_win, FONT_NAME, bank_info)
+    if (hp_win_width / 2 - WindowTextWidth(hp_win, FONT_NAME, win_title) / 2 - 45) < WindowTextWidth(hp_win, FONT_NAME, lv_info) then
+        win_title_left = hp_win_width - WindowTextWidth(hp_win, FONT_NAME, win_title) -45 - WindowTextWidth(hp_win, FONT_NAME, lv_info)
     else
         win_title_left = hp_win_width / 2 - WindowTextWidth(hp_win, FONT_NAME, win_title) / 2
     end
     WindowText(hp_win, FONT_NAME, win_title,
     win_title_left, top, 0, 0,
     ColourNameToRGB("white"), false)
-    -- Bank account info
-    WindowText(hp_win, FONT_NAME, bank_info,
-    hp_win_width - 6 - WindowTextWidth(hp_win, FONT_NAME, bank_info), top, 0, 0,
+    -- Level info
+    WindowText(hp_win, FONT_NAME, lv_info,
+    hp_win_width - 6 - WindowTextWidth(hp_win, FONT_NAME, lv_info), top, 0, 0,
     ColourNameToRGB("yellow"), false)
 
     top = top + 15
@@ -574,6 +581,11 @@ function hp_draw_win()
     left + title_length, top, 0, 0,
     0x40FF40, false)
 
+    -- 存款
+    WindowText(hp_win, FONT_NAME, "存款：" .. score.gold,
+    left + 130, top, 0, 0,
+    ColourNameToRGB("white"), false)
+
     if status.yun == 1 then
         -- 运精气
         WindowText(hp_win, FONT_NAME, "运气中",
@@ -594,10 +606,7 @@ function hp_draw_win()
     left + title_length, top, 0, 0,
     0x40FF40, false)
 
-    -- 周
-    -- WindowText (hp_win, FONT_NAME, status.week,
-    --             hp_win_width - 55 - WindowTextWidth (hp_win, FONT_NAME, status.week), top, 0, 0,
-    --             ColourNameToRGB ("white"), false)
+
 
     -- 太极加力
     if status.jiali == true then
@@ -815,32 +824,32 @@ function hp_maxnlupdate(w)
     hp_draw_win()
 end
 
--- ------------------------------------
--- bank info
--- ------------------------------------
-function hp_bank(w)
-    local a, b, c = string.find(l, "有(%S+)两黄金")
-    if c then
-        bank_balance = Fun_CHNum(c)
-    end
-    a, b, c = string.find(l, "上限是：(%S+)两黄金")
-    if c then
-        bank_limit = Fun_CHNum(c)
-    end
-    if bank_balance == nil then
-        bank_info = "0(0%)"
-        return
-    end
-    local balance = format_number(bank_balance)
-    if bank_limit == nil then
-        bank_info = balance .. "(0%)"
-        return
-    end
-    bank_balance = tonumber(bank_balance)
-    bank_limit = tonumber(bank_limit)
-    local bank_percent = math.floor(bank_balance * 100 / bank_limit)
-    bank_info = balance .. "(" .. bank_percent .. "%)"
-end
+---- ------------------------------------
+---- bank info
+---- ------------------------------------
+-- function hp_bank(w)
+--    local a, b, c = string.find(l, "有(%S+)两黄金")
+--    if c then
+--        bank_balance = Fun_CHNum(c)
+--    end
+--    a, b, c = string.find(l, "上限是：(%S+)两黄金")
+--    if c then
+--        bank_limit = Fun_CHNum(c)
+--    end
+--    if bank_balance == nil then
+--        lv_info = "Lv 10"
+--        return
+--    end
+--    local balance = format_number(bank_balance)
+--    if bank_limit == nil then
+--        lv_info = balance .. "(0%)"
+--        return
+--    end
+--    bank_balance = tonumber(bank_balance)
+--    bank_limit = tonumber(bank_limit)
+--    local bank_percent = math.floor(bank_balance * 100 / bank_limit)
+--    lv_info = balance .. "(" .. bank_percent .. "%)"
+-- end
 
 
 ---------------------------------------------------------------------------

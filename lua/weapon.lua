@@ -174,7 +174,7 @@ weaponInBag = function(p_kind)
 end
 function weapon_wield()
     --[[       if hp.neili<hp.neili_max*0.5 and cbb_cur>0 then
-          exe('eat '.. drug.neili)
+          exe('eat '.. drug.neili2)
 	   end                     ]]
     if perform and perform.skill and skillEnable[perform.skill] and weaponKind[skillEnable[perform.skill]] then
         if weapon.first and Bag[weapon.first] then

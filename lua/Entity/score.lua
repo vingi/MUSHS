@@ -30,3 +30,6 @@ score.gold = 0
 score.tb = 0
 score.yb = 0
 score.jjb = 0
+score.level = 1
+score.dead = 0
+score.buildweapon = 0

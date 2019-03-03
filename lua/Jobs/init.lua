@@ -54,5 +54,8 @@ require "/Jobs/tdh"
 -- 蝶梦楼
 require "/Jobs/diemenglou"
 
+-- 嵩山左冷禅 门派任务
+require "/Jobs/songshan"
+
 -- 任务惩罚处理
 require "/Jobs/MissionPunishment"

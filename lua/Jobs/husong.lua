@@ -400,7 +400,7 @@ function husongChkDashi()
 	end
     if locl.id[job.target] then
 	   if hp.neili<hp.neili_max then
-		exe('eat '.. drug.neili)
+		exe('eat '.. drug.neili3)
 	      return prepare_neili(husongStep)
 	   else
 	      return husongStep()

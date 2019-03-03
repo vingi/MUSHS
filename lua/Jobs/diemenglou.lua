@@ -174,17 +174,57 @@ function dml_check()
     end
     DeleteTimer('idle')
     dmlTriggers()
-    EnableTrigger('dmlfight1',true)
+    EnableTrigger('dmlfight1', true)
     exe('hp')
     print('蝶梦楼全自动挑战模块已启动.........')
     messageShow('蝶梦楼全自动模块：本日蝶梦楼备战中.........', 'yellow', 'black')
-    job.name='diemenglou' --添加这句话，蝶梦楼任务就算启动了！必须放在上边的message之下！
-    if hp.food < 40 or hp.water < 40 then
+    job.name = 'diemenglou'
+    quest.name = '蝶梦楼'
+    quest.status = '状态检查中'
+    quest.update()
+    -- 添加这句话，蝶梦楼任务就算启动了！必须放在上边的message之下！
+    if hp.food < 70 or hp.water < 70 then
         return go(dmlEat, '武当山', '茶亭')
     else
         return dmlHpCheck()
     end
 end
+function dml_AutoStart()
+    SetVariable('dmlMode', 1)
+    dml_check()
+end
+
+-- ---------------------------------------------------------------
+-- 检查是否在蝶梦楼开启期间, 早上8:05 至 晚上9:55, 保险起见,预留5分钟gap
+-- ---------------------------------------------------------------
+function dml_IsOpen()
+    local currentTime = common.time()
+    if currentTime > common.date() .. ' 08:05:00' and currentTime < common.date() .. ' 21:55:00' then
+        return true
+    else
+        return false
+    end
+end
+-- ---------------------------------------------------------------
+-- 获取今天作的蝶梦楼任务的次数
+-- ---------------------------------------------------------------
+function dml_JobTimesToday()
+    local times = 0
+    local todaystr = tostring(common.date()) .. " 06:00:00"
+    local tsql = "SELECT count(*) FROM [ActivityRecord] where ActivityName = '蝶梦楼挑战' and CreateTime > '" .. todaystr .. "'"
+    local db = DBHelper:new()
+    times = db:GetRowAmount(tsql)
+    return times
+end
+-- ---------------------------------------------------------------
+-- 完成一次蝶梦楼挑战, 将记录写入数据库
+-- ---------------------------------------------------------------
+function dml_FinishDBRecord(notes)
+    local tsql = "INSERT INTO [ActivityRecord] ([RoleID],[RoleName],[ActivityName],[Note]) VALUES ('" .. GetVariable("id") .. "', '" .. score.name .. "', '蝶梦楼挑战', '" .. notes .. "')"
+    local db = DBHelper:new()
+    local val = db:Insert(tsql)
+end
+
 function dmlNoFightRoom()
     return go(dmlNeili, '扬州城', '莲性寺白塔')
 end
@@ -610,23 +650,26 @@ end
 -- 蝶梦楼挑战开始
 -- --------------------------------------------------------------------------------------------------
 
-
 function dmlSucceed(n, l, w)
     local l_prestige = 0
     local l_competitionCoin = 0
     local _cnt = l_cnt + 1
+    local notes = ""
     if table.getn(target) >= 5 then
-        messageShow('挑战【' .. target[_cnt].name .. '】 【' .. target[_cnt].id .. '】成功！', 'lime', 'black')
+        notes = '挑战【' .. target[_cnt].name .. '】 【' .. target[_cnt].id .. '】成功！'
         table.insert(pkList, { name = target[_cnt].name, id = target[_cnt].id, })
     else
-        messageShow('挑战【' .. backupList[_cnt].name .. '】 【' .. backupList[_cnt].id .. '】成功！', 'lime', 'black')
+        notes = '挑战【' .. backupList[_cnt].name .. '】 【' .. backupList[_cnt].id .. '】成功！'
         table.insert(pkList, { name = backupList[_cnt].name, id = backupList[_cnt].id, })
     end
+    messageShow(notes, 'lime', 'black')
     l_prestige = tonumber(trans(w[2]))
     l_competitionCoin = tonumber(trans(w[3]))
     dmlsucceedCnt = dmlsucceedCnt + 1
     dmlPrestige = dmlPrestige + l_prestige
     dmlCompetitionCoin = dmlCompetitionCoin + l_competitionCoin
+    -- insert DB
+    dml_FinishDBRecord(notes)
 end
 function dmlFailed()
     CloseLog()
@@ -634,15 +677,19 @@ function dmlFailed()
     local fn = 'logs\\diemenglou_lost_' .. score.id .. '.log'
     local f = io.open(fn, "a")
     local s = ''
+    local notes = ""
     if table.getn(target) >= 5 then
         s = target[_cnt].name .. '|'
-        messageShow('挑战【' .. target[_cnt].name .. '】 【' .. target[_cnt].id .. '】失败！', 'fuchsia', 'black')
+        notes = '挑战【' .. target[_cnt].name .. '】 【' .. target[_cnt].id .. '】失败！'
     else
         s = backupList[_cnt].name .. '|'
-        messageShow('挑战【' .. backupList[_cnt].name .. '】 【' .. backupList[_cnt].id .. '】失败！', 'fuchsia', 'black')
+        notes = '挑战【' .. backupList[_cnt].name .. '】 【' .. backupList[_cnt].id .. '】失败！'
     end
+    messageShow(notes, 'fuchsia', 'black')
     f:write(s)
     f:close()
+    -- insert DB
+    dml_FinishDBRecord(notes)
 end
 function dmlCheckNextTarget()
     if table.getn(target) >= 5 then
@@ -682,9 +729,13 @@ function dmlDream()
         if l_cnt > 0 then
             if table.getn(target) >= 5 then
                 messageShow('蝶梦楼全自动模块：现在开始挑战【' .. target[l_cnt].name .. '】 【' .. target[l_cnt].id .. '】.........', 'yellow')
+                quest.status = '挑战 ' .. target[l_cnt].id
+                quest.update()
                 return exe('dream ' .. target[l_cnt].id)
             else
                 messageShow('蝶梦楼全自动模块：现在开始挑战【' .. backupList[l_cnt].name .. '】 【' .. backupList[l_cnt].id .. '】.........', 'yellow')
+                quest.status = '挑战 ' .. backupList[l_cnt].name
+                quest.update()
                 return exe('dream ' .. backupList[l_cnt].id)
             end
         else
@@ -710,6 +761,8 @@ function dmlTopTake()
     else
         if backupList[l_cnt].rank < userRank then
             exe('top take ' .. backupList[l_cnt].rank)
+            quest.status = '查询榜单'
+            quest.update()
             userRank = backupList[l_cnt].rank
             print('目标【' .. blackList[l_cnt].name .. '】离线，取代对方排名【' .. blackList[l_cnt].rank .. '】位')
             messageShow('蝶梦楼全自动模块：挑战目标【' .. blackList[l_cnt].name .. '】离线，取代对方排名至【' .. blackList[l_cnt].rank .. '】位.........', 'lime')
@@ -770,6 +823,13 @@ function dmlCheck2()
     end
 end
 function dmlOut()
+    if GetRoleConfig("Auto_DML_DuringMissionPunishment") == true then
+        -- 单次 蝶梦楼 结束,跳出.
+        dmlTriggersRemove()
+        EnableTrigger('fight2', true)
+        EnableTrigger('fight16', true)
+        return checkTop(check_food)
+    end
     if dmlFightCnt < 5 then
         if l_cnt > 0 then
             ColourNote('violet', 'black', '继续上楼挑战。')
@@ -922,14 +982,20 @@ function hpHeqiCheck(n, l, w)
     if hp.jingxue < hp.jingxue_max * 0.5 then
         exe('yun jing')
     end
-    if hp.neili < hp.neili_max * 0.5 and nxw_cur > 0 then
-        exe('eat ' .. drug.neili)
+    if hp.neili < hp.neili_max * 0.4 and cbw_cur > 0 then
+        -- 内力小于40%，优先嗑川贝丸！
+        exe('eat ' .. drug.neili2)
+    end
+    if hp.neili < hp.neili_max * 0.3 and hqd_cur > 0 then
+        -- 内力小于30%，再嗑黄芪丹！
+        exe('eat ' .. drug.neili3)
+    end
+    if hp.neili < hp.neili_max * 0.1 and nxw_cur > 0 then
+        -- 内力小于10%，嗑内息丸！
+        exe('eat ' .. drug.neili1)
     end
     if hp.jingli < hp.jingli_max * 0.5 or hp.jingli < 500 then
         exe('yun jingli')
-    end
-    if hp.neili < hp.neili_max * 0.5 and nxw_cur > 0 then
-        exe('eat ' .. drug.neili)
     end
     if hp.qixue_per < 80 then
         exe('eat ' .. drug.heal)

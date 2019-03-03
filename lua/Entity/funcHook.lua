@@ -42,7 +42,7 @@ function funcHook:new()
     --  创建新的表作为实例的对象
     local self = { }
     -- 设置class为对象元表的__index
-    setmetatable(self, { __index = class })
+    setmetatable(self, { __index = funcHook })
     -- 返回该新表
     return self
 end

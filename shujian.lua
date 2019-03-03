@@ -3,6 +3,7 @@ require "wait"
 require "tprint"
 require "Entity"
 require "Role"
+require "DBHelper"
 require "rooms"
 require "lujing"
 require "chat"
@@ -256,6 +257,11 @@ score_tb_check = function(n, l, w)
     score.tb = tonumber(w[1])
     score.yb = tonumber(w[2])
     score.jjb = tonumber(w[3])
+end
+score_lv_check = function(n, l, w)
+    score.level = tonumber(w[1])
+    score.dead = tonumber(w[2])
+    score.buildweapon = tonumber(w[3])
 end
 score_ebook_check = function(n, l, w)
     ebooktimes = trans(w[1])
@@ -685,12 +691,12 @@ function hp_trigger()
     create_trigger_t('hp17', "^(> )*你(渴得眼冒金星，全身无力|饿得头昏眼花，直冒冷汗)", '', 'checkQuit')
     create_trigger_t('hp18', "^(> )*(你舔了舔干裂的嘴唇，看来是很久没有喝水了|突然一阵“咕咕”声传来，原来是你的肚子在叫了)", '', 'checkfood')
     create_trigger_t('hp19', "^(> )*(忽然一阵刺骨的奇寒袭来，你中的星宿掌毒发作了|忽然一股寒气犹似冰箭，循着手臂，迅速无伦的射入胸膛，你中的寒毒发作了)", '', 'checkDebug')
-    create_trigger_t('hp20', "^(> )*你(服下一颗活血疗精丹，顿时感觉精血不再流失|服下一颗川贝内息丸，顿时感觉内力充沛|敷上一副蝉蜕金疮药，顿时感觉伤势好了不少|吃下一颗大还丹顿时伤势痊愈气血充盈)。", '', 'hpeatOver')
+    create_trigger_t('hp20', "^(> )*你(服下一颗活血疗精丹，顿时感觉精血不再流失|服下一颗内息丸，顿时觉得内力充沛了不少|服下一颗川贝内息丸，顿时感觉内力充沛|服下一颗黄芪内息丹，顿时感觉空虚的丹田充盈了不少|敷上一副蝉蜕金疮药，顿时感觉伤势好了不少|吃下一颗大还丹顿时伤势痊愈气血充盈)。", '', 'hpeatOver')
     create_trigger_t('hp21', "^(> )*你必须先用 enable 选择你要用的特殊内功。", '', 'jifaOver')
     create_trigger_t('hp22', "^(> )*(\\D*)目前学过(\\D*)种技能：", '', 'show_skills')
     create_trigger_t('hp23', "^(> )*你的背囊里有：", '', 'show_beinang')
-    create_trigger_t('hp24','^(> )*你眼中一亮看到\\D*的身边掉落一(件|副|双|袭|顶|个|条|对)(\\D*)(手套|靴|甲胄|腰带|披风|彩衣|头盔)。','','fqyyArmorGet')
-    create_trigger_t('hp25','^(> )*你捡起一(件|副|双|袭|顶|个|条|对)(\\D*)(手套|靴|甲胄|腰带|披风|彩衣|头盔)。','','fqyyArmorCheck')
+    create_trigger_t('hp24', '^(> )*你眼中一亮看到\\D*的身边掉落一(件|副|双|袭|顶|个|条|对)(\\D*)(手套|靴|甲胄|腰带|披风|彩衣|头盔)。', '', 'fqyyArmorGet')
+    create_trigger_t('hp25', '^(> )*你捡起一(件|副|双|袭|顶|个|条|对)(\\D*)(手套|靴|甲胄|腰带|披风|彩衣|头盔)。', '', 'fqyyArmorCheck')
     SetTriggerOption("hp24", "group", "hp")
     SetTriggerOption("hp25", "group", "hp")
     SetTriggerOption("hp1", "group", "hp")
@@ -727,7 +733,8 @@ function hp_trigger()
     create_trigger_t('score8', "^您目前的存款上限是：(\\D*)锭黄金", '', 'checkGoldLmt')
     create_trigger_t('score10', '^┃理相：(\\D*)\\((\\d*)\\)\\s*合气：\\+(\\d*)\\s*暴击：(\\d*)\\%\\s*必杀：(\\d*)\\%\\s*幸运：(\\d*)\\s*┃', '', 'score_check_xy')
     create_trigger_t('score11', '^┃书剑通宝：(\\N*)\\s*书剑元宝：(\\N*)\\s*竞技币：(\\N*)\\s*┃', '', 'score_tb_check')
-    create_trigger_t('score12', "^本周您已经使用精英之书(\\D*)次。", '', 'score_ebook_check')
+    create_trigger_t('score12', '^┃当前等级：(\\N*)\\s*死亡：(\\N*)\\s*打造机会：(\\N*)\\s*┃', '', 'score_lv_check')
+    create_trigger_t('score13', "^本周您已经使用精英之书(\\D*)次。", '', 'score_ebook_check')
     SetTriggerOption("score1", "group", "score")
     SetTriggerOption("score2", "group", "score")
     SetTriggerOption("score3", "group", "score")
@@ -740,6 +747,7 @@ function hp_trigger()
     SetTriggerOption("score10", "group", "score")
     SetTriggerOption("score11", "group", "score")
     SetTriggerOption("score12", "group", "score")
+    SetTriggerOption("score13", "group", "score")
 end
 
 function jifaOver()
@@ -769,8 +777,14 @@ function hpeatOver(n, l, w)
     if string.find(l, "敷上一副蝉蜕金疮药，顿时感觉伤势好了不少") then
         cty_cur = cty_cur - 1
     end
-    if string.find(l, "服下一颗川贝内息丸，顿时感觉内力充沛") then
+    if string.find(l, "服下一颗内息丸，顿时觉得内力充沛了不少") then
         nxw_cur = nxw_cur - 1
+    end
+    if string.find(l, "服下一颗川贝内息丸，顿时感觉内力充沛") then
+        cbw_cur = cbw_cur - 1
+    end
+    if string.find(l, "服下一颗黄芪内息丹，顿时感觉空虚的丹田充盈了不少") then
+        hqd_cur = hqd_cur - 1
     end
     if string.find(l, "服下一颗活血疗精丹，顿时感觉精血不再流失") then
         DeleteTimer("eatdan")
@@ -945,7 +959,15 @@ function checkPrepare()
         return check_gold()
     end
 
-    if score.gold and score.gold > 100 and nxw_cur < 5 and drugPrepare["川贝内息丸"] then
+    if score.gold and score.gold > 100 and nxw_cur < 5 and drugPrepare["内息丸"] then
+        return checkNxw()
+    end
+
+    if score.gold and score.gold > 100 and cbw_cur < 5 and drugPrepare["川贝内息丸"] then
+        return checkNxw()
+    end
+
+    if score.gold and score.gold > 100 and hqd_cur < 5 and drugPrepare["黄芪内息丹"] then
         return checkNxw()
     end
 
@@ -1188,12 +1210,23 @@ function check_job()
     if score.party == "桃花岛" and(hp.shen > 150000 or hp.shen < -150000) then
         return thdJiaohui()
     end
-
+    -- 蝶梦楼 partial
+    if dmlFightCnt < 5 and(not condition.busy or condition.busy == 0) then
+        -- 判断 DB记录, 以及是否蝶梦楼开启时间
+        local dbrecordAmout = tonumber(dml_JobTimesToday())
+        if dbrecordAmout < 5 and dml_IsOpen() == true then
+            if dbrecordAmout > dmlFightCnt then
+                dmlFightCnt = dbrecordAmout
+            end
+            return dml_check()
+        end
+    end
     -- if score.gold and score.gold>150 and weaponUsave and countTab(weaponUsave)>0 and math.random(1,5)==1 then
     -- return weaponUcheck()
     -- end
     return check_halt(weaponUcheck)
 end
+
 function check_jobx()
     for p in pairs(weaponUsave) do
         if Bag and not Bag[p] then
@@ -1218,7 +1251,7 @@ function check_jobx()
     if smydie * 1 >= smyall * 1 then
         job.zuhe["songmoya"] = nil
     end
-    if job.zuhe["husong"] and (score.party ~= "少林派" or hp.exp < 2000000) then
+    if job.zuhe["husong"] and(score.party ~= "少林派" or hp.exp < 2000000) then
         job.zuhe["husong"] = nil
     end
     if job.zuhe["songmoya"] and job.last ~= "songmoya" and mytime <= os.time() then
@@ -1234,21 +1267,13 @@ function check_jobx()
         return checkJob()
     end
 end
+
 function checkJob()
     if GetRoleConfig("Auto_hqgzc_10times") then
         if job.last ~= 'hqgzc' then
-            local fn = 'logs\\hqgzc_mark_' .. score.id .. '.log'
-            local f = io.open(fn, "r")
-            if not f then
+            -- 判断是否超过10次
+            if hqgzcJobTimesToday() ~= nil and tonumber(hqgzcJobTimesToday()) < 10 and hqgzcJob.Over10Times ~= true then
                 return hqgzc()
-            else
-                local s = f:read()
-                f:close()
-                if s ~= os.date("%Y%m%d%H") then
-                    if os.date("%Y%m%d%H") - s >= 100 then
-                        return hqgzc()
-                    end
-                end
             end
         end
     end
@@ -1917,7 +1942,10 @@ function checkYaoBags(func)
     EnableTriggerGroup("Yaobags", true)
     cty_cur = 0
     nxw_cur = 0
+    cbw_cur = 0
+    hqd_cur = 0
     hxd_cur = 0
+    dhd_cur = 0
     -- print(cty_cur,nxw_cur,hxd_cur)
     Bag["黄金"].cnt = 0
     Bag["白银"].cnt = 0
@@ -1950,8 +1978,14 @@ function checkBY()
         if string.find(l_name, "蝉蜕金疮药") then
             cty_cur = trans(Beinang[i])
         end
-        if string.find(l_name, "川贝内息丸") then
+        if string.find(l_name, "颗内息丸") then
             nxw_cur = trans(Beinang[i])
+        end
+        if string.find(l_name, "川贝内息丸") then
+            cbw_cur = trans(Beinang[i])
+        end
+        if string.find(l_name, "黄芪内息丹") then
+            hqd_cur = trans(Beinang[i])
         end
         if string.find(l_name, "活血疗精丹") then
             hxd_cur = trans(Beinang[i])
@@ -2001,7 +2035,10 @@ function checkBags(func)
     EnableTrigger("bags1", true)
     cty_cur = 0
     nxw_cur = 0
+    cbw_cur = 0
+    hqd_cur = 0
     hxd_cur = 0
+    dhd_cur = 0
     -- print(cty_cur,nxw_cur,hxd_cur)
     bags = { }
     Bag = { }
@@ -3056,8 +3093,8 @@ end
 
 function checkNxw()
     tmp.cnt = 0
-    if score.gold and score.gold > 100 and nxw_cur < count.nxw_max then
-        return go(checkNxwBuy, randomElement(drugBuy["川贝内息丸"]))
+    if score.gold and score.gold > 100 and(nxw_cur < count.nxw_max or cbw_cur < count.cbw_max or hqd_cur < count.hqd_max) then
+        return go(checkNxwBuy, randomElement(drugBuy["内息丸"]))
     else
         return checkNxwOver()
     end
@@ -3067,13 +3104,22 @@ function checkNxwBuy()
     if tmp.cnt > 30 then
         return checkNxwOver()
     else
-        exe("buy " .. drug.neili)
+        if hqd_cur < count.hqd_max then
+            -- 这里是买3种内力药了，购买的次序分别是黄芪丹，川贝丸和内息丸，注意：黄芪丹+70%，川贝丸+50%，内息丸是固定+3000内力。
+            exe('buy ' .. drug.neili3)
+        end
+        if cbw_cur < count.cbw_max then
+            exe('buy ' .. drug.neili2)
+        end
+        if nxw_cur < count.nxw_max then
+            exe('buy ' .. drug.neili1)
+        end
         checkYaoBags()
         return check_bei(checkNxwi)
     end
 end
 function checkNxwi()
-    if nxw_cur < count.nxw_max and Bag["黄金"] and Bag["黄金"].cnt > 4 then
+    if (nxw_cur < count.nxw_max or cbw_cur < count.cbw_max or hqd_cur < count.hqd_max) and Bag["黄金"] and Bag["黄金"].cnt > 4 then
         return checkWait(checkNxwBuy, 1)
     else
         return checkNxwOver()
@@ -3841,11 +3887,14 @@ end
 function drugSet()
     drugPrepare = { }
     local t = {
+        ["内息丸"] = "内息丸",
         ["川贝内息丸"] = "川贝内息丸",
+        ["黄芪内息丹"] = "黄芪内息丹",
         ["蝉蜕金疮药"] = "蝉蜕金疮药",
         ["活血疗精丹"] = "活血疗精丹",
         ["大还丹"] = "大还丹",
-        ["火折"] = "火折"
+        ["火折"] = "火折",
+        ["牛皮酒袋"] = "牛皮酒袋",
     }
     if GetVariable("drugprepare") then
         tmp.drug = utils.split(GetVariable("drugprepare"), "|")
@@ -4345,9 +4394,9 @@ function dzxy_finish()
 end
 
 function recordtime()
-    messageShowT("船到岸: "..os.date("%Y-%m-%d %H:%M:%S", os.time()))
+    messageShowT("船到岸: " .. os.date("%Y-%m-%d %H:%M:%S", os.time()))
 end
 
 function recordtime_leave()
-    messageShowT("开船离岸: "..os.date("%Y-%m-%d %H:%M:%S", os.time()))
+    messageShowT("开船离岸: " .. os.date("%Y-%m-%d %H:%M:%S", os.time()))
 end
