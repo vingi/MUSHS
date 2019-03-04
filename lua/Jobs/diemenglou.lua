@@ -189,6 +189,10 @@ function dml_check()
         return dmlHpCheck()
     end
 end
+
+-- ---------------------------------------------------------------
+-- 蝶梦楼自动开启,无需设置, 默认无脑刷分模式 
+-- ---------------------------------------------------------------
 function dml_AutoStart()
     SetVariable('dmlMode', 1)
     dml_check()
@@ -211,7 +215,7 @@ end
 function dml_JobTimesToday()
     local times = 0
     local todaystr = tostring(common.date()) .. " 06:00:00"
-    local tsql = "SELECT count(*) FROM [ActivityRecord] where ActivityName = '蝶梦楼挑战' and CreateTime > '" .. todaystr .. "'"
+    local tsql = "SELECT count(*) FROM [ActivityRecord] where ActivityName = '蝶梦楼挑战' and RoleID = '"..score.id.."' and CreateTime > '" .. todaystr .. "'"
     local db = DBHelper:new()
     times = db:GetRowAmount(tsql)
     return times
@@ -220,7 +224,7 @@ end
 -- 完成一次蝶梦楼挑战, 将记录写入数据库
 -- ---------------------------------------------------------------
 function dml_FinishDBRecord(notes)
-    local tsql = "INSERT INTO [ActivityRecord] ([RoleID],[RoleName],[ActivityName],[Note]) VALUES ('" .. GetVariable("id") .. "', '" .. score.name .. "', '蝶梦楼挑战', '" .. notes .. "')"
+    local tsql = "INSERT INTO [ActivityRecord] ([RoleID],[RoleName],[ActivityName],[Note]) VALUES ('" .. score.id .. "', '" .. score.name .. "', '蝶梦楼挑战', '" .. notes .. "')"
     local db = DBHelper:new()
     local val = db:Insert(tsql)
 end
@@ -823,13 +827,6 @@ function dmlCheck2()
     end
 end
 function dmlOut()
-    if GetRoleConfig("Auto_DML_DuringMissionPunishment") == true then
-        -- 单次 蝶梦楼 结束,跳出.
-        dmlTriggersRemove()
-        EnableTrigger('fight2', true)
-        EnableTrigger('fight16', true)
-        return checkTop(check_food)
-    end
     if dmlFightCnt < 5 then
         if l_cnt > 0 then
             ColourNote('violet', 'black', '继续上楼挑战。')

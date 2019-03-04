@@ -491,7 +491,7 @@ end
 function hqgzcJobTimesToday()
     local times = 0
     local todaystr = tostring(common.date()).." 06:00:00"
-    local tsql = "SELECT count(*) FROM [ActivityRecord] where ActivityName = '洪七公作菜' and CreateTime > '" .. todaystr .. "'"
+    local tsql = "SELECT count(*) FROM [ActivityRecord] where ActivityName = '洪七公作菜' and RoleID = '"..score.id.."' and CreateTime > '" .. todaystr .. "'"
     local db = DBHelper:new()
     times = db:GetRowAmount(tsql)
     return times
@@ -501,7 +501,7 @@ end
 -- ---------------------------------------------------------------
 function hqgzcFinishDBRecord()
     if GetRoleConfig("Auto_hqgzc_10times") then
-        local tsql = "INSERT INTO [ActivityRecord] ([RoleID],[RoleName],[ActivityName],[Note]) VALUES ('" .. GetVariable("id") .. "', '" .. score.name .. "', '洪七公作菜', NULL)"
+        local tsql = "INSERT INTO [ActivityRecord] ([RoleID],[RoleName],[ActivityName],[Note]) VALUES ('" .. score.id .. "', '" .. score.name .. "', '洪七公作菜', NULL)"
         local db = DBHelper:new()
         local val = db:Insert(tsql)
     end

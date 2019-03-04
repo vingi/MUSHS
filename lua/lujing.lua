@@ -773,6 +773,10 @@ find_nobody = function()
             return _G[p]()
         end
     end
+
+    -- 加这么一句就行了，找不到人就会再次看信！
+    if job.name == 'dolost' then return lookXin() end
+
     return go(check_heal, '大理城', '药铺')
 end
 List = { }
@@ -1633,25 +1637,25 @@ yilidoor_over = function()
     if flag.find == 1 then return end
     return walk_wait()
 end
-yilicheckwds=function()
-	fastLocate()
-	if flag.find==1 then return end
-	wait.make(function()
-		wait.time(0.5)
-		return yilidoor_checkks()
-	end)
+yilicheckwds = function()
+    fastLocate()
+    if flag.find == 1 then return end
+    wait.make( function()
+        wait.time(0.5)
+        return yilidoor_checkks()
+    end )
 end
-yilidoor_checkks=function()
-	if locl.room=='南城门' then
-	   return check_halt(yilidoor_overs)
-	else
-	   return go_locate()
-	end
+yilidoor_checkks = function()
+    if locl.room == '南城门' then
+        return check_halt(yilidoor_overs)
+    else
+        return go_locate()
+    end
 end
-yilidoor_overs=function()
-   exe('s')
-   if flag.find==1 then return end
-   return walk_wait()
+yilidoor_overs = function()
+    exe('s')
+    if flag.find == 1 then return end
+    return walk_wait()
 end
 duhe_trigger = function()
     EnableTriggerGroup("prepare_neili", false)

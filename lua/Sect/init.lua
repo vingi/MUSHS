@@ -15,11 +15,16 @@ require "Sect"
 
 --]]
 
---require "/Entity/hp"
---require "/Entity/quest"
---require "/Entity/score"
---require "/Entity/count"
---require "/Entity/drug"
---require "/Entity/drugBuy"
---require "/Entity/drugPoison"
---require "/Entity/flag"
+Sect = { }
+
+-- ---------------------------------------------------------------
+-- 根据角色门派加载所需要用到的部分 
+-- ---------------------------------------------------------------
+function Sect.Onload()
+    if score.party == "姑苏慕容" then
+        print("正在加载 姑苏慕容的档案.")
+        require "/Sect/murong"
+    end
+end
+
+
