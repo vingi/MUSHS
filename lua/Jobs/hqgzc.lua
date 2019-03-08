@@ -196,7 +196,10 @@ function hqgzcDazuo()
     exe("s")
     return prepare_lianxi(hqgzc)
 end
-function hqgzcFail()
+function hqgzcFail(n, l, w)
+    if string.find(l, "潜能已经这么多了") and GetRoleConfig("Auto_hqgzc_10times") then
+        hqgzcFinish_Over10TimesHandle()    
+    end 
     EnableTriggerGroup("hqgzcAccept", false)
     hqgzcTriggerDel()
     -- job.last='hqgzc'
@@ -499,13 +502,14 @@ end
 -- ---------------------------------------------------------------
 -- 完成一次洪七公作菜, 将记录写入数据库
 -- ---------------------------------------------------------------
-function hqgzcFinishDBRecord()
+function hqgzcFinishDBRecord(notes)
     if GetRoleConfig("Auto_hqgzc_10times") then
-        local tsql = "INSERT INTO [ActivityRecord] ([RoleID],[RoleName],[ActivityName],[Note]) VALUES ('" .. score.id .. "', '" .. score.name .. "', '洪七公作菜', NULL)"
+        local tsql = "INSERT INTO [ActivityRecord] ([RoleID],[RoleName],[ActivityName],[Note]) VALUES ('" .. score.id .. "', '" .. score.name .. "', '洪七公作菜', '"..notes.."')"
         local db = DBHelper:new()
         local val = db:Insert(tsql)
     end
 end
+
 function hqgzcFinish(n, l, w)
     DeleteTriggerGroup("hqgzcFinish_Exception")
     EnableTriggerGroup("hqgzcFinish", false)
@@ -538,7 +542,7 @@ function hqgzcFinishGold(n, l, w)
             hqgzcFinish_Over10TimesHandle()
         end
         -- 记录DB
-        hqgzcFinishDBRecord()
+        hqgzcFinishDBRecord("做菜任务：完成！获得【" .. w[2] .. "】锭黄金！")
         job.zctime = 0
         flag.idle = 0
         dis_all()
@@ -556,7 +560,7 @@ function hqgzcFinishGold(n, l, w)
             hqgzcFinish_Over10TimesHandle()
         end
         -- 记录DB
-        hqgzcFinishDBRecord()
+        hqgzcFinishDBRecord("做菜任务：完成！获得【" .. w[2] .. "】锭黄金！")
         job.zctime = 0
         flag.idle = 0
         dis_all()

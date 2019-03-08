@@ -19,7 +19,7 @@ require "check
 --]]
 
 
-module("vingib", package.seeall)
+module("vingic", package.seeall)
 
 settings = {
     -- 是否自动向韦小宝买龙泉剑 (若设定为true, 则运行start后会先去买龙泉剑,该过程可能会很久,有可能几个小时才能买到, 买到后才会开始正常job)
@@ -50,4 +50,4 @@ function tt()
     print("call vingi method success")
 end
 
-return vingib 
+return vingic 

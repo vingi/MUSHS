@@ -18,6 +18,9 @@ require "Jobs"
 -- 任务管理核心文件
 require "/Jobs/job"
 
+-- 武馆任务
+--require "/Jobs/wg"
+
 -- 巡城
 require "/Jobs/xuncheng"
 
@@ -59,3 +62,6 @@ require "/Jobs/songshan"
 
 -- 任务惩罚处理
 require "/Jobs/MissionPunishment"
+
+-- 每日定时矿产收矿
+require "/Jobs/Miner"

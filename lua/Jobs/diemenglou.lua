@@ -84,7 +84,8 @@ function dmlTriggers()
     create_trigger_t('dmlfight7', '^(> )*没有发现一个id是\\D*的玩家。请注意在线玩家列表！', '', 'dmlTakePlace')
     create_trigger_t('dmlfight8', '^(> )*竞技时间已过，你无法向\\D*发起挑战。', '', 'dmlOver')
     create_trigger_t('dmlfight9', '^(> )*突然一道神光笼罩着你，你的精气神竟然全部恢复了！', '', 'dmlFailed')
-    for i = 1, 9 do SetTriggerOption('dmlfight' .. i, 'group', 'dmlfight') end
+    create_trigger_t('dmlfight10', '^(> )*你们排名和实力悬殊太大，你无法向(\\D*)发起挑战。', '', 'dmlCheckNextTarget')
+    for i = 1, 10 do SetTriggerOption('dmlfight' .. i, 'group', 'dmlfight') end
     EnableTriggerGroup('dmlfight', false)
 end
 function dmlPkTriggers()

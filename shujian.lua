@@ -903,7 +903,7 @@ function xxSleepcheck()
 end
 
 -- ---------------------------------------------------------------
--- 客栈被小二busy触发处理.. 
+-- 客栈被小二busy触发处理..
 -- ---------------------------------------------------------------
 function kedian_sleep()
     -- 路径合并了！适用所有客栈！
@@ -1239,17 +1239,7 @@ function check_job()
     if score.party == "桃花岛" and(hp.shen > 150000 or hp.shen < -150000) then
         return thdJiaohui()
     end
-    -- 蝶梦楼 partial
-    if dmlFightCnt < 5 and(not condition.busy or condition.busy == 0) then
-        -- 判断 DB记录, 以及是否蝶梦楼开启时间
-        local dbrecordAmout = tonumber(dml_JobTimesToday())
-        if dbrecordAmout < 5 and dml_IsOpen() == true then
-            if dbrecordAmout > dmlFightCnt then
-                dmlFightCnt = dbrecordAmout
-            end
-            return dml_AutoStart()
-        end
-    end
+
     -- if score.gold and score.gold>150 and weaponUsave and countTab(weaponUsave)>0 and math.random(1,5)==1 then
     -- return weaponUcheck()
     -- end
@@ -1298,7 +1288,29 @@ function check_jobx()
 end
 
 function checkJob()
-    if GetRoleConfig("Auto_hqgzc_10times") then
+    -- 自动 蝶梦楼
+    if GetRoleConfig("AutoDML") == true then
+        if dmlFightCnt < 5 and(not condition.busy or condition.busy == 0) then
+            -- 判断 DB记录, 以及是否蝶梦楼开启时间
+            local dbrecordAmout = tonumber(dml_JobTimesToday())
+            if dbrecordAmout < 5 and dml_IsOpen() == true then
+                if dbrecordAmout > dmlFightCnt then
+                    dmlFightCnt = dbrecordAmout
+                end
+                return dml_AutoStart()
+            end
+        end
+    end
+
+    -- 自动 论坛收矿
+    if GetRoleConfig("AutoMine") == true then
+        if Miner.CheckMineGap() then
+            Miner.Mining()
+        end 
+    end 
+
+    -- 自动 10次洪七公作菜
+    if GetRoleConfig("Auto_hqgzc_10times") == true then
         if job.last ~= 'hqgzc' then
             -- 判断是否超过10次
             if hqgzcJobTimesToday() ~= nil and tonumber(hqgzcJobTimesToday()) < 10 and hqgzcJob.Over10Times ~= true then
@@ -4250,6 +4262,13 @@ function randomElement(p_set)
     return l_element
 end
 
+road.huanghe1=true
+road.huanghe2=true
+function duhe_change()
+        road.huanghe1=not road.huanghe1
+        road.huanghe2=not road.huanghe2
+        EnableTriggerGroup("duhe",false)----------2018-08-30更新
+end
 
 function recordtime()
     messageShowT("船到岸: " .. os.date("%Y-%m-%d %H:%M:%S", os.time()))

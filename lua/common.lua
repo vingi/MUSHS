@@ -61,6 +61,44 @@ function common.time()
     return os.date("%Y-%m-%d %H:%M:%S", os.time())
 end
 
+-- ---------------------------------------------------------------
+-- 时间字符串转为时间戳 
+-- ---------------------------------------------------------------
+function common.string2time(timeString)
+    if type(timeString) ~= 'string' then error('string2time: timeString is not a string') return 0 end
+    local fun = string.gmatch( timeString, "%d+")
+    local y = fun() or 0
+    if y == 0 then error('timeString is a invalid time string') return 0 end
+    local m = fun() or 0
+    if m == 0 then error('timeString is a invalid time string') return 0 end
+    local d = fun() or 0
+    if d == 0 then error('timeString is a invalid time string') return 0 end
+    local H = fun() or 0
+    if H == 0 then error('timeString is a invalid time string') return 0 end
+    local M = fun() or 0
+    if M == 0 then error('timeString is a invalid time string') return 0 end
+    local S = fun() or 0
+    if S == 0 then error('timeString is a invalid time string') return 0 end
+    return os.time({year=y, month=m, day=d, hour=H,min=M,sec=S})
+end
+
+-- ---------------------------------------------------------------
+-- 获取两个时间的间隔 
+-- ---------------------------------------------------------------
+function common.timediff(long_time,short_time)
+	local n_short_time,n_long_time,carry,diff = os.date('*t',short_time),os.date('*t',long_time),false,{}
+	local colMax = {60,60,24,os.date('*t',os.time{year=n_short_time.year,month=n_short_time.month+1,day=0}).day,12,0}
+	n_long_time.hour = n_long_time.hour - (n_long_time.isdst and 1 or 0) + (n_short_time.isdst and 1 or 0) -- handle dst
+	for i,v in ipairs({'sec','min','hour','day','month','year'}) do
+		diff[v] = n_long_time[v] - n_short_time[v] + (carry and -1 or 0)
+		carry = diff[v] < 0
+		if carry then
+			diff[v] = diff[v] + colMax[i]
+		end
+	end
+	return diff
+end
+
 -- ----------------------------------------------------------
 -- 自定义实现 lua split方法
 -- ----------------------------------------------------------

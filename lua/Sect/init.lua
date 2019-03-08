@@ -24,6 +24,12 @@ function Sect.Onload()
     if score.party == "姑苏慕容" then
         print("正在加载 姑苏慕容的档案.")
         require "/Sect/murong"
+        dzxy()
+    end
+    if score.party == "古墓派" then
+        print("正在加载 古墓派的档案.")
+        require "/Sect/gumu"
+        gmpfmExceptionOn()
     end
 end
 

@@ -21,7 +21,7 @@ require "check
 
 module("redmoon", package.seeall)
 
-settings= {
+settings = {
     -- 是否自动向韦小宝买龙泉剑 (若设定为true, 则运行start后会先去买龙泉剑,该过程可能会很久,有可能几个小时才能买到, 买到后才会开始正常job)
     AutoBuy_Xiaobao_Longquan = false,
 
@@ -37,6 +37,12 @@ settings= {
     -- 是否作华山2任务
     HuashanJob_Step2 = false,
 
+    -- 是否自动蝶梦楼刷分
+    AutoDML = true,
+
+    -- 是否自动论坛收矿石
+    -- 说明, 自动收矿石会发送你的帐号密码至WEBAPI以调用收取矿石, 如果觉得不安全的, 请不要使用
+    AutoMine = true,
 }
 
 
@@ -45,7 +51,7 @@ function tt()
 end
 
 function tta(arg)
-    print("call arg success : "..arg)
+    print("call arg success : " .. arg)
 end
 
 

@@ -1766,6 +1766,10 @@ duhe_over = function()
 end
 duhe_wait = function()
     -- exe('set Л§аю')
+    if road.huanghe1 ~= nil and road.huanghe2 ~= nil then
+        duhe_change()
+        return go(road.act)
+    end
     if hp.exp > 300000 then
         exe('yun jing;yun qi;yun jingli;sxlian;dazuo ' .. hp.dazuo)
     else

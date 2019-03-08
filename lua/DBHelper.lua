@@ -12,7 +12,7 @@
     local db = DBHelper:new()
     local val = db:GetFirstValue(tsql)
 
-    -- GetRowAmount 
+    -- GetRowAmount
     local tsql = "SELECT count(*) FROM [ActivityRecord]"
     local db = DBHelper:new()
     local val = db:GetRowAmount(tsql)
@@ -66,7 +66,11 @@ end
 -- 获取SQL语句中查询的行数(即数量集)
 -- ---------------------------------------------------------------
 function DBHelper:GetRowAmount(sql)
-    return DBHelper:GetFirstValue(sql) 
+    local rowscount = DBHelper:GetFirstValue(sql)
+    if rowscount == nil or rowscount == "" then
+        rowscount = 0
+    end
+    return rowscount
 end
 
 -- ---------------------------------------------------------------

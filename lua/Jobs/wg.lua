@@ -338,7 +338,7 @@ function wg_chihe_askwater()
     Execute('ask wang about ˮ')
     check_halt(
         function() 
-            Execute ('get mi fan;get cha;eat mi fan;eat mi fan;eat mi fan;drink cha;drink cha;drink cha;drop mi fan;drop cha;e;e;eu')
+            Execute ('get rice;get tea;eat rice;eat rice;eat rice;drink tea;drink tea;drink tea;drop rice;drop tea;e;e;eu')
             checkpoint()
         end)
 end

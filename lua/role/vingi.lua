@@ -37,6 +37,12 @@ settings= {
     -- 是否作华山2任务
     HuashanJob_Step2 = true,
 
+    -- 是否自动蝶梦楼刷分
+    AutoDML = true,
+
+    -- 是否自动论坛收矿石
+    -- 说明, 自动收矿石会发送你的帐号密码至WEBAPI以调用收取矿石, 如果觉得不安全的, 请不要使用
+    AutoMine = true,
 }
 
 

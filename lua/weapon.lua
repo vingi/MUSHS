@@ -199,10 +199,6 @@ function weapon_wield()
     end
     checkWield()
 end
-function weaponWWalk()
-    weapon_wield()
-    return walk_wait()
-end
 function weapon_unwield()
     for p in pairs(Bag) do
         if Bag[p].kind and(not itemWield or itemWield[p]) then
@@ -226,6 +222,11 @@ function weapon_unwield()
 
     checkWield()
 end
+function weaponWWalk()
+    weapon_wield()
+    return walk_wait()
+end
+
 function weaponUnWalk()
     weapon_unwield()
     return walk_wait()
