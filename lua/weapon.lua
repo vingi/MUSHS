@@ -1,3 +1,5 @@
+
+Weapon = {}
 weaponPrepare = { }
 weaponUsave = { }
 itemWield = { }
@@ -92,6 +94,17 @@ unarmedKind = {
     ["leg"] = true
 }
 
+-- ---------------------------------------------------------------
+-- 装备回内力武器, 前提是在之前的命令已经执行过 i 命令, 获得身上最新的装备着的武器信息 
+-- ---------------------------------------------------------------
+function Weapon.RecoverNeili()
+    -- 是否已经装备回内武器
+    if itemWield[GetItemChineseInBagByFullID(GetVariable("myweapon"))] ~= true then
+        weapon_unwield()
+        weapon_wield()
+    end
+end
+
 function weaponSet()
     weaponPrepare = { }
     local t = { }
@@ -181,9 +194,9 @@ function weapon_wield()
             exe("wield " .. Bag[weapon.first].fullid)
         end
         -- 默认myweapon为回内武器
-		if GetVariable("myweapon") and string.len(GetVariable("myweapon")) > 1 then
-			exe("wield " .. GetVariable("myweapon"))
-		end
+        if GetVariable("myweapon") and string.len(GetVariable("myweapon")) > 1 then
+            exe("wield " .. GetVariable("myweapon"))
+        end
         for p in pairs(Bag) do
             if Bag[p].kind and Bag[p].kind == skillEnable[perform.skill] and perform.skill ~= "yuxiao-jian" then
                 if not weapon.first or weapon.first ~= p then

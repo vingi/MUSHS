@@ -27,9 +27,16 @@ score.con = 20
 score.con_t = 20
 score.age = 14
 score.gold = 0
+score.vip = nil
+-- 书剑通宝
 score.tb = 0
+-- 元宝
 score.yb = 0
+-- 竞技币
 score.jjb = 0
+-- 游戏等级
 score.level = 1
+-- 死亡次数
 score.dead = 0
+-- 打造次数
 score.buildweapon = 0

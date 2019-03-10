@@ -43,6 +43,12 @@ settings = {
     -- 是否自动论坛收矿石
     -- 说明, 自动收矿石会发送你的帐号密码至WEBAPI以调用收取矿石, 如果觉得不安全的, 请不要使用
     AutoMine = true,
+
+    -- 是否每周四自动领取会员福利
+    AutoVipBenefit = true,
+
+    -- 是否自动吃满Ebook双倍经验书
+    AutoEbook = false,
 }
 
 

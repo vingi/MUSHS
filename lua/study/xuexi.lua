@@ -21,7 +21,10 @@ local learnTime_min = 10
 
 function xuexiTrigger()
     DeleteTriggerGroup("xuexi")
-    create_trigger_t("xuexi1", "^(> )*你(\\D*)" .. score.master .. "(\\D*)指导", "", "xuexiAction")
+    if score.master then
+        create_trigger_t("xuexi1", "^(> )*你(\\D*)" .. score.master .. "(\\D*)指导", "", "xuexiAction")
+        SetTriggerOption("xuexi1", "group", "xuexi")
+    end
     create_trigger_t("xuexi2", "^(> )*你现在正忙着呢。", "", "xuexiAction")
     create_trigger_t("xuexi3", "^(> )*你今天太累了，结果什么也没有学到。", "", "xuexiSleep")
     create_trigger_t(
@@ -41,7 +44,7 @@ function xuexiTrigger()
     "",
     "xueWeapon"
     )
-    SetTriggerOption("xuexi1", "group", "xuexi")
+
     SetTriggerOption("xuexi2", "group", "xuexi")
     SetTriggerOption("xuexi3", "group", "xuexi")
     SetTriggerOption("xuexi4", "group", "xuexi")
@@ -175,7 +178,7 @@ function xuexiContinue()
     EnableTriggerGroup("xuexi", true)
     wait.make(
     function()
-        wait.time(1)
+        wait.time(0.4)
         exe("yun jing;xue " .. master.id .. " " .. master.skills[tmp.xuexi] .. " " .. master.times)
     end
     )

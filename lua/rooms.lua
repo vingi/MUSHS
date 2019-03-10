@@ -20677,25 +20677,17 @@ Room {
     },
 }
 Room {
-    id = "mingjiao/hdg/shanbi",
-    name = "山壁",
-    ways =
-    {
-        ["south"] = "city/wroad3",
-        ["right"] = "mingjiao/hdg/huacong1",
-    },
-    nolooks =
-    {
-        ["right"] = true,
-    },
-    lengths =
-    {
-        ["right"] = "if score.party and score.party=='明教' then return 10 else return false end",
-    },
-    precmds =
-    {
-        ["right"] = "bo huacong",
-    },
+        id = "mingjiao/hdg/shanbi",
+        name = "山壁",
+        ways = {
+                ["south"] = "city/wroad3",
+                --["right"] = "mingjiao/hdg/huacong1",
+                ["#bohuacong"] = "mingjiao/hdg/huacong1",
+        },
+        nolooks = {
+                ["#bohuacong"] = true,
+        },
+
 }
 Room {
     id = "mingjiao/hdg/shanlu1",

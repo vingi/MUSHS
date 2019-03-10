@@ -75,8 +75,6 @@ function Miner.InsertDB(notes)
     local val = db:Insert(tsql)
 end
 
-
-
 -- ---------------------------------------------------------------
 -- 检查DB里距离上次自动收矿记录, 是否超过6小时,若超过则返回true, 否则false
 -- ---------------------------------------------------------------
@@ -92,6 +90,16 @@ function Miner.CheckMineGap()
         return true
     else
         return false
+    end
+end
+-- ---------------------------------------------------------------
+-- 自动挖矿,含判断当前是否达到要挖的条件
+-- ---------------------------------------------------------------
+function Miner.AutoMine()
+    if GetRoleConfig("AutoMine") == true then
+        if Miner.CheckMineGap() then
+            Miner.Mining()
+        end
     end
 end
 

@@ -6,6 +6,7 @@ require "Role"
 require "DBHelper"
 require "rooms"
 require "lujing"
+require "Member"
 require "Sect"
 require "chat"
 require "Study"
@@ -286,6 +287,7 @@ score_age_check = function(n, l, w)
     score.age = trans(w[1])
 end
 score_gold_check = function(n, l, w)
+    score.vip = w[1]
     score.gold = trans(w[2])
     if score.gold == nil then
         score.gold = 0
@@ -661,13 +663,7 @@ hp_dz_count = function()
     end
 end
 function vcheck()
-    if score.id and score.id == "ptbx" and ptbxvip == 1 then
-        job.name = "ptbx"
-        exe("cond")
-        return go(VIPask, "扬州城", "当铺")
-    else
-        return Gstart()
-    end
+    return Gstart()
 end
 function Gstart()
     return check_bei(check_food)
@@ -714,7 +710,7 @@ function hp_trigger()
     create_trigger_t('hp23', "^(> )*你的背囊里有：", '', 'show_beinang')
     create_trigger_t('hp24', '^(> )*你眼中一亮看到\\D*的身边掉落一(件|副|双|袭|顶|个|条|对)(\\D*)(手套|靴|甲胄|腰带|披风|彩衣|头盔)。', '', 'fqyyArmorGet')
     create_trigger_t('hp25', '^(> )*你捡起一(件|副|双|袭|顶|个|条|对)(\\D*)(手套|靴|甲胄|腰带|披风|彩衣|头盔)。', '', 'fqyyArmorCheck')
-    create_trigger_t('hp26', '^(> )*客官已经付了银子，怎么不住店就走了呢！旁人还以为小店伺候不周呢！', '', 'kedian_sleep')
+    create_trigger_t('hp26', '^(> )*(\\D*)客官已经付了银子，怎(么|麽)不住店就走了呢！旁人还以为小店伺候不周呢！', '', 'kedian_sleep')
     SetTriggerOption("hp1", "group", "hp")
     SetTriggerOption("hp2", "group", "hp")
     SetTriggerOption("hp3", "group", "hp")
@@ -772,6 +768,7 @@ end
 function jifaOver()
     exe("jifa all")
 end
+
 function checkDebug()
     messageShow("您中毒了!")
     vippoison = 1
@@ -788,6 +785,7 @@ function checkDebug()
         return check_halt(check_xue)
     end
 end
+
 function hpEat()
     exe("eat huoxue dan")
 end
@@ -1224,7 +1222,9 @@ function checkJoblast(n, l, w)
         job.last = joblast[w[2]]
     end
 end
-
+-- ---------------------------------------------------------------
+-- 选择下一个任务前的一系列检查及准备
+-- ---------------------------------------------------------------
 function check_job()
     if xcexp == 0 and hp.exp < 1000000 then
         print("巡城到1M")
@@ -1243,82 +1243,23 @@ function check_job()
     -- if score.gold and score.gold>150 and weaponUsave and countTab(weaponUsave)>0 and math.random(1,5)==1 then
     -- return weaponUcheck()
     -- end
-    return check_halt(weaponUcheck)
-end
 
-function check_jobx()
-    for p in pairs(weaponUsave) do
-        if Bag and not Bag[p] then
-            job.zuhe["songmoya"] = nil
-        end
-    end
-    if fqyytmp.goArmorD == 1 then
-        return fqyyArmorGoCheck()
-    end
-    if job.zuhe == nil then
-        job.zuhe = { }
-    end
-    if job.zuhe["zhuoshe"] and score.party ~= "丐帮" then
-        job.zuhe["zhuoshe"] = nil
-    end
-    if job.zuhe["sldsm"] and score.party ~= "神龙教" then
-        job.zuhe["sldsm"] = nil
-    end
-    if job.zuhe["songmoya"] and hp.exp < 5000000 then
-        job.zuhe["songmoya"] = nil
-    end
-    if smydie * 1 >= smyall * 1 then
-        job.zuhe["songmoya"] = nil
-    end
-    if job.zuhe["husong"] and(score.party ~= "少林派" or hp.exp < 2000000) then
-        job.zuhe["husong"] = nil
-    end
-    if job.zuhe["songmoya"] and job.last ~= "songmoya" and mytime <= os.time() then
-        return songmoya()
-    end
-    if job.zuhe["hubiao"] and job.last ~= "hubiao" and job.teamname and
-        ((not condition.hubiao) or(condition.hubiao and condition.hubiao <= 0))
-    then
-        return hubiao()
-    elseif job.zuhe["husong"] then
-        return husong()
+    -- 每10次任务检查一次武器装备
+    if job.group.times ~= nil and job.group.times < 10 then
+        return check_halt(check_jobx)
     else
-        return checkJob()
+        job.group.times = 0
+        return check_halt(weaponUcheck)
     end
+end
+-- ---------------------------------------------------------------
+-- job切换
+-- ---------------------------------------------------------------
+function check_jobx()
+    job.Switch()
 end
 
 function checkJob()
-    -- 自动 蝶梦楼
-    if GetRoleConfig("AutoDML") == true then
-        if dmlFightCnt < 5 and(not condition.busy or condition.busy == 0) then
-            -- 判断 DB记录, 以及是否蝶梦楼开启时间
-            local dbrecordAmout = tonumber(dml_JobTimesToday())
-            if dbrecordAmout < 5 and dml_IsOpen() == true then
-                if dbrecordAmout > dmlFightCnt then
-                    dmlFightCnt = dbrecordAmout
-                end
-                return dml_AutoStart()
-            end
-        end
-    end
-
-    -- 自动 论坛收矿
-    if GetRoleConfig("AutoMine") == true then
-        if Miner.CheckMineGap() then
-            Miner.Mining()
-        end 
-    end 
-
-    -- 自动 10次洪七公作菜
-    if GetRoleConfig("Auto_hqgzc_10times") == true then
-        if job.last ~= 'hqgzc' then
-            -- 判断是否超过10次
-            if hqgzcJobTimesToday() ~= nil and tonumber(hqgzcJobTimesToday()) < 10 and hqgzcJob.Over10Times ~= true then
-                return hqgzc()
-            end
-        end
-    end
-
     -- if hp.exp>2000000 then job.zuhe["zhuoshe"]=nil end
     -- if hp.shen>0 or hp.exp>6000000 then job.zuhe["songshan"]=nil end
     if job.zuhe["songxin2"] then
@@ -1928,6 +1869,12 @@ function idle_set()
         print("正在提练矿石中")
         return
     end
+    if job.name == "wudang" and wudangJob.killStartTime ~= nil then
+        -- 说明已进入叫杀阶段, 鉴于武当任务的busy时间超长, 所以将允许的战斗时间延长至12分钟, 避免太长的战斗时间进入idle的判断
+        if flag.idle < 24 then
+            return
+        end
+    end
     print(flag.idle)
     exe("poem")
     if not flag.idle or type(flag.idle) ~= "number" then
@@ -2337,14 +2284,7 @@ function check_item_over()
 
     return checkPrepare()
 end
-function VIPask()
-    exe("ask laoban about 会员成长")
-    check_bei(VIPask2)
-end
-function VIPask2()
-    exe("ask laoban about 会员福利")
-    check_bei(Ebookcheck)
-end
+
 function Ebookcheck()
     DeleteTriggerGroup("vipchk")
     -- ain dls nv id Ebookcheck
@@ -2507,15 +2447,15 @@ function check_jingxue_count()
         -- return checkWait(check_heal_newbie,1)
         return go(check_heal_newbie, "扬州城", "药铺")
     elseif hp.jingxue_per < 96 or hp.qixue_per < 88 then
-        return checkWait(checkvip, 1)
+        return checkWait(checkvip, 0.1)
     else
-        return checkWait(check_jingxue, 1)
+        return checkWait(check_jingxue, 0.1)
     end
 end
 function check_jingxue()
     if (hp.qixue_per < 98 and hp.qixue_per > 88) and cty_cur > 0 then
         exe("eat chantui yao;hp")
-        return check_busy(check_jingxue, 1)
+        return check_busy(check_jingxue, 0.1)
     else
         if cty_cur == 0 then
             return checkHxd()
@@ -2524,7 +2464,7 @@ function check_jingxue()
         if score.party == "大轮寺" and hp.neili > 2000 then
             exe("yun juxue")
         end
-        return check_halt(check_heal_over, 1)
+        return check_halt(check_heal_over, 0.2)
     end
 end
 function check_heal_newbie()
@@ -2732,10 +2672,8 @@ end
 
 function check_food(Force2Full)
     -- 是否已经装备回内武器
-    if itemWield[GetItemChineseInBagByFullID(GetVariable("myweapon"))] ~= true then
-        weapon_unwield()
-        weapon_wield()
-    end
+    Weapon.RecoverNeili()
+
     Force2Full = Force2Full or false
     if score.gender == "无1" then
         -- 厂公专用，封闭房间
@@ -4262,12 +4200,13 @@ function randomElement(p_set)
     return l_element
 end
 
-road.huanghe1=true
-road.huanghe2=true
+road.huanghe1 = true
+road.huanghe2 = true
 function duhe_change()
-        road.huanghe1=not road.huanghe1
-        road.huanghe2=not road.huanghe2
-        EnableTriggerGroup("duhe",false)----------2018-08-30更新
+    road.huanghe1 = not road.huanghe1
+    road.huanghe2 = not road.huanghe2
+    EnableTriggerGroup("duhe", false)
+    ----------2018-08-30更新
 end
 
 function recordtime()

@@ -197,11 +197,12 @@ function hqgzcDazuo()
     return prepare_lianxi(hqgzc)
 end
 function hqgzcFail(n, l, w)
-    if string.find(l, "潜能已经这么多了") and GetRoleConfig("Auto_hqgzc_10times") then
-        hqgzcFinish_Over10TimesHandle()    
-    end 
     EnableTriggerGroup("hqgzcAccept", false)
     hqgzcTriggerDel()
+    if string.find(l, "潜能已经这么多了") and GetRoleConfig("Auto_hqgzc_10times") then
+        hqgzcFinish_Over10TimesHandle()
+        return check_pot()
+    end
     -- job.last='hqgzc'
     return check_food()
 end
@@ -474,8 +475,8 @@ function hqgzcFinish_Over10TimesHandle()
     --    local s = os.date("%Y%m%d%H")
     --    f:write(s)
     --    f:close()
-    hqgzcJob.Over10Times = true
---    hqgzcCnt = 0
+    --    hqgzcJob.Over10Times = true
+    --    hqgzcCnt = 0
 end
 -- ---------------------------------------------------------------
 -- 洪七公作菜, 要不到黄金奖励的异常情况处理
@@ -493,8 +494,19 @@ end
 -- ---------------------------------------------------------------
 function hqgzcJobTimesToday()
     local times = 0
-    local todaystr = tostring(common.date()).." 06:00:00"
-    local tsql = "SELECT count(*) FROM [ActivityRecord] where ActivityName = '洪七公作菜' and RoleID = '"..score.id.."' and CreateTime > '" .. todaystr .. "'"
+    local todaystr = tostring(common.date()) .. " 06:00:00"
+    local gapOneday = os.date("%Y-%m-%d", os.time() -24 * 3600)
+    local yesterdaystr = tostring(gapOneday) .. " 06:00:00"
+    local curHour = tonumber(os.date("%H", os.time()))
+    local tsql = ""
+    if curHour < 6 then
+        -- 时间为凌晨6点前的,都归为昨天
+        tsql = "SELECT count(*) FROM [ActivityRecord] where ActivityName = '洪七公作菜' and RoleID = '" ..
+        score.id .. "' and CreateTime > '" .. yesterdaystr .. "'"
+    else
+        tsql = "SELECT count(*) FROM [ActivityRecord] where ActivityName = '洪七公作菜' and RoleID = '" ..
+        score.id .. "' and CreateTime > '" .. todaystr .. "'"
+    end
     local db = DBHelper:new()
     times = db:GetRowAmount(tsql)
     return times
@@ -504,7 +516,9 @@ end
 -- ---------------------------------------------------------------
 function hqgzcFinishDBRecord(notes)
     if GetRoleConfig("Auto_hqgzc_10times") then
-        local tsql = "INSERT INTO [ActivityRecord] ([RoleID],[RoleName],[ActivityName],[Note]) VALUES ('" .. score.id .. "', '" .. score.name .. "', '洪七公作菜', '"..notes.."')"
+        local tsql =
+        "INSERT INTO [ActivityRecord] ([RoleID],[RoleName],[ActivityName],[Note]) VALUES ('" ..
+        score.id .. "', '" .. score.name .. "', '洪七公作菜', '" .. notes .. "')"
         local db = DBHelper:new()
         local val = db:Insert(tsql)
     end
@@ -520,6 +534,8 @@ function hqgzcFinish(n, l, w)
     quest.desc = ""
     quest.note = ""
     quest.update()
+    -- 记录DB
+    hqgzcFinishDBRecord("做菜任务：完成！获得【" .. w[2] .. "】点潜能！")
     job.zctime = 0
     flag.idle = 0
     dis_all()
@@ -580,4 +596,19 @@ function hqgzcFinish1(n, l, w)
     flag.idle = 0
     dis_all()
     return check_halt(hqgzc)
+end
+-- ---------------------------------------------------------------
+-- 判断是否满足洪七公作菜的条件
+-- ---------------------------------------------------------------
+function CheckAutohqgzc()
+    local isTrue = false
+    if GetRoleConfig("Auto_hqgzc_10times") == true and hp.exp > 2000000 then
+        if job.last ~= "hqgzc" then
+            -- 判断是否超过10次
+            if hqgzcJobTimesToday() ~= nil and tonumber(hqgzcJobTimesToday()) < 10 then
+                isTrue = true
+            end
+        end
+    end
+    return isTrue
 end

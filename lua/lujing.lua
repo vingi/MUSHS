@@ -22,8 +22,8 @@ road.wipe_id = nil
 road.wipe_who = nil
 road.wipe_con = nil
 road.resume = nil
-road.wait = 0.15
-road.steps = 10
+road.wait = 0.13
+road.steps = 16
 locate_finish = 0
 road.cmd = nil
 road.cmd_save = nil
@@ -1490,6 +1490,71 @@ function wayMl()
 end
 function wayMlOver()
     return walk_wait()
+end
+------------------------------蝴蝶谷-----------------------------------------
+bohuacong=function()
+        exe('tell zhou 开门;whisper startd 开门')
+            --check_step_num1=check_step_num1+1
+            wait.make(function() 
+            wait.time(0.5)
+            exe('right')
+            end)
+        wait.make(function() 
+        wait.time(0.5)
+        locate_finish='bohuaconggo'
+            return fastLocate()
+        end)
+end
+bohuaconggo=function()
+        locate_finish=0
+        if locl.room=="花丛中" then
+                        EnableTriggerGroup("hdghuacong",false)
+            return walk_wait()
+        else
+                    return go_locate()
+            end
+end
+hdgleavein=function()
+DeleteTriggerGroup("miaopucheck")
+create_trigger_t('miaopucheck1','^>*\\s*你乱走一气，忽然眼前一亮，来到一处草径','','hdgupp')   
+create_trigger_t('miaopucheck2','^>*\\s*你把 "action" 设定为 "离开花圃了吗" 成功完成。','','hdgingoon')   
+SetTriggerOption("miaopucheck1","group","miaopucheck")
+SetTriggerOption("miaopucheck2","group","miaopucheck")
+EnableTriggerGroup("miaopucheck",true)
+      hdgup=0
+      if flag.find==1 then return end        
+      exe('nd')
+          return hdgdown()
+end
+hdgupp=function()
+        EnableTimer('walkWait4',false)
+        if flag.find==1 then return end
+        hdgup=1
+        wait.make(function() 
+            wait.time(1)
+            return hdgingoon()
+        end)
+end
+hdgdown=function()
+        if flag.find==1 then return end
+        hdgup=0
+        create_timer_s('walkWait4',0.5,'hdgrun')
+end
+hdgrun=function()
+   exe('nd;n;n;nd;n;n;nd;n;n;nd;n;n;yun jing;yun jingli')
+end
+hdgingoon=function()
+        if flag.find==1 then return end
+        EnableTriggerGroup("miaopucheck",true)        
+        if hdgup==0 then
+                return hdgdown()
+        else
+                hdgup=0
+            EnableTriggerGroup("miaopucheck",false)        
+            exe('n;n')
+                --check_step_num1=check_step_num1+4
+                return walk_wait()
+        end
 end
 -------------------------------------------------------------------------------------------
 hscaidi = function()

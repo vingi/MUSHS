@@ -123,7 +123,8 @@ end
 
 function job_huashan()
     EnableTriggerGroup("huashan_ask", true)
-    exe("ask yue buqun about job")
+    NewObserver("huashanAskJobOb", 'ask yue buqun about job')
+    -- 增加要任务发呆计时器
 end
 
 function huashan_trigger()
@@ -185,6 +186,8 @@ end
 function huashan_ask()
     EnableTriggerGroup("huashan_ask", false)
     EnableTriggerGroup("huashan_accept", true)
+    RemoveObserver('huashanAskJobOb')
+    -- 关闭要任务计时器
 end
 
 function huashan_nobody()
@@ -257,11 +260,11 @@ function huashan_npc()
 end
 
 function huashan_npc_go()
-    go_direct(huashan_npc_get,"华山","正气堂", "华山", "山脚下", "huashan/zhengqi")
+    go_direct(huashan_npc_get, "华山", "正气堂", "华山", "山脚下", "huashan/zhengqi")
 end
 
 function huashan_npc_go2()
-    go_direct(huashan_npc_get,"华山", "祭坛", "华山", "山脚下", "huashan/jitan")
+    go_direct(huashan_npc_get, "华山", "祭坛", "华山", "山脚下", "huashan/jitan")
 end
 
 function huashan_npc_get()
@@ -307,7 +310,8 @@ function huashan_find(n, l, w)
     quest.target = job.target
     quest.update()
     DeleteTriggerGroup("huashan_find")
-    create_trigger_t("huashan_find1", "^( )*" .. job.target .. "\\((\\D*)\\)", "", "huashan_fight")
+    create_trigger_t('huashan_find1', '^( )*' .. job.target .. '\\((\\D*)\\)', '', 'huashan_fight')
+    -----------计时器杀人
     create_trigger_t("huashan_find2", "^(> )*看起来(\\D*)想杀死你！", "", "huashan_debug_fight")
     create_trigger_t("huashan_find3", "^(> )*采花大盗正盯着你看，不知道打些什么主意。", "", "huashan_dadao")
     SetTriggerOption("huashan_find1", "group", "huashan_find")
@@ -370,6 +374,11 @@ function huashan_dadao()
     return go(huashanFindAct, dest.area, dest.room)
 end
 
+function huashan_fight_ti()
+    ----------增加华山kill 计时器
+    NewObserverByFunc("huashankillOb", 'huashan_faint')
+end
+
 function huashan_fight(n, l, w)
     EnableTrigger("huashan_find2", false)
     job.id = string.lower(w[2])
@@ -403,6 +412,8 @@ function huashan_faint()
 end
 
 function huashan_cut()
+    ------------关闭华山kill 计时器
+    RemoveObserver("huashankillOb")
     EnableTriggerGroup("huashan_fight", false)
     EnableTriggerGroup("huashan_find", false)
     DeleteTriggerGroup("huashan_cut")
@@ -410,10 +421,10 @@ function huashan_cut()
     create_trigger_t("huashan_cut2", "^(> )*(乱切别人杀的人干嘛啊|你手上这件兵器无锋无刃|你得用件锋利的器具才能切下这尸体的头来)", "", "huashan_cut_weapon")
     SetTriggerOption("huashan_cut1", "group", "huashan_cut")
     SetTriggerOption("huashan_cut2", "group", "huashan_cut")
+    -- 因战斗中使用克制武功,通常会装备不同的武器,造成weapon_unwield()的不准确, 故在此处重新读取最新的物品列表信息
+    exe("i")
     -- 清空错误的road.id(临时方法)
     -- 后续考虑用 opposite path
-    exe("i")
-    -- 因战斗中使用克制武功,通常会装备不同的武器,造成weapon_unwield()的不准确, 故在此处重新读取最新的物品列表信息
     road.id = nil
     job.killer = { }
     fight.time.e = os.time()
@@ -454,8 +465,7 @@ end
 
 function huashan_cut_after()
     -- 换上回内武器
-    weapon_unwield()
-    weapon_wield()
+    Weapon.RecoverNeili()
     return go(huashan_yls, "华山", "祭坛")
 end
 
@@ -472,7 +482,8 @@ function huashan_yls()
     SetTriggerOption("huashan_yls1", "group", "huashan_yls")
     SetTriggerOption("huashan_yls2", "group", "huashan_yls")
     SetTriggerOption("huashan_yls3", "group", "huashan_yls")
-    return exe("give head to yue lingshan;hp")
+    -- 增加交首级计时器
+    NewObserver("huashanGiveHeadOb", 'give head to yue lingshan;hp')
 end
 
 function huashan_yls_fail()
@@ -511,6 +522,8 @@ function huashan_yls_lbcx()
 end
 
 function huashan_yls_ask(n, l, w)
+    RemoveObserver("huashanGiveHeadOb")
+    -- 触发成功后删除交首级计时器
     EnableTriggerGroup("huashan_yls", false)
     DeleteTriggerGroup("huashan_yls_ask")
     create_trigger_t("huashan_yls_ask1", "^(> )*你向岳灵珊打听有关『力不从心』的消息。", "", "huashan_yls_back")
