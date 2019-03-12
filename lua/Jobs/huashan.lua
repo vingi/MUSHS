@@ -487,6 +487,8 @@ function huashan_yls()
 end
 
 function huashan_yls_fail()
+    -- 触发成功后删除交首级计时器
+    RemoveObserver("huashanGiveHeadOb")
     EnableTriggerGroup("huashan_yls", false)
     if locl.room ~= "祭坛" then
         return go(huashan_yls, "华山", "祭坛")
@@ -496,6 +498,8 @@ function huashan_yls_fail()
 end
 
 function huashan_yls_lingpai()
+    -- 触发成功后删除交首级计时器
+    RemoveObserver("huashanGiveHeadOb")
     EnableTriggerGroup("huashan_yls", false)
     exe("drop ling pai")
     return check_halt(huashan_yls)
@@ -522,8 +526,8 @@ function huashan_yls_lbcx()
 end
 
 function huashan_yls_ask(n, l, w)
-    RemoveObserver("huashanGiveHeadOb")
     -- 触发成功后删除交首级计时器
+    RemoveObserver("huashanGiveHeadOb")
     EnableTriggerGroup("huashan_yls", false)
     DeleteTriggerGroup("huashan_yls_ask")
     create_trigger_t("huashan_yls_ask1", "^(> )*你向岳灵珊打听有关『力不从心』的消息。", "", "huashan_yls_back")

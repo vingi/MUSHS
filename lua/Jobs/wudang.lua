@@ -3,7 +3,9 @@ wudangJob = {
     -- 接到任务时间 (接到任务时间与叫杀时间的时间差,就是寻人所耗的时间)
     takeMissionTime = nil,
     -- 记录开始叫杀时间
-    killStartTime = nil
+    killStartTime = nil,
+    -- Npc情况描述
+    NpcCondition = nil
 }
 
 function wudangTrigger()
@@ -200,7 +202,7 @@ function wudangConsider(n, l, w)
     else
         wd_distance = 4
     end
-    print(wd_distance)
+    print("方圆"..tostring(wd_distance).."里之内")
     if string.find(job.where, "周围") then
         local l_cnt = string.find(job.where, "周围")
         job.where = string.sub(job.where, 1, l_cnt - 1)
@@ -391,7 +393,8 @@ end
 -- ---------------------------------------------------------------
 function wudangKillObserver()
     local timegap = common.timediff(common.string2time(common.time()), common.string2time(wudangJob.killStartTime))
-    if (timegap.min > 0 or timegap.sec > 30) and wudangJob.killStartTime ~= nil then
+    if (timegap.min > 0 or timegap.sec > 30) and wudangJob.killStartTime ~= nil and wudangJob.NpcCondition ~= quest.note then
+        wudangJob.NpcCondition = quest.note
         messageShowT("武当任务战斗时间超过30秒：" .. quest.note)
         RemoveObserver("wudangJobKillOb")
     end

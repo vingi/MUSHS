@@ -1749,7 +1749,13 @@ function checkWaitOk()
     if waithook == nil then
         waithook = test
     end
-    return waithook()
+    if type(waithook) == "string" or type(waithook) == "number" then
+        print("waithook 赋值异常: 当前类型为 - "..type(waithook)..", 当前值为 - "..waithook)
+        return test()
+    end 
+    if type(waithook) == "function" then
+        return waithook()
+    end 
 end
 
 nexthook = test
@@ -1869,16 +1875,16 @@ function idle_set()
         print("正在提练矿石中")
         return
     end
-    if job.name == "wudang" and wudangJob.killStartTime ~= nil then
-        -- 说明已进入叫杀阶段, 鉴于武当任务的busy时间超长, 所以将允许的战斗时间延长至12分钟, 避免太长的战斗时间进入idle的判断
-        if flag.idle < 24 then
-            return
-        end
+    if flag.idle then
+        print(flag.idle)
     end
-    print(flag.idle)
     exe("poem")
     if not flag.idle or type(flag.idle) ~= "number" then
         flag.idle = 0
+    end
+    if flag.idle < 24 and job.name == "wudang" and wudangJob.killStartTime ~= nil then
+        -- 说明已进入叫杀阶段, 鉴于武当任务的busy时间超长, 所以将允许的战斗时间延长至12分钟, 避免太长的战斗时间进入idle的判断
+        return
     end
     flag.idle = flag.idle + 1
     if flag.idle < 8 then
@@ -1890,7 +1896,7 @@ function idle_set()
     end
     scrLog()
     dis_all()
-    chats_locate("定位系统：发呆5分钟后，于【" .. locl.area .. locl.room .. "】重新启动系统！", "red")
+    chats_locate("定位系统：发呆" ..(flag.idle / 2) .. "分钟后，于【" .. locl.area .. locl.room .. "】重新启动系统！", "red")
     Disconnect()
     Connect()
 end
