@@ -212,6 +212,7 @@ function wudangConsider(n, l, w)
     -- if job.area=="明教" and string.find(job.room,"字门") then
     -- job.room="紫杉林"
     -- end
+    if job.area=="明教" and (job.room=="紫杉林" or string.find(job.room,"字门")) then job.room="练武场" end
 end
 function wudangNpc(n, l, w)
     EnableTriggerGroup("wudangAccept", false)
