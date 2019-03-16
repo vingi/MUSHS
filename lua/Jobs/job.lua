@@ -3047,8 +3047,9 @@ end
 -- job切换具体实现方法
 -- ---------------------------------------------------------------
 function job.Switch()
-    -- 任务组计数, 用于节省每次任务结束的判断, 一些判断改为每个任务组(10次)进行一次检查
-    job.group.times = job.group.times + 1
+    -- ---------------------------------------------------------------
+    -- 公共任务, 限次数
+    -- ---------------------------------------------------------------
 
     -- 自动领取会员福利
     if Vip.CheckGetBenefit() then
@@ -3067,6 +3068,28 @@ function job.Switch()
     if CheckAutohqgzc() then
         return hqgzc()
     end
+
+    -- ---------------------------------------------------------------
+    -- 新手任务部分先判断
+    -- ---------------------------------------------------------------
+    if xcexp == 0 and hp.exp < 1000000 then
+        print("巡城到1M")
+        kdummy = 0
+        return xunCheng()
+    end
+    if xcexp == 1 and hp.exp < 2000000 then
+        print("巡城到2M")
+        kdummy = 0
+        return xunCheng()
+    end
+    if score.party == "桃花岛" and(hp.shen > 150000 or hp.shen < -150000) then
+        return thdJiaohui()
+    end
+    -- ---------------------------------------------------------------
+    -- 成长阶段任务
+    -- ---------------------------------------------------------------
+    -- 任务组计数, 用于节省每次任务结束的判断, 一些判断改为每个任务组(10次)进行一次检查
+    job.group.times = job.group.times + 1
 
     for p in pairs(weaponUsave) do
         if Bag and not Bag[p] then

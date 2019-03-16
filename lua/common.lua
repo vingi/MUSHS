@@ -17,7 +17,7 @@ require "common"
 --]]
 require "lc"
 
-common = {}
+common = { }
 
 -- ----------------------------------------------------------
 -- Common.InstanceRun(执行的函数, 间隔的时间, 执行函数的参数);
@@ -27,7 +27,7 @@ common = {}
 -- 我的图片示例,
 -- common.InstanceRun(common.Test);
 -- ----------------------------------------------------------
-common.tInstanceVoid = {}
+common.tInstanceVoid = { }
 common.InstanceRun = function(pVoid, nTime, vParam)
     local strKey = tostring(pVoid)
     if strKey == nil or strKey == "" then
@@ -107,26 +107,26 @@ function common.string2time(timeString)
         error("timeString is a invalid time string")
         return 0
     end
-    return os.time({year = y, month = m, day = d, hour = H, min = M, sec = S})
+    return os.time( { year = y, month = m, day = d, hour = H, min = M, sec = S })
 end
 
 -- ---------------------------------------------------------------
 -- 获取两个时间的间隔
 -- ---------------------------------------------------------------
 function common.timediff(long_time, short_time)
-    local n_short_time, n_long_time, carry, diff = os.date("*t", short_time), os.date("*t", long_time), false, {}
+    local n_short_time, n_long_time, carry, diff = os.date("*t", short_time), os.date("*t", long_time), false, { }
     local colMax = {
         60,
         60,
         24,
-        os.date("*t", os.time {year = n_short_time.year, month = n_short_time.month + 1, day = 0}).day,
+        os.date("*t",os.time { year = n_short_time.year, month = n_short_time.month + 1, day = 0 }).day,
         12,
         0
     }
-    n_long_time.hour = n_long_time.hour - (n_long_time.isdst and 1 or 0) + (n_short_time.isdst and 1 or 0)
+    n_long_time.hour = n_long_time.hour -(n_long_time.isdst and 1 or 0) +(n_short_time.isdst and 1 or 0)
     -- handle dst
-    for i, v in ipairs({"sec", "min", "hour", "day", "month", "year"}) do
-        diff[v] = n_long_time[v] - n_short_time[v] + (carry and -1 or 0)
+    for i, v in ipairs( { "sec", "min", "hour", "day", "month", "year" }) do
+        diff[v] = n_long_time[v] - n_short_time[v] +(carry and -1 or 0)
         carry = diff[v] < 0
         if carry then
             diff[v] = diff[v] + colMax[i]
@@ -142,26 +142,28 @@ function common.GetLastRebootTime()
     local day_gap = 0
     if tonumber(weektime) > 4 then
         day_gap = weektime - 4
+    elseif tonumber(weektime) == 4 then
+        day_gap = 0
     else
         day_gap = weektime + 3
     end
     curH = tonumber(os.date("%H", os.time()))
     curM = tonumber(os.date("%M", os.time()))
     curS = tonumber(os.date("%S", os.time()))
-    reboottime = (os.time() - day_gap * 24 * 3600 - curH * 3600 - curM * 60 - curS) + 8 * 3600
+    reboottime =(os.time() - day_gap * 24 * 3600 - curH * 3600 - curM * 60 - curS) + 8 * 3600
     return os.date("%Y-%m-%d %H:%M:%S", reboottime)
 end
 -- ----------------------------------------------------------
 -- 自定义实现 lua split方法
 -- ----------------------------------------------------------
 function string.split(s, p)
-    local rt = {}
+    local rt = { }
     string.gsub(
-        s,
-        "[^" .. p .. "]+",
-        function(w)
-            table.insert(rt, w)
-        end
+    s,
+    "[^" .. p .. "]+",
+    function(w)
+        table.insert(rt, w)
+    end
     )
     return rt
 end
@@ -181,26 +183,24 @@ function string.isempty(str)
     end
     return isem
 end
-
 -- ----------------------------------------------------------
 -- 自定义实现 lua string.trim
 -- ----------------------------------------------------------
 function string.trim(s)
-    return (s:gsub("^%s*(.-)%s*$", "%1"))
+    return(s:gsub("^%s*(.-)%s*$", "%1"))
 end
 
 -- ----------------------------------------------------------
 -- 自定义实现 lua table 倒序排列
 -- ----------------------------------------------------------
 function common.reverseTable(tab)
-    local tmp = {}
+    local tmp = { }
     for i = 1, #tab do
         local key = #tab
         tmp[i] = table.remove(tab)
     end
     return tmp
 end
-
 -- ----------------------------------------------------------
 -- 自定义实现 lua 获取talbe长度
 -- ----------------------------------------------------------
@@ -211,7 +211,6 @@ function common.table_leng(t)
     end
     return leng
 end
-
 -- ----------------------------------------------------------
 -- 根据最大值和最小值获得在该范围内的值,
 -- return value
@@ -225,7 +224,6 @@ function common.GetValueByRange(num, min, max)
     end
     return num
 end
-
 -- ---------------------------------------------------------------
 -- 字符转换lc.dll的帮助文件
 
@@ -248,14 +246,12 @@ end
 function common.LcHelp()
     print(lc.help())
 end
-
 -- ---------------------------------------------------------------
 -- 字符转换, 从 utf8 to ansi
 -- ---------------------------------------------------------------
 function common.u2a(str)
     return lc.u2a(str)
 end
-
 -- ---------------------------------------------------------------
 -- 字符转换, 从 ansi to utf8
 -- ---------------------------------------------------------------
@@ -292,22 +288,22 @@ end
 -- 创建一个普通别名
 function create_alias(a_name, a_match, a_response)
     return AddAlias(
-        a_name,
-        a_match,
-        a_response,
-        alias_flag.Enabled + alias_flag.Replace + alias_flag.RegularExpression,
-        ""
+    a_name,
+    a_match,
+    a_response,
+    alias_flag.Enabled + alias_flag.Replace + alias_flag.RegularExpression,
+    ""
     )
 end
 -- 创建一个exe别名
 function create_alias_e(a_name, a_match, a_response)
     local tp =
-        AddAlias(
-        a_name,
-        a_match,
-        a_response,
-        alias_flag.Enabled + alias_flag.Replace + alias_flag.RegularExpression,
-        ""
+    AddAlias(
+    a_name,
+    a_match,
+    a_response,
+    alias_flag.Enabled + alias_flag.Replace + alias_flag.RegularExpression,
+    ""
     )
     SetAliasOption(a_name, "send_to", "10")
     return tp
@@ -319,164 +315,164 @@ end
 -- 创建一个分定时器
 function create_timer_m(t_name, t_min, t_function)
     return AddTimer(
-        t_name,
-        0,
-        t_min,
-        0,
-        "",
-        timer_flag.Enabled + timer_flag.ActiveWhenClosed + timer_flag.Replace,
-        t_function
+    t_name,
+    0,
+    t_min,
+    0,
+    "",
+    timer_flag.Enabled + timer_flag.ActiveWhenClosed + timer_flag.Replace,
+    t_function
     )
 end
 -- 创建一个秒定时器
 function create_timer_s(t_name, t_second, t_function)
     return AddTimer(
-        t_name,
-        0,
-        0,
-        t_second,
-        "",
-        timer_flag.Enabled + timer_flag.ActiveWhenClosed + timer_flag.Replace,
-        t_function
+    t_name,
+    0,
+    0,
+    t_second,
+    "",
+    timer_flag.Enabled + timer_flag.ActiveWhenClosed + timer_flag.Replace,
+    t_function
     )
 end
 -- 创建一个一次性秒定时器
 function create_timer_st(t_name, t_second, t_function)
     return AddTimer(
-        t_name,
-        0,
-        0,
-        t_second,
-        "",
-        timer_flag.Enabled + timer_flag.ActiveWhenClosed + timer_flag.Replace + timer_flag.OneShot,
-        t_function
+    t_name,
+    0,
+    0,
+    t_second,
+    "",
+    timer_flag.Enabled + timer_flag.ActiveWhenClosed + timer_flag.Replace + timer_flag.OneShot,
+    t_function
     )
 end
 -- 创建一个触发器
 function create_trigger_t(t_name, t_match, t_response, t_function)
     return AddTrigger(
-        t_name,
-        t_match,
-        t_response,
-        trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace,
-        -1,
-        0,
-        "",
-        t_function
+    t_name,
+    t_match,
+    t_response,
+    trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace,
+    - 1,
+    0,
+    "",
+    t_function
     )
 end
 -- 创建一个临时的触发器
 function create_trigger_f(t_name, t_match, t_response, t_function)
     return AddTrigger(
-        t_name,
-        t_match,
-        t_response,
-        trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace + trigger_flag.Temporary,
-        -1,
-        0,
-        "",
-        t_function
+    t_name,
+    t_match,
+    t_response,
+    trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace + trigger_flag.Temporary,
+    - 1,
+    0,
+    "",
+    t_function
     )
 end
 -- 创建一个临时的一次性触发器
 function create_trigger(t_name, t_match, t_response, t_function)
     return AddTrigger(
-        t_name,
-        t_match,
-        t_response,
-        trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace + trigger_flag.Temporary +
-            trigger_flag.OneShot,
-        -1,
-        0,
-        "",
-        t_function
+    t_name,
+    t_match,
+    t_response,
+    trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace + trigger_flag.Temporary +
+    trigger_flag.OneShot,
+    - 1,
+    0,
+    "",
+    t_function
     )
 end
 -- 创建一个ex触发器
 function create_triggerex_t(t_name, t_match, t_response, t_function)
     return AddTriggerEx(
-        t_name,
-        t_match,
-        t_response,
-        trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace,
-        -1,
-        0,
-        "",
-        t_function,
-        12,
-        99
+    t_name,
+    t_match,
+    t_response,
+    trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace,
+    - 1,
+    0,
+    "",
+    t_function,
+    12,
+    99
     )
 end
 
 function create_triggerex_t101(t_name, t_match, t_response, t_function)
     return AddTriggerEx(
-        t_name,
-        t_match,
-        t_response,
-        trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace,
-        -1,
-        0,
-        "",
-        t_function,
-        12,
-        101
+    t_name,
+    t_match,
+    t_response,
+    trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace,
+    - 1,
+    0,
+    "",
+    t_function,
+    12,
+    101
     )
 end
 function create_triggerex_lvl(t_name, t_match, t_response, t_function, lvl)
     return AddTriggerEx(
-        t_name,
-        t_match,
-        t_response,
-        trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace,
-        -1,
-        0,
-        "",
-        t_function,
-        12,
-        lvl
+    t_name,
+    t_match,
+    t_response,
+    trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace,
+    - 1,
+    0,
+    "",
+    t_function,
+    12,
+    lvl
     )
 end
 -- 创建一个临时的触发器
 function create_triggerex_f(t_name, t_match, t_response, t_function)
     return AddTriggerEx(
-        t_name,
-        t_match,
-        t_response,
-        trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace + trigger_flag.Temporary,
-        -1,
-        0,
-        "",
-        t_function,
-        12,
-        100
+    t_name,
+    t_match,
+    t_response,
+    trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace + trigger_flag.Temporary,
+    - 1,
+    0,
+    "",
+    t_function,
+    12,
+    100
     )
 end
 -- 创建一个临时的一次性触发器
 function create_triggerex(t_name, t_match, t_response, t_function)
     return AddTriggerEx(
-        t_name,
-        t_match,
-        t_response,
-        trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace + trigger_flag.Temporary +
-            trigger_flag.OneShot,
-        -1,
-        0,
-        "",
-        t_function,
-        12,
-        100
+    t_name,
+    t_match,
+    t_response,
+    trigger_flag.Enabled + trigger_flag.RegularExpression + trigger_flag.Replace + trigger_flag.Temporary +
+    trigger_flag.OneShot,
+    - 1,
+    0,
+    "",
+    t_function,
+    12,
+    100
     )
 end
 -- 创建一个临时的一次性定时器
 function create_timer(t_name, t_time, t_com, t_function)
     return AddTimer(
-        t_name,
-        0,
-        0,
-        t_time,
-        t_com,
-        timer_flag.Enabled + timer_flag.OneShot + timer_flag.TimerSpeedWalk + timer_flag.Replace + timer_flag.Temporary,
-        t_function
+    t_name,
+    0,
+    0,
+    t_time,
+    t_com,
+    timer_flag.Enabled + timer_flag.OneShot + timer_flag.TimerSpeedWalk + timer_flag.Replace + timer_flag.Temporary,
+    t_function
     )
 end
 
@@ -485,12 +481,12 @@ end
 -- ------------------------------------
 function Fun_AddAlias(name, match, group, script)
     local value =
-        AddAlias(
-        name,
-        match,
-        "",
-        alias_flag.Enabled + alias_flag.Replace + alias_flag.Temporary + alias_flag.RegularExpression,
-        script
+    AddAlias(
+    name,
+    match,
+    "",
+    alias_flag.Enabled + alias_flag.Replace + alias_flag.Temporary + alias_flag.RegularExpression,
+    script
     )
     SetAliasOption(name, "group", group)
 
@@ -505,12 +501,12 @@ end
 -- ------------------------------------
 function Fun_AddAliasRE(name, match, group, script)
     local value =
-        AddAlias(
-        name,
-        match,
-        "",
-        alias_flag.Enabled + alias_flag.Replace + alias_flag.Temporary + alias_flag.RegularExpression,
-        script
+    AddAlias(
+    name,
+    match,
+    "",
+    alias_flag.Enabled + alias_flag.Replace + alias_flag.Temporary + alias_flag.RegularExpression,
+    script
     )
     SetAliasOption(name, "group", group)
 
@@ -525,15 +521,15 @@ end
 -- ------------------------------------
 function Fun_AddTrigger(name, match, group, script)
     local value =
-        AddTrigger(
-        name,
-        match,
-        "",
-        trigger_flag.KeepEvaluating + trigger_flag.RegularExpression + trigger_flag.Replace + trigger_flag.Temporary,
-        custom_colour.NoChange,
-        0,
-        "",
-        script
+    AddTrigger(
+    name,
+    match,
+    "",
+    trigger_flag.KeepEvaluating + trigger_flag.RegularExpression + trigger_flag.Replace + trigger_flag.Temporary,
+    custom_colour.NoChange,
+    0,
+    "",
+    script
     )
     SetTriggerOption(name, "group", group)
 
@@ -548,16 +544,16 @@ end
 -- ------------------------------------
 function Fun_AddTriggerHide(name, match, group, script)
     local value =
-        AddTrigger(
-        name,
-        match,
-        "",
-        trigger_flag.KeepEvaluating + trigger_flag.RegularExpression + trigger_flag.Replace + trigger_flag.Temporary +
-            trigger_flag.OmitFromOutput,
-        custom_colour.NoChange,
-        0,
-        "",
-        script
+    AddTrigger(
+    name,
+    match,
+    "",
+    trigger_flag.KeepEvaluating + trigger_flag.RegularExpression + trigger_flag.Replace + trigger_flag.Temporary +
+    trigger_flag.OmitFromOutput,
+    custom_colour.NoChange,
+    0,
+    "",
+    script
     )
     SetTriggerOption(name, "group", group)
 
@@ -586,6 +582,17 @@ function Fun_AddTimer(name, time, group, script)
     return value
 end
 -- ---------------------------------------------------------------
+-- 判断一个Observer是否存在
+-- ---------------------------------------------------------------
+function ExistObserver(obname)
+    local isExist = IsTimer(obname)
+    if isExist ~= nill and tonumber(isExist) == 0 then
+        return true
+    else
+        return false
+    end
+end
+-- ---------------------------------------------------------------
 -- 新建一个监视器, 通过新建计时器的方式, 监视命令是否被正常执行, 通常该命令执行后续会触发方法将这个定时器关闭
 -- args:
 -- obname: 监视器名称
@@ -593,11 +600,12 @@ end
 -- cmd: 需要执行的命令
 -- ---------------------------------------------------------------
 function NewObserver(obname, cmd, ticktime)
-    exe(cmd)
-    local ticktime = ticktime or 2
-    AddTimer(obname, 0, 0, ticktime, cmd, timer_flag.Enabled + timer_flag.ActiveWhenClosed, "")
+    if not ExistObserver(obname) then
+        exe(cmd)
+        local ticktime = ticktime or 2
+        AddTimer(obname, 0, 0, ticktime, cmd, timer_flag.Enabled + timer_flag.ActiveWhenClosed, "")
+    end
 end
-
 -- ---------------------------------------------------------------
 -- 新建一个监视器, 通过新建计时器的方式, 监视命令是否被正常执行, 通常该命令执行后续会触发方法将这个定时器关闭
 -- args:
@@ -606,9 +614,11 @@ end
 -- func: 需要执行的方法
 -- ---------------------------------------------------------------
 function NewObserverByFunc(obname, func, ticktime)
-    _G[func]()
-    local ticktime = ticktime or 2
-    create_timer_s(obname, ticktime, func)
+    if not ExistObserver(obname) then
+        _G[func]()
+        local ticktime = ticktime or 2
+        create_timer_s(obname, ticktime, func)
+    end
 end
 -- ---------------------------------------------------------------
 -- 移除监视器

@@ -3,8 +3,8 @@ nofindxuezhu=1
 ---------------------------------------------------------------------Ö÷Ä£¿é------------------------------------------------------------------------------------------------
 function xuezhugo()
         nofindxuezhu=0
-        delete_all_triggers()
-        dis_all()
+        exe('unset wimpy')
+        
 	exe('nick È¥Ãç½®ÕÒÐ¡³ÌÃÃ×Ó')
 	return go(xuezhuask,'Ãç½®','Ò©Íõ¾Ó')
 end
@@ -38,10 +38,10 @@ function xuezhuask()
 	EnableTriggerGroup("xz",true)
 end
 function xuezhuask1()
-	exe('nw;s;w;w;nu;eu;ed;nu;nw;e;enter;dian fire;yao shuteng;unwield qiankun;unwield haoqi;unwield longquan;bei leg;jiali 30;hit xue zhu')----------±øÆ÷Ìæ»»³É±äÁ¿°É
+	exe('nw;s;w;w;nu;eu;ed;nu;nw;e;enter;dian fire;yao shuteng;unwield qiankun;unwield haoqi;unwield longquan;bei leg;jiali 50;hit xue zhu')----------±øÆ÷Ìæ»»³É±äÁ¿°É
 	end
 function getxuezhu()
-	exe('dian fire;yao shuteng;unwield qiankun;unwield haoqi;unwield longquan;bei leg;jiali 30;hit xue zhu')
+	exe('dian fire;yao shuteng;unwield qiankun;unwield haoqi;unwield longquan;bei leg;jiali 50;hit xue zhu')
 end
 function xuezhunofind()
         exe('yao shuteng')
@@ -53,23 +53,23 @@ function getxuezhu1()
 	return go(xuezhufinish,'Ãç½®','Ò©Íõ¾Ó')
 end
 function hitxuezhu1()
-	exe('unwield qiankun;unwield haoqi;unwield longquan;bei leg;jiali 30;hit xue zhu')
+	exe('unwield qiankun;unwield haoqi;unwield longquan;bei leg;jiali 50;hit xue zhu')
 end
 function xuezhufinish()
 	exe('give xue zhu to cheng lingsu')
 	nofindxuezhu=1
 	againxuezhu=0
-	EnableTriggerGroup("xz",false)
-	return check_jobx()
+	return check_job()
 end
 function xuezhudie()
 	nofindxuezhu=1
 	againxuezhu=1
 	EnableTriggerGroup("xz",false)
-	return check_jobx()	
+	return check_job()	
 end
 function xuezhuset()
          exe('set ÄÃÑ©Öë yes')
+         EnableTriggerGroup("xz",false)
 end
 
 if nofindxuezhu==0 then

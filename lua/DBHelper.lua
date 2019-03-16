@@ -18,7 +18,7 @@
     local val = db:GetRowAmount(tsql)
 
 
-    -- insert
+    -- Insert
     local tsql = "INSERT INTO [ActivityRecord] ([RoleID],[RoleName],[ActivityName],[Note]) VALUES ('vingi', '²ÔÔÂ', 'ºéÆß¹«×÷²Ë', NULL)"
     local db = DBHelper:new()
     local val = db:Insert(tsql)

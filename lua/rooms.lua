@@ -15858,6 +15858,7 @@ Room {
     lengths =
     {
         ["south"] = "if score.gender and score.gender=='Å®' then return 1 else return false end",
+        ["west"] = "if job.room=='·¹Ìü' or job.room=='Ò©·¿' then return 1 elseif flag.times and flag.times<3 then return 6 else return 1 end",
     },
 }
 Room {
@@ -16585,6 +16586,9 @@ Room {
     {
         ["south"] = "huashan/fanting",
         ["north"] = "huashan/lianwu1",
+    },
+    lengths = {
+        ["south"] = "if job.room=='·¹Ìü' or job.room=='Ò©·¿' then return 1 elseif flag.times and flag.times<3 then return 6 else return 1 end",
     },
 }
 Room {

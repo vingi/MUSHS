@@ -760,7 +760,7 @@ find_nobody = function()
     end
 
     flag.times = flag.times + 1
-    if flag.times > 2 then
+    if flag.times > 3 then
         jobFindFail = jobFindFail or { }
         if job.name and jobFindFail[job.name] then
             local p = jobFindFail[job.name]
@@ -796,11 +796,28 @@ function searchPre()
     local p_room = map.rooms[road.id].name
     local p_dest = getLookCity(road.id)
     local l_distance = 6
-    if job.name and(job.name == "clb" or job.name == 'tdh' or job.name == 'tmonk') and flag.times == 1 then
-        l_distance = 2
+    -- if job.name and(job.name == "clb" or job.name == 'tdh' or job.name == 'tmonk') and flag.times == 1 then
+    --     l_distance = 2
+    -- end
+    if flag.times==1 then
+        if job.name=='wudang' and wd_distance>2 then
+            l_distance = wd_distance
+        else
+            l_distance = 2
+        end
+    end
+    if flag.times==2 then
+        if job.name=='wudang' and wd_distance>4 then
+            l_distance = wd_distance
+        else
+            l_distance = 4
+        end    
     end
     if job.name and job.name == 'xueshan' and flag.times == 1 then
         l_distance = 3
+    end
+    if flag.times==3 or job.name=='zhuacaishen' then
+       l_distance = 6
     end
     if p_dest == nil then
         p_dest = map.rooms[road.id].outdoor

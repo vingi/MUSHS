@@ -177,7 +177,7 @@ function weaponGetVar()
         weapon.first = nil
     end
 end
-weaponInBag = function(p_kind)
+function weaponInBag(p_kind)
     for p in pairs(Bag) do
         if Bag[p].kind and Bag[p].kind == p_kind then
             return true
@@ -185,6 +185,26 @@ weaponInBag = function(p_kind)
     end
     return false
 end
+-- ---------------------------------------------------------------
+-- 重置,并重新检查包含里所有装备中的装备
+-- ---------------------------------------------------------------
+function checkWield()
+    itemWield = { }
+    exe("i")
+end
+function checkWieldCatch(n, l, w)
+    itemWield = itemWield or { }
+    local l_item = w[1]
+    for p in pairs(weaponThrowing) do
+        if string.find(l_item, p) then
+            l_item = p
+        end
+    end
+    itemWield[l_item] = true
+end
+-- ---------------------------------------------------------------
+-- 装备所有武器
+-- ---------------------------------------------------------------
 function weapon_wield()
     --[[       if hp.neili<hp.neili_max*0.5 and cbb_cur>0 then
           exe('eat '.. drug.neili2)
@@ -212,6 +232,9 @@ function weapon_wield()
     end
     checkWield()
 end
+-- ---------------------------------------------------------------
+-- 卸下所有武器
+-- ---------------------------------------------------------------
 function weapon_unwield()
     for p in pairs(Bag) do
         if Bag[p].kind and(not itemWield or itemWield[p]) then
@@ -244,6 +267,8 @@ function weaponUnWalk()
     weapon_unwield()
     return walk_wait()
 end
+
+
 weaponWieldCut = function()
     if Bag["木剑"] then
         exe("wield " .. Bag["木剑"].fullid)
@@ -334,6 +359,12 @@ weaponRepairQuCheck = function()
     else
         return weaponRepairFind()
     end
+end
+-- ---------------------------------------------------------------
+-- 从采矿师傅 那里找铁锤 
+-- ---------------------------------------------------------------
+function Weapon.GetTiechui()
+    weaponRepairFind()
 end
 weaponRepairFind = function()
     DeleteTriggerGroup("weaponFind")

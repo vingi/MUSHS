@@ -624,7 +624,7 @@ kezhiDesc["无"] = {
 }
 
 kezhiDesc["屌"] = {
-	["四象掌"] = {"「五气呈祥", "「逆流捧沙", "「雷洞霹雳", "「梵心降魔", "遥遥一鞠，一式「三阳开泰」，双掌大开大阖", "一式「摘星换斗」，劲气弥漫，双掌如轮"},
+	-- ["四象掌"] = {"「五气呈祥", "「逆流捧沙", "「雷洞霹雳", "「梵心降魔", "遥遥一鞠，一式「三阳开泰」，双掌大开大阖", "一式「摘星换斗」，劲气弥漫，双掌如轮"},
 	["空明拳"] = {
 		"「空」",
 		"「朦」",
@@ -766,7 +766,7 @@ function kezhiwugongcheck(i, n, l, w)
 	--print(tmpdes)
 	--print("----------正在检测-----------")
 	if string.find(tmpdes, "「摘星换斗」") and string.find(tmpdes, "的后背斫去") then
-		return kezhiwugongValue("屌", i, "四象掌")
+		return kezhiwugongValue("屌", i, "般若掌")
 	end
 	for v, p in pairs(kezhiDesc) do
 		for j, k in pairs(p) do

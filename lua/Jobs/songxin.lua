@@ -114,8 +114,11 @@ function songxinFindFail()
 end
 function songxin_start()
     flag.idle = nil
-    if GetRoleConfig("CheckNeili_InAdvance") == true then return go(sxaskjob, '大理城', '马房') else return go(job_songxin, '大理城', '驿站') end
-    return
+    if GetRoleConfig("CheckNeili_InAdvance") then 
+        return go(sxaskjob, '大理城', '马房') 
+    else 
+        return go(job_songxin, '大理城', '驿站') 
+    end
 end
 function sxaskjob()
     return zhunbeineili(songxin_begin)
@@ -132,7 +135,7 @@ function job_songxin()
     --    score.goldlmt=28000
     --  end
     job.time.b = os.time()
-    create_timer_s('songxin_checkask',1.5,'job_songxin_checkask')
+    create_timer_s('songxin_checkask', 1.5, 'job_songxin_checkask')
     exe('ask zhu wanli about job')
 end
 function job_songxin_checkask()
@@ -210,7 +213,7 @@ function songxin_xin()
     job.last = "songxin"
     sxkiller1 = 0
     sxkiller2 = 0
-    create_timer_s('songxin_checklookletter',1.5,'Execute_lookletter')
+    create_timer_s('songxin_checklookletter', 1.5, 'Execute_lookletter')
     Execute_lookletter()
 end
 function Execute_lookletter()
@@ -325,18 +328,18 @@ function songxin_send(n, l, w)
         sxjob.cnt = 1
         sxjob.id = string.lower(w[1])
         exe('hp;follow ' .. sxjob.id)
-        checkBags()
-        return checkNext(songxin_check)
+        -- checkBags()
+        return checkNext(songxin_send_act)
         -- return check_halt(songxin_send_act)
     end
 end
-function songxin_check()
-    if Bag["信件"] then
-        return check_halt(songxin_send_act)
-    else
-        return check_heal()
-    end
-end
+-- function songxin_check()
+--     if Bag["信件"] then
+--         return check_halt(songxin_send_act)
+--     else
+--         return check_heal()
+--     end
+-- end
 function songxin_send_act()
     exe('halt;songxin ' .. sxjob.id)
     tmp.cnt = 0
@@ -348,7 +351,7 @@ function songxin_act_set()
     if tmp.cnt then
         tmp.cnt = tmp.cnt + 1
     end
-    if not tmp.cnt or tmp.cnt > 50 then
+    if not tmp.cnt or tmp.cnt > 20 then
         return check_heal()
     end
     exe('halt;songxin ' .. sxjob.id .. ' ' .. sxjob.cnt)

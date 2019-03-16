@@ -9,10 +9,11 @@
 
 eg.
 
+
 --]]
 
 huashanJob = {
-    jobStep = 0
+    jobStep = 0,
 }
 
 huashanJob.jobStep = 0
@@ -434,7 +435,6 @@ function huashan_cut()
     return check_halt(huashan_cut_act)
 end
 
-
 function huashan_cut_act()
     DeleteTimer("perform")
     weapon_unwield()
@@ -448,7 +448,9 @@ end
 function huashan_cut_weapon()
     return check_halt(huashan_cut_act, 1)
 end
-
+-- ---------------------------------------------------------------
+-- 砍头事件执行触发 
+-- ---------------------------------------------------------------
 function huashan_cut_con(n, l, w)
     DeleteTriggerGroup("all_fight")
     kezhiwugongclose()
@@ -462,13 +464,17 @@ function huashan_cut_con(n, l, w)
         return check_halt(huashan_cut_after)
     end
 end
-
+-- ---------------------------------------------------------------
+-- 砍头后执行事件 
+-- ---------------------------------------------------------------
 function huashan_cut_after()
     -- 换上回内武器
     Weapon.RecoverNeili()
     return go(huashan_yls, "华山", "祭坛")
 end
-
+-- ---------------------------------------------------------------
+-- 去岳灵珊处交令牌 
+-- ---------------------------------------------------------------
 function huashan_yls()
     DeleteTriggerGroup("huashan_yls")
     create_trigger_t(
@@ -478,29 +484,36 @@ function huashan_yls()
     "huashan_yls_fail"
     )
     create_trigger_t("huashan_yls2", "^(> )*岳灵珊在你的令牌上写下了一个 (一|二) 字。", "", "huashan_yls_ask")
-    create_trigger_t("huashan_yls3", "^(> )*这好象不是你领的令牌吧？", "", "huashan_yls_lingpai")
+    create_trigger_t("huashan_yls3", "^(> )*这好象不是你领的令牌吧？", "", "huashan_yls_wronglingpai")
     SetTriggerOption("huashan_yls1", "group", "huashan_yls")
     SetTriggerOption("huashan_yls2", "group", "huashan_yls")
     SetTriggerOption("huashan_yls3", "group", "huashan_yls")
     -- 增加交首级计时器
     NewObserver("huashanGiveHeadOb", 'give head to yue lingshan;hp')
 end
-
-function huashan_yls_fail()
+-- ---------------------------------------------------------------
+-- 交令牌给岳灵珊失败后的处理 
+-- ---------------------------------------------------------------
+function huashan_yls_fail(n, l, w)
     -- 触发成功后删除交首级计时器
     RemoveObserver("huashanGiveHeadOb")
     EnableTriggerGroup("huashan_yls", false)
     if locl.room ~= "祭坛" then
         return go(huashan_yls, "华山", "祭坛")
     end
-    exe("out;w;s;se;su;su;s")
-    return check_halt(huashan_shibai_b)
+    if not string.find(l, "这里没有这个人") then
+        exe("out;w;s;se;su;su;s")
+        return check_halt(huashan_shibai_b)
+    end
 end
-
-function huashan_yls_lingpai()
+-- ---------------------------------------------------------------
+-- 交错令牌处理, 先丢掉令牌, 再返回执行一次交令牌给岳灵珊
+-- 触发语句 "这好像不是你的令牌吧"
+-- ---------------------------------------------------------------
+function huashan_yls_wronglingpai()
     -- 触发成功后删除交首级计时器
     RemoveObserver("huashanGiveHeadOb")
-    EnableTriggerGroup("huashan_yls", false)
+    DeleteTriggerGroup("huashan_yls")
     exe("drop ling pai")
     return check_halt(huashan_yls)
 end
@@ -509,7 +522,9 @@ function huashan_heal()
     exe("set no_kill_ap")
     return check_bei(huashan_neili)
 end
-
+-- ---------------------------------------------------------------
+-- 华山任务找NPC前的准备, 如积蓄内力等 
+-- ---------------------------------------------------------------
 function huashan_neili()
     huashanJob.jobStep = 1
     if GetRoleConfig("CheckNeili_InAdvance") == false then
@@ -518,17 +533,19 @@ function huashan_neili()
         return zhunbeineili(huashan_npc)
     end
 end
-
+-- ---------------------------------------------------------------
+-- 岳灵珊处执行力不从心, 即华山1结束,不作华山2,直接交任务
+-- ---------------------------------------------------------------
 function huashan_yls_lbcx()
     EnableTriggerGroup("huashan_yls_ask", true)
-    weapon_unwield()
+    -- weapon_unwield()
     return exe("drop head;askk yue lingshan about 力不从心")
 end
 
 function huashan_yls_ask(n, l, w)
     -- 触发成功后删除交首级计时器
     RemoveObserver("huashanGiveHeadOb")
-    EnableTriggerGroup("huashan_yls", false)
+    DeleteTriggerGroup("huashan_yls")
     DeleteTriggerGroup("huashan_yls_ask")
     create_trigger_t("huashan_yls_ask1", "^(> )*你向岳灵珊打听有关『力不从心』的消息。", "", "huashan_yls_back")
     SetTriggerOption("huashan_yls_ask1", "group", "huashan_yls_ask")
@@ -544,30 +561,28 @@ function huashan_yls_ask(n, l, w)
 end
 
 function huashan_yls_back()
-    EnableTriggerGroup("huashan_yls_ask", false)
+    DeleteTriggerGroup("huashan_yls_ask")
     EnableTriggerGroup("huashanQuest", true)
     DeleteTriggerGroup("huashan_over")
-    create_trigger_t("huashan_over1", "^(> )*你给岳不群一块令牌。", "", "huashan_finish")
-    create_trigger_t("huashan_over2", "^(> )*这里没有这个人。", "", "")
-    SetTriggerOption("huashan_over1", "group", "huashan_over")
-    SetTriggerOption("huashan_over2", "group", "huashan_over")
     -- return go(huashan_over, "华山", "正气堂", "huashan/jitan")
     return check_busy(huashan_ysl_after)
 end
-
 -- ------------------------------------
 -- 从 岳灵珊 处返回 岳不群 path
 -- ------------------------------------
 function huashan_ysl_after()
+    create_trigger_t("huashan_over1", "^(> )*你给岳不群一块令牌。", "", "huashan_finish")
+    create_trigger_t("huashan_over2", "^(> )*这里没有这个人。", "", "")
+    SetTriggerOption("huashan_over1", "group", "huashan_over")
+    SetTriggerOption("huashan_over2", "group", "huashan_over")
     local backto_ybq = "out;w;s;se;su;su;s;give ling pai to yue buqun"
     exe(backto_ybq);
 end
-
 -- ------------------------------------
 -- 华山任务结束
 -- ------------------------------------
 function huashan_finish()
-    weapon_unwield()
+    -- weapon_unwield()
     EnableTriggerGroup("huashanQuest", true)
     job.time.e = os.time()
     job.time.over = job.time.e - job.time.b
@@ -581,10 +596,7 @@ function huashan_finish()
     exe("drop ling pai")
     -- jobExpTongji()
     huashan_triggerDel()
-    -- if job.zuhe["wudang"] then
-    --     job.last='wudang'
-    -- end
-    setLocateRoomID = "huashan/zhengqi"
+    -- setLocateRoomID = "huashan/zhengqi"
     return check_halt(check_food)
 end
 
