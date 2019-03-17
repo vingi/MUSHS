@@ -28,7 +28,7 @@ function MissionPunishment.PunishmentHandle(busySecond)
     end
     if hp.pot > 100 then
         print("Mission Punishment Gap, going to Study")
-        func = checkxue
+        func = check_pot
     else
         print("Mission Punishment Gap, going to Check_Food")
         func = function()

@@ -12251,6 +12251,9 @@ Room {
         ["east"] = "gumu/jqg/lang4",
         ["north"] = "gumu/jqg/jianshi",
     },
+    postcmds = {
+        ["north"] = "#walkBusy",
+    },
     lengths =
     {
         ["north"] = "if not skills['dodge'] or skills['dodge'].lvl>130 then return 1 else return false end",

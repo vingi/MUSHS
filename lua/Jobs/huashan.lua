@@ -11,9 +11,8 @@ eg.
 
 
 --]]
-
 huashanJob = {
-    jobStep = 0,
+    jobStep = 0
 }
 
 huashanJob.jobStep = 0
@@ -78,9 +77,9 @@ function huashan()
     return huashan_start()
 end
 
-jobFindAgain = jobFindAgain or { }
+jobFindAgain = jobFindAgain or {}
 jobFindAgain["huashan"] = "huashanFindAgain"
-jobFindFail = jobFindFail or { }
+jobFindFail = jobFindFail or {}
 jobFindFail["huashan"] = "huashanFindFail"
 
 -- ----------------------------------------------------------
@@ -124,7 +123,7 @@ end
 
 function job_huashan()
     EnableTriggerGroup("huashan_ask", true)
-    NewObserver("huashanAskJobOb", 'ask yue buqun about job')
+    NewObserver("huashanAskJobOb", "ask yue buqun about job")
     -- 增加要任务发呆计时器
 end
 
@@ -153,10 +152,10 @@ function huashan_trigger()
     DeleteTriggerGroup("huashan_npc")
     create_trigger_t("huashan_npc1", "^(> )*(冷不防|突然|猛地|忽然|冷不丁)从树林\\D*你的令牌，向(\\D*)(处|方向)\\D*逃去。$", "", "huashan_where")
     create_trigger_t(
-    "huashan_npc2",
-    "^(> )*你一把抓向蒙面人试图抢回令牌，但被蒙面人敏捷得躲了过去，你顺手扯下蒙面人的面罩，发现原来是曾经名震江湖的(\\D*)。",
-    "",
-    "huashan_find"
+        "huashan_npc2",
+        "^(> )*你一把抓向蒙面人试图抢回令牌，但被蒙面人敏捷得躲了过去，你顺手扯下蒙面人的面罩，发现原来是曾经名震江湖的(\\D*)。",
+        "",
+        "huashan_find"
     )
     create_trigger_t("huashan_npc3", '^(> )*你把 "hsjob" 设定为 "闲逛中" 成功完成。', "", "huashan_npc_goon")
     SetTriggerOption("huashan_npc1", "group", "huashan_npc")
@@ -187,7 +186,7 @@ end
 function huashan_ask()
     EnableTriggerGroup("huashan_ask", false)
     EnableTriggerGroup("huashan_accept", true)
-    RemoveObserver('huashanAskJobOb')
+    RemoveObserver("huashanAskJobOb")
     -- 关闭要任务计时器
 end
 
@@ -257,7 +256,6 @@ function huashan_npc()
         quest.update()
         return check_bei(huashan_npc_go2)
     end
-
 end
 
 function huashan_npc_go()
@@ -276,6 +274,7 @@ function huashan_npc_get()
 end
 
 function huashan_npc_goon()
+    RemoveObserver("huashanhangout")
     quest.status = "闲逛中"
     quest.update()
     exe("n;e;e;")
@@ -290,9 +289,11 @@ function huashan_ssl()
         return check_bei(huashan_npc_goon)
     end
 end
-
+-- ---------------------------------------------------------------
+-- 未发现蒙面人抢令牌, 开始闲逛
+-- ---------------------------------------------------------------
 function huashan_npc_ssl()
-    return exe("w;s;s;alias hsjob 闲逛中")
+    NewObserver("huashanhangout", "w;s;s;alias hsjob 闲逛中", 5)
 end
 
 function huashan_where(n, l, w)
@@ -306,12 +307,12 @@ function huashan_find(n, l, w)
     local flag_huashan = 0
     dis_all()
     job.target = tostring(w[2])
-    job.killer = { }
+    job.killer = {}
     job.killer[job.target] = true
     quest.target = job.target
     quest.update()
     DeleteTriggerGroup("huashan_find")
-    create_trigger_t('huashan_find1', '^( )*' .. job.target .. '\\((\\D*)\\)', '', 'huashan_fight')
+    create_trigger_t("huashan_find1", "^( )*" .. job.target .. "\\((\\D*)\\)", "", "huashan_fight")
     -----------计时器杀人
     create_trigger_t("huashan_find2", "^(> )*看起来(\\D*)想杀死你！", "", "huashan_debug_fight")
     create_trigger_t("huashan_find3", "^(> )*采花大盗正盯着你看，不知道打些什么主意。", "", "huashan_dadao")
@@ -377,7 +378,7 @@ end
 
 function huashan_fight_ti()
     ----------增加华山kill 计时器
-    NewObserverByFunc("huashankillOb", 'huashan_faint')
+    NewObserverByFunc("huashankillOb", "huashan_faint")
 end
 
 function huashan_fight(n, l, w)
@@ -427,7 +428,7 @@ function huashan_cut()
     -- 清空错误的road.id(临时方法)
     -- 后续考虑用 opposite path
     road.id = nil
-    job.killer = { }
+    job.killer = {}
     fight.time.e = os.time()
     fight.time.over = fight.time.e - fight.time.b
 
@@ -449,7 +450,7 @@ function huashan_cut_weapon()
     return check_halt(huashan_cut_act, 1)
 end
 -- ---------------------------------------------------------------
--- 砍头事件执行触发 
+-- 砍头事件执行触发
 -- ---------------------------------------------------------------
 function huashan_cut_con(n, l, w)
     DeleteTriggerGroup("all_fight")
@@ -465,7 +466,7 @@ function huashan_cut_con(n, l, w)
     end
 end
 -- ---------------------------------------------------------------
--- 砍头后执行事件 
+-- 砍头后执行事件
 -- ---------------------------------------------------------------
 function huashan_cut_after()
     -- 换上回内武器
@@ -473,15 +474,15 @@ function huashan_cut_after()
     return go(huashan_yls, "华山", "祭坛")
 end
 -- ---------------------------------------------------------------
--- 去岳灵珊处交令牌 
+-- 去岳灵珊处交令牌
 -- ---------------------------------------------------------------
 function huashan_yls()
     DeleteTriggerGroup("huashan_yls")
     create_trigger_t(
-    "huashan_yls1",
-    "^(> )*(这里没有这个人。|你身上没有这样东西。|这人好象不是你杀的吧？|你的令牌呢|你还没有去找恶贼，怎么就来祭坛了？)",
-    "",
-    "huashan_yls_fail"
+        "huashan_yls1",
+        "^(> )*(这里没有这个人。|你身上没有这样东西。|这人好象不是你杀的吧？|你的令牌呢|你还没有去找恶贼，怎么就来祭坛了？)",
+        "",
+        "huashan_yls_fail"
     )
     create_trigger_t("huashan_yls2", "^(> )*岳灵珊在你的令牌上写下了一个 (一|二) 字。", "", "huashan_yls_ask")
     create_trigger_t("huashan_yls3", "^(> )*这好象不是你领的令牌吧？", "", "huashan_yls_wronglingpai")
@@ -489,10 +490,10 @@ function huashan_yls()
     SetTriggerOption("huashan_yls2", "group", "huashan_yls")
     SetTriggerOption("huashan_yls3", "group", "huashan_yls")
     -- 增加交首级计时器
-    NewObserver("huashanGiveHeadOb", 'give head to yue lingshan;hp')
+    NewObserver("huashanGiveHeadOb", "give head to yue lingshan;hp")
 end
 -- ---------------------------------------------------------------
--- 交令牌给岳灵珊失败后的处理 
+-- 交令牌给岳灵珊失败后的处理
 -- ---------------------------------------------------------------
 function huashan_yls_fail(n, l, w)
     -- 触发成功后删除交首级计时器
@@ -500,10 +501,8 @@ function huashan_yls_fail(n, l, w)
     EnableTriggerGroup("huashan_yls", false)
     if locl.room ~= "祭坛" then
         return go(huashan_yls, "华山", "祭坛")
-    end
-    if not string.find(l, "这里没有这个人") then
-        exe("out;w;s;se;su;su;s")
-        return check_halt(huashan_shibai_b)
+    elseif not string.find(l, "这里没有这个人") then
+        return go_direct(huashan_shibai_b, "华山", "祭坛", "华山", "正气堂", "huashan/jitan")
     end
 end
 -- ---------------------------------------------------------------
@@ -523,7 +522,7 @@ function huashan_heal()
     return check_bei(huashan_neili)
 end
 -- ---------------------------------------------------------------
--- 华山任务找NPC前的准备, 如积蓄内力等 
+-- 华山任务找NPC前的准备, 如积蓄内力等
 -- ---------------------------------------------------------------
 function huashan_neili()
     huashanJob.jobStep = 1
@@ -576,7 +575,7 @@ function huashan_ysl_after()
     SetTriggerOption("huashan_over1", "group", "huashan_over")
     SetTriggerOption("huashan_over2", "group", "huashan_over")
     local backto_ybq = "out;w;s;se;su;su;s;give ling pai to yue buqun"
-    exe(backto_ybq);
+    exe(backto_ybq)
 end
 -- ------------------------------------
 -- 华山任务结束

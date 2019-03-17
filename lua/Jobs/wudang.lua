@@ -8,6 +8,11 @@ wudangJob = {
     NpcCondition = nil
 }
 
+jobFindAgain = jobFindAgain or {}
+jobFindAgain["wudang"] = "wudangFindAgain"
+jobFindFail = jobFindFail or {}
+jobFindFail["wudang"] = "wudangFindFail"
+
 function wudangTrigger()
     DeleteTriggerGroup("wudangAsk")
     create_trigger_t("wudangAsk1", "^(> )*你向宋远桥打听有关", "", "wudangAsk")
@@ -17,10 +22,10 @@ function wudangTrigger()
     EnableTriggerGroup("wudangAsk", false)
     DeleteTriggerGroup("wudangAccept")
     create_trigger_t(
-    "wudangAccept1",
-    "^(> )*宋远桥在你的耳边悄声说道：据说(江南|江北|西南|中原|西北|河南|河北|东北)(草寇|寨主|恶霸|山贼|土匪|飞贼|盗贼)(\\D*)正在(\\D*)捣乱",
-    "",
-    "wudangConsider"
+        "wudangAccept1",
+        "^(> )*宋远桥在你的耳边悄声说道：据说(江南|江北|西南|中原|西北|河南|河北|东北)(草寇|寨主|恶霸|山贼|土匪|飞贼|盗贼)(\\D*)正在(\\D*)捣乱",
+        "",
+        "wudangConsider"
     )
     create_trigger_t("wudangAccept2", "^(> )*宋远桥说道：「我不是告诉你了吗，有人在", "", "wudangFangqi")
     create_trigger_t("wudangAccept3", "^(> )*宋远桥在你的耳边悄声说道(\\D*)尤为擅长(\\D*)的功夫。", "", "wudangNpc")
@@ -77,10 +82,7 @@ function wudangTrigger()
     SetTriggerOption("wudangdebug1", "group", "wudangdebug")
     EnableTriggerGroup("wudangdebug", true)
 end
-jobFindAgain = jobFindAgain or { }
-jobFindAgain["wudang"] = "wudangFindAgain"
-jobFindFail = jobFindFail or { }
-jobFindFail["wudang"] = "wudangFindFail"
+
 function wudangFindAgain()
     if flag.times == 3 and dest.area == "华山村" and dest.room == "铁匠铺" then
         return go(wudangFindAct, "华山村", "菜地")
@@ -95,7 +97,7 @@ function wudangFindFail()
     -- EnableTriggerGroup("wudangFind",false)
     return go(wudangFangqi, "武当山", "三清殿")
 end
-faintFunc = faintFunc or { }
+faintFunc = faintFunc or {}
 faintFunc["wudang"] = "wudangFaint"
 function wudangFaint()
     return wudangFindFail()
@@ -191,7 +193,7 @@ function wudangConsider(n, l, w)
     job.time.b = os.time()
     job.last = "wudang"
     job.target = Trim(w[4])
-    job.killer = { }
+    job.killer = {}
     job.killer[job.target] = true
     job.where = Trim(w[5])
     -- Note(job.where)
@@ -202,17 +204,19 @@ function wudangConsider(n, l, w)
     else
         wd_distance = 4
     end
-    print("方圆"..tostring(wd_distance).."里之内")
+    print("方圆" .. tostring(wd_distance) .. "里之内")
     if string.find(job.where, "周围") then
         local l_cnt = string.find(job.where, "周围")
         job.where = string.sub(job.where, 1, l_cnt - 1)
-        -- Note(job.where)
+    -- Note(job.where)
     end
     job.room, job.area = getAddr(job.where)
     -- if job.area=="明教" and string.find(job.room,"字门") then
     -- job.room="紫杉林"
     -- end
-    if job.area=="明教" and (job.room=="紫杉林" or string.find(job.room,"字门")) then job.room="练武场" end
+    if job.area == "明教" and (job.room == "紫杉林" or string.find(job.room, "字门")) then
+        job.room = "练武场"
+    end
 end
 function wudangNpc(n, l, w)
     EnableTriggerGroup("wudangAccept", false)
@@ -287,9 +291,23 @@ end
 function wudangFind()
     DeleteTriggerGroup("wudangFind")
     create_trigger_t("wudangFind1", "^(> )*\\D*" .. job.target .. "\\((\\D*)\\)", "", "wudangTarget")
-    create_trigger_t("wudangFind2", "^(> )*" .. job.target .. "对着你发出一阵阴笑，说道", "", "wudangFindKill")
+    create_trigger_t(
+        "wudangFind2",
+        "^(> )*" ..
+            job.target ..
+                "(对着你发出一阵阴笑，说道：既然被你这个\\D*撞见了，那也就只能算你命短了！|对你说道：\\D*！穷追不舍，既然逃不掉，\\D*我跟你拼了！|对着你说道：嘿嘿！有胆敢跟过来，\\D*不客气了！|看见你走过来，神色有些异常，赶忙低下了头。)",
+        "",
+        "wudangFindKill"
+    )
+    create_trigger_t(
+        "wudangFind3",
+        "^(> )*" .. job.target .. "对着你发出一阵阴笑，说道：\\D*，这里地方太小，有种跟\\D*到外面比划比划！",
+        "",
+        "wudangLost"
+    )
     SetTriggerOption("wudangFind1", "group", "wudangFind")
     SetTriggerOption("wudangFind2", "group", "wudangFind")
+    SetTriggerOption("wudangFind3", "group", "wudangFind")
     flag.times = 1
     flag.robber = false
     local tmppfm = GetVariable("pfmsanqing")
@@ -297,7 +315,13 @@ function wudangFind()
     create_alias("kezhiwugongpfm", "kezhiwugongpfm", "alias pfmpfm " .. tmppfm)
     exe("kezhiwugongpfm")
     exe("unset wimpy;set wimpycmd pfmpfm\\hp")
-    go(wudangFindAct, job.area, job.room)
+    print("当前位置: "..locl.area..locl.room)
+    if locl.area == "武当山" and locl.room == "三清殿" then
+        print("开启免定位直行")
+        go_direct_pure(wudangFindAct, "武当山", "三清殿", job.area, job.room, "wudang/sanqing")
+    else
+        go(wudangFindAct, job.area, job.room)
+    end
 end
 function wudangdebugFind()
     DeleteTriggerGroup("wudangFind")
@@ -316,14 +340,19 @@ function wudangFinddebug()
     find()
     messageShow("武当任务：开始重新寻找【" .. dest.area .. dest.room .. "】的" .. "【" .. job.target .. "】！")
 end
+-- ---------------------------------------------------------------
+-- 武当任务到达任务地点, 开始搜索目标
+-- ---------------------------------------------------------------
 function wudangFindAct()
+    locl.area = job.area
+    locl.room = job.room
     EnableTriggerGroup("wudangFind", true)
     DeleteTimer("wudang")
     job.flag()
     exe("look")
     find()
     messageShow(
-    "武当任务：已到达任务地点【" .. job.where .. "】，开始寻找【" .. dest.area .. dest.room .. "】的" .. "【" .. job.target .. "】！"
+        "武当任务：已到达任务地点【" .. job.where .. "】，开始寻找【" .. dest.area .. dest.room .. "】的" .. "【" .. job.target .. "】！"
     )
 end
 function wudangFindKill()
@@ -355,7 +384,7 @@ function wudangMove()
 end
 function wudangLost(n, l, w)
     job.lost = job.lost + 1
-    if job.lost > 2 then
+    if job.lost > 3 then
         job.lost = 0
         messageShow("武当任务：搜索丢失【" .. job.target .. "】两次！回去放弃！")
         return check_halt(wudangFindFail)
@@ -368,10 +397,10 @@ function wudangLost(n, l, w)
 end
 function wudangKill()
     wait.make(
-    function()
-        wait.time(0.2)
-        wudangKillAct()
-    end
+        function()
+            wait.time(0.2)
+            wudangKillAct()
+        end
     )
 end
 function wudangKillAct()
@@ -442,12 +471,12 @@ function wudangFinishC()
     print("等待老宋发奖励。")
     if wudangjobok == 0 and wudangCk < 5 then
         wait.make(
-        function()
-            wait.time(1)
-            wudangCk = wudangCk + 1
-            exe("out;enter")
-            return wudangFinishC()
-        end
+            function()
+                wait.time(1)
+                wudangCk = wudangCk + 1
+                exe("out;enter")
+                return wudangFinishC()
+            end
         )
     else
         return wudangFangqi()

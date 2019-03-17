@@ -46,7 +46,7 @@ local hp_checktime = 60
 local hp_checktimecur = hp_checktime
 local hp_win = "hp_window"
 local hp_win_width = 300
-local hp_win_height = 211
+local hp_win_height = 385
 
 local actorname = ""-- GetVariable("actorname") or utils.inputbox("输入你的角色名称")
 
@@ -362,19 +362,19 @@ end
 -- 状态模块
 ---------------------------------------------------------------------------
 
-status =
+local status =
 {
     -- 精神
     jing = 1000,
     jing_curmax = 1000,
     jing_max = 1000,
-    jing_pre = 100,
+    jing_per = 100,
 
     -- 气血
     qi = 1000,
     qi_curmax = 1000,
     qi_max = 1000,
-    qi_pre = 100,
+    qi_per = 100,
 
     -- 精力
     jingli = 10000,
@@ -471,7 +471,7 @@ function hp_draw_win()
     hp_win_width - 6 - WindowTextWidth(hp_win, FONT_NAME, lv_info), top, 0, 0,
     ColourNameToRGB("yellow"), false)
 
-    top = top + 15
+    top = top + 20
     -- 精神
     WindowText(hp_win, FONT_NAME, "精神",
     left, top, 0, 0,
@@ -479,7 +479,7 @@ function hp_draw_win()
     Fun_DrawGrid2(hp_win, status.jing, status.jing_curmax, status.jing_max,
     left + title_length, top + 1, grid_length, grid_height,
     0x40FF40, ColourNameToRGB("red"), ColourNameToRGB("white"))
-    WindowText(hp_win, FONT_NAME, status.jing .. "/" .. status.jing_curmax .. "(" .. status.jing_pre .. "%)",
+    WindowText(hp_win, FONT_NAME, status.jing .. "/" .. status.jing_curmax .. "(" .. status.jing_per .. "%)",
     left + title_length + grid_length + 2, top, 0, 0,
     0x40FF40, false)
 
@@ -491,7 +491,7 @@ function hp_draw_win()
     Fun_DrawGrid2(hp_win, status.qi, status.qi, status.qi_max,
     left + title_length, top + 1, grid_length, grid_height,
     0x40FF40, ColourNameToRGB("red"), ColourNameToRGB("white"))
-    WindowText(hp_win, FONT_NAME, status.qi .. "/" .. status.qi_max .. "(" .. status.qi_pre .. "%)",
+    WindowText(hp_win, FONT_NAME, status.qi .. "/" .. status.qi_max .. "(" .. status.qi_per .. "%)",
     left + title_length + grid_length + 2, top, 0, 0,
     0x40FF40, false)
 
@@ -649,13 +649,57 @@ function hp_draw_win()
     top = top + 15
     WindowText(hp_win, FONT_NAME, "备注：" .. quest.misc2,
     left, top, 0, 0, ColourNameToRGB("white"), false)
+    top = top + 25
+    WindowText(hp_win, FONT_NAME, "本次运行时间：" .. job.statistics.Duration,
+    left, top, 0, 0, ColourNameToRGB("gold"), false)
+    top = top + 15
+    WindowText(hp_win, FONT_NAME, "共接取任务: " ..job.statistics.Times.." 次",
+    left, top, 0, 0, ColourNameToRGB("cyan"), false)
+    top = top + 15
+    WindowText(hp_win, FONT_NAME, "任务完成：" .. job.statistics.Success,
+    left - 1, top, 0, 0, ColourNameToRGB("cyan"), false)
+    WindowText(hp_win, FONT_NAME, "任务失败：" .. job.statistics.Failure,
+    left + 130, top, 0, 0, ColourNameToRGB("cyan"), false)
+    top = top + 15
+    WindowText(hp_win, FONT_NAME, "华山完成：" .. job.statistics.Category["华山"].Success,
+    left - 1, top, 0, 0, ColourNameToRGB("cyan"), false)
+    WindowText(hp_win, FONT_NAME, "失败：" .. job.statistics.Category["华山"].Failure,
+    left + 130, top, 0, 0, ColourNameToRGB("cyan"), false)
+    top = top + 15
+    WindowText(hp_win, FONT_NAME, "武当完成：" .. job.statistics.Category["武当"].Success,
+    left - 1, top, 0, 0, ColourNameToRGB("cyan"), false)
+    WindowText(hp_win, FONT_NAME, "失败：" .. job.statistics.Category["武当"].Failure,
+    left + 130, top, 0, 0, ColourNameToRGB("cyan"), false)
+    top = top + 15
+    WindowText(hp_win, FONT_NAME, "送信完成：" .. job.statistics.Category["送信"].Success,
+    left - 1, top, 0, 0, ColourNameToRGB("cyan"), false)
+    WindowText(hp_win, FONT_NAME, "失败：" .. job.statistics.Category["送信"].Failure,
+    left + 130, top, 0, 0, ColourNameToRGB("cyan"), false)
+    top = top + 15
+    WindowText(hp_win, FONT_NAME, "颂摩崖完成：" .. job.statistics.Category["颂摩崖"].Success,
+    left - 1, top, 0, 0, ColourNameToRGB("cyan"), false)
+    WindowText(hp_win, FONT_NAME, "死亡：" .. job.statistics.Category["颂摩崖"].Failure,
+    left + 130, top, 0, 0, ColourNameToRGB("deeppink"), false)
+    top = top + 15
+    WindowText(hp_win, FONT_NAME, "失落的信笺完成：" .. job.statistics.Category["失落的信笺"].Times,
+    left - 1, top, 0, 0, ColourNameToRGB("cyan"), false)
+    top = top + 15
+    local ExpScore = 0
+    if job.statistics.PreviousExp ~= 0 then
+        ExpScore = hp.exp - job.statistics.PreviousExp
+    end
+    WindowText(hp_win, FONT_NAME, "共计获取经验：" .. ExpScore,
+    left, top, 0, 0, ColourNameToRGB("red"), false)
+    top = top + 15
+    WindowText(hp_win, FONT_NAME, "每小时获取经验：" .. job.statistics.Efficiency,
+    left, top, 0, 0, ColourNameToRGB("red"), false)
 
     WindowShow(hp_win, true)
     movewindow.save_state(hp_win)
 end
 
 -- ------------------------------------
--- hpbrief命令
+-- hp 状态
 -- ------------------------------------
 function hp_hpbrief(w)
     local Lastexp = status.exp
@@ -668,15 +712,17 @@ function hp_hpbrief(w)
     status.jingli_curmax = tonumber(w.jingli_max)
     status.jingli = tonumber(w.jingli)
     status.qi_max = tonumber(w.qixue_max)
-    status.qi_curmax = tonumber(w.qixue)
+    status.qi_curmax = tonumber(w.qixue_max)
     status.qi = tonumber(w.qixue)
     status.jing_max = tonumber(w.jingxue_max)
-    status.jing_curmax = tonumber(w.jingxue)
+    status.jing_curmax = tonumber(w.jingxue_max)
     status.jing = tonumber(w.jingxue)
     status.heqi = tonumber(w.heqi)
 
-    status.jing_pre = math.floor(status.jing_curmax * 100 / status.jing_max)
-    status.qi_pre = math.floor(status.qi_curmax * 100 / status.qi_max)
+    -- status.jing_per = math.floor(status.jing_curmax * 100 / status.jing_max)`
+    status.jing_per = w.jingxue_per
+    -- status.qi_per = math.floor(status.qi_curmax * 100 / status.qi_max)
+    status.qi_per = w.qixue_per
 
     if Lastexp ~= "0" and Lastexp ~= status.exp then
         status.exp_lastadd = Fun_ChangeKM(status.exp) - Fun_ChangeKM(Lastexp)
@@ -707,33 +753,33 @@ function hp_hpbrief(w)
 
     hp_draw_win()
 end
--- ------------------------------------
--- 精神、气血、内力和精力
--- ------------------------------------
-function hp_jingqishen(w)
-    status.jing = tonumber(w[1])
-    status.jing_curmax = tonumber(w[2])
-    status.jing_pre = tonumber(w[3])
-    status.jing_max = tonumber(status.jing_curmax * 100 / status.jing_pre)
-    status.jingli = tonumber(w[4])
-    status.jingli_curmax = tonumber(w[5])
-    status.qi = tonumber(w[6])
-    status.qi_curmax = tonumber(w[7])
-    status.qi_pre = tonumber(w[8])
-    status.qi_max = tonumber(status.qi_curmax * 100 / status.qi_pre)
-    status.neili = tonumber(w[9])
-    status.neili_curmax = tonumber(w[10])
-    -- print(w[1],w[2],w[3],w[4],w[5],w[6],w[7],w[8],w[9],w[10])
+-- -- ------------------------------------
+-- -- 精神、气血、内力和精力
+-- -- ------------------------------------
+-- function hp_jingqishen(w)
+--     status.jing = tonumber(w[1])
+--     status.jing_curmax = tonumber(w[2])
+--     status.jing_per = tonumber(w[3])
+--     status.jing_max = tonumber(status.jing_curmax * 100 / status.jing_per)
+--     status.jingli = tonumber(w[4])
+--     status.jingli_curmax = tonumber(w[5])
+--     status.qi = tonumber(w[6])
+--     status.qi_curmax = tonumber(w[7])
+--     status.qi_per = tonumber(w[8])
+--     status.qi_max = tonumber(status.qi_curmax * 100 / status.qi_per)
+--     status.neili = tonumber(w[9])
+--     status.neili_curmax = tonumber(w[10])
+--     -- print(w[1],w[2],w[3],w[4],w[5],w[6],w[7],w[8],w[9],w[10])
 
-    SetVariable("HP", w[6])
-    SetVariable("NEILI", w[9])
-    SetVariable("NEILI_MAX", w[10])
+--     SetVariable("HP", w[6])
+--     SetVariable("NEILI", w[9])
+--     SetVariable("NEILI_MAX", w[10])
 
-    hp_draw_win()
-end
--- ------------------------------------
--- 食物和饮水
--- ------------------------------------
+--     hp_draw_win()
+-- end
+-- -- ------------------------------------
+-- -- 食物和饮水
+-- -- ------------------------------------
 function hp_shiwuyinshui(w)
     status.shiwu = w.food
     status.shiwu_max = 100

@@ -442,13 +442,15 @@ function SJ.Init()
     getVariable()
     userGet()
     hpheqi()
-    statusbar.Activate()
+    -- 任务统计
+    job.statistics_Init()
     -- 激活 StatusBar
-    gag.Activate()
+    statusbar.Activate()
     -- 激活 消息过滤
+    gag.Activate()
 
-    Openfpk()
     -- ain
+    Openfpk()
 
     map.rooms["sld/lgxroom"].ways["#outSld"] = "huanghe/huanghe8"
     exe("down;alias askk ask $*;stand;halt;uweapon;score;cha;hp;jifa all;jiali max;unset no_kill_ap;cond;pfmset")
@@ -460,8 +462,6 @@ end
 -- ---------------------------------------------------------------
 function SJ.Config()
     needdolost = 0
-
-
 end
 
 -- ---------------------------------------------------------------
@@ -1243,167 +1243,6 @@ end
 -- ---------------------------------------------------------------
 function check_jobx()
     job.Switch()
-end
-
-function checkJob()
-    -- if hp.exp>2000000 then job.zuhe["zhuoshe"]=nil end
-    -- if hp.shen>0 or hp.exp>6000000 then job.zuhe["songshan"]=nil end
-    if job.zuhe["songxin2"] then
-        job.zuhe["songxin2"] = nil
-        job.zuhe["songxin"] = true
-        flag.sx2 = true
-    end
-    if job.last and job.zuhe[job.last] then
-        if type(job.zuhe[job.last]) == "number" then
-            job.zuhe[job.last] = job.zuhe[job.last] + 1
-        else
-            job.zuhe[job.last] = 1
-        end
-    end
-    if countTab(job.zuhe) > 2 and not skills["xixing-dafa"] and job.zuhe["huashan"] and job.zuhe["wudang"] and jobtimes["华山岳不群惩恶扬善"] and jobtimes["武当宋远桥杀恶贼"]
-    then
-        local t_hs = jobtimes["华山岳不群惩恶扬善"]
-        local t_wd = jobtimes["武当宋远桥杀恶贼"]
-        local t_times = math.fmod((t_hs + t_wd), 50)
-        if t_times > 48 then
-            exe("pray pearl")
-            if job.last ~= "huashan" then
-                return huashan()
-            else
-                for p in pairs(job.zuhe) do
-                    if p ~= "huashan" and p ~= "wudang" and p ~= "hubiao" and p ~= "husong" and p ~= "songmoya" then
-                        return _G[p]()
-                    end
-                end
-            end
-        end
-    end
-    if score.party and score.party == "华山派" and countTab(job.zuhe) > 2 and not skills["dugu-jiujian"] and job.zuhe["huashan"] and job.zuhe["songxin"]
-    then
-        local t_hs, t_sx, t_gb
-
-        if jobtimes["华山岳不群惩恶扬善"] then
-            t_hs = jobtimes["华山岳不群惩恶扬善"]
-        else
-            t_hs = 0
-        end
-        if jobtimes["大理王府送信任务"] then
-            t_sx = jobtimes["大理王府送信任务"]
-        else
-            t_sx = 0
-        end
-        if jobtimes["丐帮吴长老杀人任务"] then
-            t_gb = jobtimes["丐帮吴长老杀人任务"]
-        else
-            t_gb = 0
-        end
-        local t_times = math.fmod((t_hs + t_sx + t_gb), 50)
-        if t_times > 47 then
-            exe("pray pearl")
-            if job.last ~= "huashan" then
-                return huashan()
-            else
-                for p in pairs(job.zuhe) do
-                    if p ~= "huashan" and p ~= "songxin" and p ~= "hubiao" and p ~= "husong" and p ~= "songmoya" then
-                        return _G[p]()
-                    end
-                end
-            end
-        end
-    end
-
-    if job.third and job.zuhe[job.third] and job.last ~= job.third then
-        if job.second and job.last == job.second then
-            if job.third == "wudang" and(not job.wdtime or job.wdtime <= os.time()) then
-                return _G[job.third]()
-            end
-            if job.third ~= "wudang" and job.third ~= "songmoya" then
-                return _G[job.third]()
-            end
-        end
-    end
-    if job.first and job.zuhe[job.first] and job.last ~= job.first then
-        if job.first ~= "xueshan" and job.first ~= "wudang" and job.first ~= "songmoya" then
-            return _G[job.first]()
-        end
-        if job.first == "xueshan" and((not condition.xueshan) or(condition.xueshan and condition.xueshan <= 0)) then
-            return _G[job.first]()
-        end
-        if job.first == "wudang" and(not job.wdtime or job.wdtime <= os.time()) then
-            return _G[job.first]()
-        end
-        if job.first == "xueshan" and condition.xueshan and condition.busy and condition.busy >= condition.xueshan then
-            return _G[job.first]()
-        end
-    end
-    if job.second and job.zuhe[job.second] and job.last ~= job.second then
-        if job.second ~= "xueshan" and job.second ~= "wudang" and job.second ~= "songmoya" then
-            return _G[job.second]()
-        end
-        if job.second == "xueshan" and((not condition.xueshan) or(condition.xueshan and condition.xueshan <= 0)) then
-            return _G[job.second]()
-        end
-        if job.second == "wudang" and(not job.wdtime or job.wdtime <= os.time()) then
-            return _G[job.second]()
-        end
-        if job.second == "xueshan" and condition.xueshan and condition.busy and condition.busy >= condition.xueshan then
-            return _G[job.second]()
-        end
-    end
-
-    for p in pairs(job.zuhe) do
-        if job.last ~= p and job.first ~= p and job.second ~= p and p ~= "songmoya" then
-            return _G[p]()
-        end
-    end
-
-    for p in pairs(job.zuhe) do
-        if job.last ~= p and p ~= "songmoya" then
-            return _G[p]()
-        end
-    end
-    if job.zuhe["xueshan"] and job.last ~= "xueshan" then
-        return xueshan()
-    end
-    if job.zuhe["huashan"] and job.last ~= "huashan" then
-        return huashan()
-    end
-    if job.zuhe["tmonk"] and job.last ~= "tmonk" then
-        return tmonk()
-    end
-    if job.zuhe["songxin"] and job.last ~= "songxin" then
-        return songxin()
-    end
-    if job.zuhe["wudang"] and job.last ~= "wudang" then
-        return wudang()
-    end
-    if job.zuhe["gaibang"] and job.last ~= "gaibang" then
-        return gaibang()
-    end
-    if job.zuhe["zhuoshe"] and job.last ~= "zhuoshe" then
-        return zhuoshe()
-    end
-    if job.zuhe["sldsm"] and job.last ~= "sldsm" then
-        return sldsm()
-    end
-    if job.zuhe["songshan"] and job.last ~= "songshan" then
-        return songshan()
-    end
-    if job.last ~= "songxin" then
-        return songxin()
-    end
-    if job.last ~= "xueshan" and hp.shen < 0 then
-        return xueshan()
-    end
-    if job.last ~= "wudang" and hp.shen > 100000 then
-        return wudang()
-    end
-    if job.last ~= "gaibang" and hp.exp < 2000000 and hp.shen > 0 then
-        return gaibang()
-    end
-    if job.last ~= "songshan" and hp.shen < 0 and hp.exp < 2000000 then
-        return songshan()
-    end
 end
 
 function lianxi(times, xskill)
@@ -2850,7 +2689,9 @@ function check_silver_qu()
 end
 function check_gold_qu()
     local l_cnt = Bag["黄金"].cnt - count.gold_max * 2
-    exe("cun " .. l_cnt .. " gold")
+    if l_cnt>0 then
+        exe('cun '.. l_cnt ..' gold')
+    end
     if Bag["黄金"].cnt < count.gold_max then
         exe("qu " .. count.gold_max .. " gold")
     end

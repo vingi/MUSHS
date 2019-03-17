@@ -6,36 +6,15 @@ hqgzcJob = {
 }
 
 function hqgzcTrigger()
-    cooking = { }
-    cooking.hebei = { "神龙岛", "昆仑", "黑木崖", "天山", "恒山", "回疆", "昆仑", "明教", "星宿", "伊犁", "草原", "塘沽", "沧州", "兰州" }
-    cooking.zhongyuan = {
-        "绝情谷",
-        "成都",
-        "峨嵋",
-        "襄阳",
-        "扬州",
-        "长乐帮",
-        "华山",
-        "嵩山",
-        "泰山",
-        "铁掌",
-        "大雪山",
-        "长安",
-        "南阳",
-        "苗疆",
-        "武当",
-        "大理",
-        "天龙寺",
-        "萧府",
-        "柳宗",
-        "黄河流域"
-    }
-    cooking.jiangnan = { "佛山", "福州", "杭州", "嘉兴", "梅庄", "姑苏慕容", "燕子坞", "曼佗罗山庄", "宁波", "莆田", "苏州", "牛家村", "归云庄" }
-    cooking.target = { }
-    cooking.where = { }
-    cooking.menu = { }
-    cooking.flag = { }
-    cooking.findtimes = { }
+    cooking = {}
+    cooking.hebei = {"神龙岛", "昆仑", "黑木崖", "天山", "恒山", "回疆", "昆仑", "明教", "星宿", "伊犁", "草原", "塘沽", "沧州", "兰州"}
+    cooking.zhongyuan = {"绝情谷","成都", "峨嵋", "襄阳", "扬州","长乐帮","华山","嵩山","泰山", "铁掌","大雪山", "长安", "南阳","苗疆", "武当", "大理", "天龙寺", "萧府", "柳宗", "黄河流域"}
+    cooking.jiangnan = {"佛山", "福州", "杭州", "嘉兴", "梅庄", "姑苏慕容", "燕子坞", "曼佗罗山庄", "宁波", "莆田", "苏州", "牛家村", "归云庄"}
+    cooking.target = {}
+    cooking.where = {}
+    cooking.menu = {}
+    cooking.flag = {}
+    cooking.findtimes = {}
     DeleteTriggerGroup("hqgzcAsk")
     create_trigger_t("hqgzcAsk1", "^(> )*你向洪七公打听有关", "", "hqgzcAsk")
     create_trigger_t("hqgzcAsk2", "^(> )*这里没有这个人。$", "", "hqgzcNobody")
@@ -136,9 +115,9 @@ function hqgzc()
     checkBags()
     return check_halt(hqgzcCheckSilver)
 end
-jobFindAgain = jobFindAgain or { }
+jobFindAgain = jobFindAgain or {}
 jobFindAgain["hqgzc"] = "hqgzcFindAgain"
-jobFindFail = jobFindFail or { }
+jobFindFail = jobFindFail or {}
 jobFindFail["hqgzc"] = "hqgzcFindFail"
 function hqgzcFindAgain()
     Note("做菜任务：寻找次数" .. flag.times)
@@ -149,7 +128,7 @@ function hqgzcFindAgain()
     EnableTriggerGroup("hqgzcFind", true)
     return go(hqgzcFindAct, dest.area, dest.room)
 end
-faintFunc = faintFunc or { }
+faintFunc = faintFunc or {}
 faintFunc["hqgzc"] = "hqgzcFindFail"
 function hqgzcFindFail()
     EnableTriggerGroup("hqgzcFind", false)
@@ -178,14 +157,7 @@ function hqgzcAsk()
 end
 function hqgzcNotHungry()
     dis_all()
-    for p in pairs(job.zuhe) do
-        if job.last == "clb" then
-            return check_bei(_G[p])
-        else
-            -- 洪七公任务作菜busy时,只能作长乐帮任务, 其它任务不可作, 所以写死长乐帮任务
-            return clb()
-        end
-    end
+    return check_job()
 end
 function hqgzcBusy()
     EnableTriggerGroup("hqgzcAccept", false)
@@ -232,7 +204,7 @@ function hqgzcCaiPuDetail1(n, l, w)
         if value == l_target then
             cooking.flag[key] = 1
             Note(
-            cooking.flag[key] .. " " .. cooking.target[key] .. " " .. cooking.where[key] .. " " .. cooking.menu[key]
+                cooking.flag[key] .. " " .. cooking.target[key] .. " " .. cooking.where[key] .. " " .. cooking.menu[key]
             )
         end
     end
@@ -316,16 +288,16 @@ function hqgzcFind()
                 create_trigger_t("hqgzcTrade2", "^(> )*\\D*" .. job.target .. "说道：「嗯，你要的话，就拿去吧。」", "", "hqgzcTradeOK")
                 create_trigger_t("hqgzcTrade5", "^(> )*\\D*" .. job.target .. "说道：「嗯，你要就拿去吧。」", "", "hqgzcTradeOK")
                 create_trigger_t(
-                "hqgzcTrade3",
-                "^(> )*\\D*" .. job.target .. "说道：「罗嗦什么啊？一口价，我都说了，不要就算了。」",
-                "",
-                "hqgzcNoPay"
+                    "hqgzcTrade3",
+                    "^(> )*\\D*" .. job.target .. "说道：「罗嗦什么啊？一口价，我都说了，不要就算了。」",
+                    "",
+                    "hqgzcNoPay"
                 )
                 create_trigger_t(
-                "hqgzcTrade4",
-                "^(> )*\\D*" .. job.target .. "漫不经心的“嗯”了一声，似乎根本没在听你说什么。",
-                "",
-                "hqgzcAskMenu"
+                    "hqgzcTrade4",
+                    "^(> )*\\D*" .. job.target .. "漫不经心的“嗯”了一声，似乎根本没在听你说什么。",
+                    "",
+                    "hqgzcAskMenu"
                 )
                 create_trigger_t("hqgzcTrade6", "^(> )*这里没有这个人。", "", "hqgzcLost")
                 SetTriggerOption("hqgzcTrade1", "group", "hqgzcTrade")
@@ -365,7 +337,7 @@ function hqgzcFindAct()
     exe("look")
     find()
     messageShow(
-    "做菜任务：已到达任务地点【" .. job.where .. "】，开始寻找【" .. dest.area .. dest.room .. "】的" .. "【" .. job.target .. "】！"
+        "做菜任务：已到达任务地点【" .. job.where .. "】，开始寻找【" .. dest.area .. dest.room .. "】的" .. "【" .. job.target .. "】！"
     )
 end
 function hqgzcTarget(n, l, w)
@@ -448,10 +420,10 @@ function hqgzcFinishT()
     EnableTriggerGroup("hqgzcFinish", true)
     if hqgzcjl and hqgzcjl * 1 == 0 then
         create_trigger_t(
-        "hqgzcFinish_exception_case1",
-        "^(> )*洪七公说道：「今天我还是先指点你武功吧。」",
-        "",
-        "hqgzcFinish_AskGoldUnavaliableHandle"
+            "hqgzcFinish_exception_case1",
+            "^(> )*洪七公说道：「今天我还是先指点你武功吧。」",
+            "",
+            "hqgzcFinish_AskGoldUnavaliableHandle"
         )
         SetTriggerOption("hqgzcFinish_exception_case1", "group", "hqgzcFinish_Exception")
         create_trigger_t("hqgzcFinish_exception_case2", "^(> )*您先歇口气再说话吧。", "", "hqgzcFinish_AskGold_ExceptionHandle")
@@ -483,10 +455,10 @@ end
 -- ---------------------------------------------------------------
 function hqgzcFinish_AskGold_ExceptionHandle()
     wait.make(
-    function()
-        wait.time(0.1)
-        return exe("ask hong qigong about finish")
-    end
+        function()
+            wait.time(0.1)
+            return exe("ask hong qigong about finish")
+        end
     )
 end
 -- ---------------------------------------------------------------
@@ -495,17 +467,19 @@ end
 function hqgzcJobTimesToday()
     local times = 0
     local todaystr = tostring(common.date()) .. " 06:00:00"
-    local gapOneday = os.date("%Y-%m-%d", os.time() -24 * 3600)
+    local gapOneday = os.date("%Y-%m-%d", os.time() - 24 * 3600)
     local yesterdaystr = tostring(gapOneday) .. " 06:00:00"
     local curHour = tonumber(os.date("%H", os.time()))
     local tsql = ""
     if curHour < 6 then
         -- 时间为凌晨6点前的,都归为昨天
-        tsql = "SELECT count(*) FROM [ActivityRecord] where ActivityName = '洪七公作菜' and RoleID = '" ..
-        score.id .. "' and CreateTime > '" .. yesterdaystr .. "'"
+        tsql =
+            "SELECT count(*) FROM [ActivityRecord] where ActivityName = '洪七公作菜' and RoleID = '" ..
+            score.id .. "' and CreateTime > '" .. yesterdaystr .. "'"
     else
-        tsql = "SELECT count(*) FROM [ActivityRecord] where ActivityName = '洪七公作菜' and RoleID = '" ..
-        score.id .. "' and CreateTime > '" .. todaystr .. "'"
+        tsql =
+            "SELECT count(*) FROM [ActivityRecord] where ActivityName = '洪七公作菜' and RoleID = '" ..
+            score.id .. "' and CreateTime > '" .. todaystr .. "'"
     end
     local db = DBHelper:new()
     times = db:GetRowAmount(tsql)
@@ -517,8 +491,8 @@ end
 function hqgzcFinishDBRecord(notes)
     if GetRoleConfig("Auto_hqgzc_10times") then
         local tsql =
-        "INSERT INTO [ActivityRecord] ([RoleID],[RoleName],[ActivityName],[Note]) VALUES ('" ..
-        score.id .. "', '" .. score.name .. "', '洪七公作菜', '" .. notes .. "')"
+            "INSERT INTO [ActivityRecord] ([RoleID],[RoleName],[ActivityName],[Note]) VALUES ('" ..
+            score.id .. "', '" .. score.name .. "', '洪七公作菜', '" .. notes .. "')"
         local db = DBHelper:new()
         local val = db:Insert(tsql)
     end
