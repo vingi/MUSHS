@@ -240,7 +240,7 @@ hp_pot_check = function(n, l, w)
             end
         end
     end
-    if skills["parry"] and skills["parry"].lvl < hp.pot_max - 100 and skills["parry"].lvl < 450 then
+    if skills["parry"] and skills["parry"].lvl <= hp.pot_max - 100 and skills["parry"].lvl < 450 then
         flag.xuexi = 1
     end
     hp:update()
@@ -610,7 +610,7 @@ hp_dazuo_count = function()
     if skills["linji-zhuang"] and skills["linji-zhuang"].lvl > 149 then
         exe("yun yinyang")
     end
-    if skills["force"] and skills["force"].lvl < 450 and skills["force"].lvl < hp.pot_max - 100 then
+    if skills["force"] and skills["force"].lvl < 450 and skills["force"].lvl <= hp.pot_max - 100 then
         flag.xuexi = 1
     end
     exe("yun qi;hp")
@@ -1575,12 +1575,12 @@ function checkWaitOk()
         waithook = test
     end
     if type(waithook) == "string" or type(waithook) == "number" then
-        print("waithook 赋值异常: 当前类型为 - "..type(waithook)..", 当前值为 - "..waithook)
+        print("waithook 赋值异常: 当前类型为 - " .. type(waithook) .. ", 当前值为 - " .. waithook)
         return test()
-    end 
+    end
     if type(waithook) == "function" then
         return waithook()
-    end 
+    end
 end
 
 nexthook = test
@@ -1707,12 +1707,29 @@ function idle_set()
     if not flag.idle or type(flag.idle) ~= "number" then
         flag.idle = 0
     end
+    flag.idle = flag.idle + 1
+    if flag.idle < 8 then
+        return
+    end
     if flag.idle < 24 and job.name == "wudang" and wudangJob.killStartTime ~= nil then
         -- 说明已进入叫杀阶段, 鉴于武当任务的busy时间超长, 所以将允许的战斗时间延长至12分钟, 避免太长的战斗时间进入idle的判断
         return
     end
-    flag.idle = flag.idle + 1
-    if flag.idle < 8 then
+    if flag.idle < 10 then
+        DeleteTimer("walkWait10")
+        DeleteTimer("walkWait9")
+        if dest.area == nil then return end
+        if dest.area == '铁掌山' then
+            locate()
+            if locl.room ~= job.room then
+                return walk_wait()
+            else
+                if job.name == 'wudang' then return wudangFindAct() end
+                if job.name == 'huashan' then return huashanFindAct() end
+                if job.name == 'xueshan' then return xueshan_find_act() end
+                if job.name == 'songxin' or job.name == 'songxin2' then return songxin_find_go() end
+            end
+        end
         return
     end
     if flag.idle < 10 then
@@ -2469,23 +2486,23 @@ function check_pot(p_cmd)
 
     job_exp_tongji()
 
-    for p in pairs(skillEnable) do
-        if skills[p] then
-            q = skillEnable[p]
-            -- ain 提前领悟
-            if
-                q and skills[q] and q ~= "force" and
-                (skills[q].lvl > 219 or(score.party == "普通百姓" and skills[q].lvl > 100)) and
-                skills[q].lvl < hp.pot_max - 100 and
-                skills[q].lvl <= skills[p].lvl and
-                hp.pot >= l_pot
-            then
-                flag.lingwu = 1
-            end
-        end
-    end
-    if
-        GetVariable("lingwuskill") or
+    --    for p in pairs(skillEnable) do
+    --        if skills[p] then
+    --            q = skillEnable[p]
+    --            -- ain 提前领悟
+    --            if
+    --                q and skills[q] and q ~= "force" and
+    --                (skills[q].lvl > 219 or(score.party == "普通百姓" and skills[q].lvl > 100)) and
+    --                skills[q].lvl < hp.pot_max - 100 and
+    --                skills[q].lvl <= skills[p].lvl and
+    --                hp.pot >= l_pot
+    --            then
+    --                flag.lingwu = 1
+    --            end
+    --        end
+    --    end
+
+    if GetVariable("lingwuskill") or
         (tmp.xskill and skills[tmp.xskill] and skillEnable[tmp.xskill] and skills[skillEnable[tmp.xskill]])
     then
         flag.lingwu = 0
@@ -2689,8 +2706,8 @@ function check_silver_qu()
 end
 function check_gold_qu()
     local l_cnt = Bag["黄金"].cnt - count.gold_max * 2
-    if l_cnt>0 then
-        exe('cun '.. l_cnt ..' gold')
+    if l_cnt > 0 then
+        exe('cun ' .. l_cnt .. ' gold')
     end
     if Bag["黄金"].cnt < count.gold_max then
         exe("qu " .. count.gold_max .. " gold")

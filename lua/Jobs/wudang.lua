@@ -178,6 +178,8 @@ function wudangFail()
     -- 重置叫杀时间
     wudangJob.killStartTime = nil
     setLocateRoomID = "wudang/sanqing"
+    -- 任务计数补1
+    job.statistics_JobTimePlus()
     if score.party == "华山派" and hp.shen < 0 then
         return clb()
     end
@@ -280,6 +282,10 @@ function wudangFangqi()
     job.level = nil
     job.lost = 0
     nobusy = 0
+    job.statistics.Failure = job.statistics.Failure + 1
+    job.statistics.Category["武当"].Times = job.statistics.Category["武当"].Times + 1
+    job.statistics.Category["武当"].Failure = job.statistics.Category["武当"].Failure + 1
+    job.statistics_Update()
     EnableTriggerGroup("wudangAccept", false)
     check_bei(wudangFangqiAsk)
 end
@@ -315,7 +321,7 @@ function wudangFind()
     create_alias("kezhiwugongpfm", "kezhiwugongpfm", "alias pfmpfm " .. tmppfm)
     exe("kezhiwugongpfm")
     exe("unset wimpy;set wimpycmd pfmpfm\\hp")
-    print("当前位置: "..locl.area..locl.room)
+    print("当前位置: " .. locl.area .. locl.room)
     if locl.area == "武当山" and locl.room == "三清殿" then
         print("开启免定位直行")
         go_direct_pure(wudangFindAct, "武当山", "三清殿", job.area, job.room, "wudang/sanqing")
@@ -466,6 +472,10 @@ function wudangFinishT()
     -- 重置叫杀时间
     wudangJob.killStartTime = nil
     -- setLocateRoomID='wudang/sanqing'
+    job.statistics.Success = job.statistics.Success + 1
+    job.statistics.Category["武当"].Times = job.statistics.Category["武当"].Times + 1
+    job.statistics.Category["武当"].Success = job.statistics.Category["武当"].Success + 1
+    job.statistics_Update()
 end
 function wudangFinishC()
     print("等待老宋发奖励。")

@@ -799,25 +799,25 @@ function searchPre()
     -- if job.name and(job.name == "clb" or job.name == 'tdh' or job.name == 'tmonk') and flag.times == 1 then
     --     l_distance = 2
     -- end
-    if flag.times==1 then
-        if job.name=='wudang' and wd_distance>2 then
+    if flag.times == 1 then
+        if job.name == 'wudang' and wd_distance > 2 then
             l_distance = wd_distance
         else
             l_distance = 2
         end
     end
-    if flag.times==2 then
-        if job.name=='wudang' and wd_distance>4 then
+    if flag.times == 2 then
+        if job.name == 'wudang' and wd_distance > 4 then
             l_distance = wd_distance
         else
             l_distance = 4
-        end    
+        end
     end
     if job.name and job.name == 'xueshan' and flag.times == 1 then
         l_distance = 3
     end
-    if flag.times==3 or job.name=='zhuacaishen' then
-       l_distance = 6
+    if flag.times == 3 or job.name == 'zhuacaishen' then
+        l_distance = 6
     end
     if p_dest == nil then
         p_dest = map.rooms[road.id].outdoor
@@ -1509,98 +1509,105 @@ function wayMlOver()
     return walk_wait()
 end
 ------------------------------蝴蝶谷-----------------------------------------
-bohuacong=function()
-        exe('tell zhou 开门;whisper startd 开门')
-            --check_step_num1=check_step_num1+1
-            wait.make(function() 
-            wait.time(0.5)
-            exe('right')
-            end)
-        wait.make(function() 
+bohuacong = function()
+    exe('tell zhou 开门;whisper startd 开门')
+    -- check_step_num1=check_step_num1+1
+    wait.make( function()
         wait.time(0.5)
-        locate_finish='bohuaconggo'
-            return fastLocate()
-        end)
+        exe('right')
+    end )
+    wait.make( function()
+        wait.time(0.5)
+        locate_finish = 'bohuaconggo'
+        return fastLocate()
+    end )
 end
-bohuaconggo=function()
-        locate_finish=0
-        if locl.room=="花丛中" then
-                        EnableTriggerGroup("hdghuacong",false)
-            return walk_wait()
-        else
-                    return go_locate()
-            end
+bohuaconggo = function()
+    locate_finish = 0
+    if locl.room == "花丛中" then
+        EnableTriggerGroup("hdghuacong", false)
+        return walk_wait()
+    else
+        return go_locate()
+    end
 end
-hdgleavein=function()
-DeleteTriggerGroup("miaopucheck")
-create_trigger_t('miaopucheck1','^>*\\s*你乱走一气，忽然眼前一亮，来到一处草径','','hdgupp')   
-create_trigger_t('miaopucheck2','^>*\\s*你把 "action" 设定为 "离开花圃了吗" 成功完成。','','hdgingoon')   
-SetTriggerOption("miaopucheck1","group","miaopucheck")
-SetTriggerOption("miaopucheck2","group","miaopucheck")
-EnableTriggerGroup("miaopucheck",true)
-      hdgup=0
-      if flag.find==1 then return end        
-      exe('nd')
-          return hdgdown()
+hdgleavein = function()
+    DeleteTriggerGroup("miaopucheck")
+    create_trigger_t('miaopucheck1', '^>*\\s*你乱走一气，忽然眼前一亮，来到一处草径', '', 'hdgupp')
+    create_trigger_t('miaopucheck2', '^>*\\s*你把 "action" 设定为 "离开花圃了吗" 成功完成。', '', 'hdgingoon')
+    SetTriggerOption("miaopucheck1", "group", "miaopucheck")
+    SetTriggerOption("miaopucheck2", "group", "miaopucheck")
+    EnableTriggerGroup("miaopucheck", true)
+    hdgup = 0
+    if flag.find == 1 then return end
+    exe('nd')
+    return hdgdown()
 end
-hdgupp=function()
-        EnableTimer('walkWait4',false)
-        if flag.find==1 then return end
-        hdgup=1
-        wait.make(function() 
-            wait.time(1)
-            return hdgingoon()
-        end)
+hdgupp = function()
+    EnableTimer('walkWait4', false)
+    if flag.find == 1 then return end
+    hdgup = 1
+    wait.make( function()
+        wait.time(1)
+        return hdgingoon()
+    end )
 end
-hdgdown=function()
-        if flag.find==1 then return end
-        hdgup=0
-        create_timer_s('walkWait4',0.5,'hdgrun')
+hdgdown = function()
+    if flag.find == 1 then return end
+    hdgup = 0
+    create_timer_s('walkWait4', 0.5, 'hdgrun')
 end
-hdgrun=function()
-   exe('nd;n;n;nd;n;n;nd;n;n;nd;n;n;yun jing;yun jingli')
+hdgrun = function()
+    exe('nd;n;n;nd;n;n;nd;n;n;nd;n;n;yun jing;yun jingli')
 end
-hdgingoon=function()
-        if flag.find==1 then return end
-        EnableTriggerGroup("miaopucheck",true)        
-        if hdgup==0 then
-                return hdgdown()
-        else
-                hdgup=0
-            EnableTriggerGroup("miaopucheck",false)        
-            exe('n;n')
-                --check_step_num1=check_step_num1+4
-                return walk_wait()
-        end
+hdgingoon = function()
+    if flag.find == 1 then return end
+    EnableTriggerGroup("miaopucheck", true)
+    if hdgup == 0 then
+        return hdgdown()
+    else
+        hdgup = 0
+        EnableTriggerGroup("miaopucheck", false)
+        exe('n;n')
+        -- check_step_num1=check_step_num1+4
+        return walk_wait()
+    end
 end
--------------------------------------------------------------------------------------------
+---------------------------------华山菜地------------------------------------------
 hscaidi = function()
     DeleteTriggerGroup("hscaidi")
     create_trigger_t('hscaidi1', '^>*\\s*你把 "action" 设定为 "离开菜地了吗" 成功完成。$', '', 'hscaidi_goon')
-    create_trigger_t('hscaidi2', '^>*\\s*村中心\\s*\\-', '', 'hscaidi_out')
+    create_trigger_t('hscaidi2', '^>*\\s*山脚下\\s*\\-', '', 'hscaidi_out')
+    -- create_trigger_t('hscaidi2','^>*\\s*村中心\\s*\\-','','hscaidi_out1')
     SetTriggerOption("hscaidi1", "group", "hscaidi")
     SetTriggerOption("hscaidi2", "group", "hscaidi")
     flag.find = 0
     road.temp = 0
-    exe('n;alias action 离开菜地了吗')
+    exe('e;e;e;e')
+    create_timer_s('caidiwalk', 0.25, 'huashan_caidi_check')
+end
+huashan_caidi_check = function()
+    road.temp = road.temp + 1
+    if road.temp > 500 then
+        road.temp = 0
+        dis_all()
+        return check_heal()
+    end
+    exe('e;e;e;e')
+end
+hscaidi_out1 = function()
+    caidiout = 1
 end
 hscaidi_goon = function()
-    if flag.find == 1 then
+    if caidiout == 1 then
         EnableTriggerGroup("hscaidi", false)
-        return walk_wait()
+        return hscaidi_out()
     else
-        road.temp = road.temp + 1
-        if road.temp > 100 then
-            dis_all()
-            return check_heal()
-        end
-        wait.make( function()
-            wait.time(0.5)
-            exe('n;alias action 离开菜地了吗')
-        end )
+        return hscaidi()
     end
 end
 hscaidi_out = function()
+    EnableTimer('caidiwalk', false)
     EnableTriggerGroup("hscaidi", false)
     return walk_wait()
 end
@@ -3503,6 +3510,14 @@ function outXtjGo()
 end
 function outXtjOver()
     walk_wait()
+end
+-------- 峨嵋洗象池
+function emxxc()
+    wait.make(function()
+        wait.time(3)
+        exe("ed")
+        return walk_wait()
+    end)
 end
 -----------by fqyy 2017-05-24 星宿海山洞
 function xingxiushandong()

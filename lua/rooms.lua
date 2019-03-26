@@ -9291,12 +9291,31 @@ Room {
 Room {
     id = "emei/zuantianpo2",
     name = "×êÌìÆÂ",
-    ways =
-    {
+    ways = {
         ["eastdown"] = "emei/zuantianpo",
-        ["westup;southup"] = "emei/lingyunti",
+        ["westup"] = "emei/xixiangchi",
     },
-    room_relative = "Ï´Ïó³Ø±ß¡û×êÌìÆÂ¡û×êÌìÆÂ×êÌìÆÂ",
+    room_relative="Ï´Ïó³Ø±ß¡û×êÌìÆÂ¡û×êÌìÆÂ×êÌìÆÂ",
+}
+Room {
+    id = "emei/xixiangchi",
+    name = "Ï´Ïó³Ø±ß",
+    ways = {
+        ["#emxxc"] = "emei/zuantianpo2",
+        ["southup"] = "emei/lingyunti",
+        ["north"] = "emei/xixiangchi1",
+    },
+    postcmds = {
+        ["eastdown"] = "#walkBusy", 
+    room_relative="×êÌìÆÂ£üÏ´Ïó³Ø±ß-----ÁèÔÆÌÝ¨J",
+    },
+}
+Room {
+    id = "emei/xixiangchi1",
+    name = "Ï´Ïó³Ø±ß",
+    ways = {
+        ["south"] = "emei/xixiangchi",
+    },
 }
 Room {
     id = "fairyland/conglin2",
@@ -34010,21 +34029,15 @@ Room {
 Room {
     id = "village/caidi",
     name = "²ËµØ",
-    ways =
-    {
-        ["#hscaidi"] = "village/zhongxin",
+    ways = {
+            ["#hscaidi"] = "huashan/path1",
     },
-    nolooks =
-    {
-        ["#hscaidi"] = true,
-        ["south"] = true,
-        ["north"] = true,
-        ["east"] = true,
-        ["west"] = true,
-    },
-    lengths =
-    {
-        ["#hscaidi"] = 500,
+    nolooks = {
+            ["#hscaidi"] = true,
+            ["south"] = true,
+            ["north"] = true,
+            ["east"] = true,
+            ["west"] = true,
     },
 }
 Room {
@@ -34181,15 +34194,14 @@ Room {
         ["northwest"] = "village/caidi",
         ["northeast"] = "village/caidi",
     },
-    postcmds =
-    {
-        ["northwest"] = "#walkBusy",
-        ["northeast"] = "#walkBusy",
-    },
+    --postcmds = {
+        --["northwest"] = "#walkBusy",
+        --["northeast"] = "#walkBusy",
+    --},
     lengths =
     {
-        ["northwest"] = 3,
-        ["northeast"] = 3,
+        ["northwest"] = 6,
+        ["northeast"] = 6,
     },
 }
 

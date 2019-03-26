@@ -72,6 +72,8 @@ function huashan()
     huashanJob.jobStep = 0
     dis_all()
     huashan_trigger()
+    delete_all_timers()
+    idle()
     job.name = "huashan"
     job.target = "任务目标"
     return huashan_start()
@@ -123,8 +125,8 @@ end
 
 function job_huashan()
     EnableTriggerGroup("huashan_ask", true)
-    NewObserver("huashanAskJobOb", "ask yue buqun about job")
     -- 增加要任务发呆计时器
+    NewObserver("huashanAskJobOb", "ask yue buqun about job")
 end
 
 function huashan_trigger()
@@ -180,14 +182,13 @@ function huashan_triggerDel()
     DeleteTriggerGroup("huashan_yls_ask")
     DeleteTriggerGroup("huashan_over")
     DeleteTriggerGroup("huashanQuest")
-    DeleteTriggerGroup("huashanJob_temp")
 end
 
 function huashan_ask()
     EnableTriggerGroup("huashan_ask", false)
     EnableTriggerGroup("huashan_accept", true)
-    RemoveObserver("huashanAskJobOb")
     -- 关闭要任务计时器
+    RemoveObserver("huashanAskJobOb")
 end
 
 function huashan_nobody()
@@ -206,11 +207,15 @@ function huashan_shibai_b()
     DeleteTriggerGroup("all_fight")
     kezhiwugongclose()
     huashan_triggerDel()
-    Execute("ask yue buqun about 失败")
+    Execute("drop corpse;ask yue buqun about 失败")
     if job.where ~= nil and string.find(job.where, "侠客岛") then
         mjlujingLog("侠客岛")
     end
-    messageShow("华山任务：任务失败。")
+    messageShow("华山任务：任务失败。", "deepskyblue")
+    job.statistics.Failure = job.statistics.Failure + 1
+    job.statistics.Category["华山"].Times = job.statistics.Category["华山"].Times + 1
+    job.statistics.Category["华山"].Failure = job.statistics.Category["华山"].Failure + 1
+    job.statistics_Update()
     return check_halt(check_food)
 end
 
@@ -220,9 +225,6 @@ function huashan_fangqi()
     huashan_triggerDel()
     job.last = "huashan"
     huashanJob.jobStep = 0
-    -- if job.zuhe["wudang"] then
-    --   job.last='wudang'
-    -- end
     return check_halt(check_food)
 end
 
@@ -270,7 +272,7 @@ function huashan_npc_get()
     EnableTriggerGroup("huashan_npc", true)
     exe("unset wimpy;set wimpycmd pfmpfm\\hp")
     exe("s")
-    return check_bei(huashan_npc_goon)
+    return huashan_npc_goon()
 end
 
 function huashan_npc_goon()
@@ -278,15 +280,16 @@ function huashan_npc_goon()
     quest.status = "闲逛中"
     quest.update()
     exe("n;e;e;")
-    locate()
+    -- locate()
+    fastLocate()
     return check_busy(huashan_ssl, 1)
 end
 
 function huashan_ssl()
     if locl.room == "石屋" or locl.room == "玉泉院" then
-        return check_bei(huashan_npc_ssl)
+        return huashan_npc_ssl()
     else
-        return check_bei(huashan_npc_goon)
+        return huashan_npc_goon()
     end
 end
 -- ---------------------------------------------------------------
@@ -301,6 +304,12 @@ function huashan_where(n, l, w)
     quest.location = job.where
     quest.update()
     -- print("1"..job.where)
+    if
+        string.find(job.where, "萧府大厅") or string.find(job.where, "萧府书房") or string.find(job.where, "萧府厨房") or
+            string.find(job.where, "萧府后院")
+     then
+        job.where = "萧府萧府大门"
+    end
 end
 
 function huashan_find(n, l, w)
@@ -309,6 +318,8 @@ function huashan_find(n, l, w)
     job.target = tostring(w[2])
     job.killer = {}
     job.killer[job.target] = true
+    locl.area='华山'
+	locl.room='树林'
     quest.target = job.target
     quest.update()
     DeleteTriggerGroup("huashan_find")
@@ -336,8 +347,8 @@ function huashan_find(n, l, w)
         messageShow("华山任务：任务地点【" .. job.where .. "】不可到达，任务放弃。", "Plum")
         return check_halt(huashanFindFail)
     end
+    print(dest.room,dest.area,job.room,job.area)
     messageShow("华山任务" .. Get_huashanjob_step() .. "：追杀逃跑到【" .. job.where .. "】的【" .. job.target .. "】。")
-    locl.room = "树林"
     -- 优化华山任务路径(由于当前处于树林迷宫)
     -- 这里的目标有两种可能 1. 目标在当前迷宫里  2. 目标在当前迷宫之外
     if dest.room == "树林" or dest.room == "松树林" or dest.room == "空地" then
@@ -387,10 +398,6 @@ function huashan_fight(n, l, w)
     exe("unset no_kill_ap;yield no")
     exe("follow " .. job.id)
     job.killer[job.target] = job.id
-    exe("kill " .. job.id)
-    exe("set wimpycmd pfmpfm\\hp")
-    exe("pfmwu")
-    exe("set wimpy 100")
 
     -- kezhiwugong(job.target,job.id,'pfmpfm')
     dis_all()
@@ -399,18 +406,114 @@ function huashan_fight(n, l, w)
     fight.time.b = os.time()
     EnableTrigger("hpheqi1", true)
     DeleteTriggerGroup("huashan_fight")
-    create_trigger_t("huashan_fight1", "^(> )*" .. job.target .. "「啪」的一声倒在地上", "", "huashan_cut")
+    create_trigger_t("huashan_fight1", "^(> )*" .. job.target .. "「啪」的一声倒在地上", "", "huashan_getget")
     create_trigger_t("huashan_fight2", "^(> )*" .. job.target .. "神志迷糊，脚下一个不稳，倒在地上昏了过去。", "", "huashan_faint")
     create_trigger_t("huashan_fight3", "^(> )*" .. job.target .. "匆匆离开。", "", "huashanFindFail")
     create_trigger_t("huashan_fight4", "^(> )*这里没有 " .. job.id .. "。", "", "huashanFindAct")
+    create_trigger_t("huashan_fight5", "^(> )*神明在前，岂可妄动。", "", "huashan_faint1")
+    create_trigger_t("huashan_fight6", "^(> )*这不是抢走你令牌的人。", "", "huashanFindFail")
     SetTriggerOption("huashan_fight1", "group", "huashan_fight")
     SetTriggerOption("huashan_fight2", "group", "huashan_fight")
     SetTriggerOption("huashan_fight3", "group", "huashan_fight")
     SetTriggerOption("huashan_fight4", "group", "huashan_fight")
+    SetTriggerOption("huashan_fight5", "group", "huashan_fight")
+    SetTriggerOption("huashan_fight6", "group", "huashan_fight")
+
+    exe("kill " .. job.id)
+    exe("set wimpycmd pfmpfm\\hp")
+    exe("pfmwu")
+    exe("set wimpy 100")
+    huashanlocate()
 end
 
 function huashan_faint()
     exe("kill " .. job.id)
+end
+function huashan_faint1()
+    exe("worship zhao")
+    wait.make(
+        function()
+            wait.time(1)
+            exe("kill " .. job.id)
+        end
+    )
+end
+function huashanlocate()
+    -- lfull=0
+    -- wait.make(function()
+    --     wait.time(0.5)
+    -- 	EnableTimer('walkWait10',false)
+    -- 	exe('unwield shentong;unset no_kill_ap')
+    --     locatefight()
+    --     quick_locate=1
+    -- end)
+end
+function huashan_getget()
+    EnableTriggerGroup("huashan_fight", false)
+    EnableTriggerGroup("huashan_find", false)
+    DeleteTriggerGroup("huashan_getnpc")
+    hsgettime = 0
+    create_trigger_t("huashan_getnpc1", "^(> )*你将(\\D*)的尸体扶了起来背在背上。", "", "huashan_get_con")
+    create_trigger_t("huashan_getnpc2", "^(> )*光天化日的想抢劫啊", "", "huashan_getagain")
+    SetTriggerOption("huashan_getnpc1", "group", "huashan_getnpc")
+    SetTriggerOption("huashan_getnpc2", "group", "huashan_getnpc")
+    kezhiwugongclose()
+    if locl.area == "绝情谷" then
+        return check_bei(huashan_cut)
+    else
+        exe("get corpse;i")
+        --fightoverweapon()
+        for i = 1, 3 do
+            exe("get ling pai from corpse " .. i)
+        end
+    end
+end
+
+function huashan_get_con(n, l, w)
+    DeleteTimer("perform")
+    DeleteTriggerGroup("all_fight")
+    EnableTriggerGroup("huashan_getnpc", false)
+    fight.time.e = os.time()
+    fight.time.over = fight.time.e - fight.time.b
+    messageShowT("华山任务" .. Get_huashanjob_step() .. "：战斗用时:【" .. fight.time.over .. "】秒,搞定蒙面人：【" .. job.target .. "】。")
+    if job.target == tostring(w[2]) then
+        EnableTriggerGroup("huashan_npc", false)
+        EnableTriggerGroup("huashan_cut", false)
+        hscheckhead = 0
+        return check_bei(huashan_backgogo)
+    else
+        return check_bei(huashan_cut)
+    end
+end
+huashan_backgogo = function()
+    -- 换上回内武器
+    Weapon.RecoverNeili()
+    --checkBags()
+    return go(huashan_yls, "华山", "祭坛")
+end
+huashan_get_con1 = function()
+    EnableTriggerGroup("huashan_fight", false)
+    EnableTriggerGroup("huashan_find", false)
+    exe("halt;get corpse")
+    return huashan_cut()
+end
+function huashan_getagain()
+    EnableTriggerGroup("huashan_getnpc", false)
+    if hsgettime < 4 then
+        hsgettime = hsgettime + 1
+        wait.make(
+            function()
+                wait.time(0.5)
+                EnableTriggerGroup("huashan_getnpc", true)
+                return hs_getagain()
+            end
+        )
+    else
+        return check_bei(huashan_cut)
+    end
+end
+function hs_getagain()
+    exe("get corpse")
 end
 
 function huashan_cut()
@@ -418,10 +521,13 @@ function huashan_cut()
     RemoveObserver("huashankillOb")
     EnableTriggerGroup("huashan_fight", false)
     EnableTriggerGroup("huashan_find", false)
+    EnableTriggerGroup("huashan_getnpc", false)
     DeleteTriggerGroup("huashan_cut")
     create_trigger_t("huashan_cut1", "^(> )*只听“咔”的一声，你将(\\D*)的首级斩了下来，提在手中。", "", "huashan_cut_con")
+    --create_trigger_t("huashan_cut3", "^(> )*你将(\\D*)的尸体扶了起来背在背上。", "", "huashan_cut_con")    create_trigger_t("huashan_cut2", "^(> )*(乱切别人杀的人干嘛啊|你手上这件兵器无锋无刃|你得用件锋利的器具才能切下这尸体的头来)", "", "huashan_cut_weapon")
     create_trigger_t("huashan_cut2", "^(> )*(乱切别人杀的人干嘛啊|你手上这件兵器无锋无刃|你得用件锋利的器具才能切下这尸体的头来)", "", "huashan_cut_weapon")
     SetTriggerOption("huashan_cut1", "group", "huashan_cut")
+    --SetTriggerOption("huashan_cut3", "group", "huashan_cut")    SetTriggerOption("huashan_cut1", "group", "huashan_cut")
     SetTriggerOption("huashan_cut2", "group", "huashan_cut")
     -- 因战斗中使用克制武功,通常会装备不同的武器,造成weapon_unwield()的不准确, 故在此处重新读取最新的物品列表信息
     exe("i")
@@ -431,15 +537,33 @@ function huashan_cut()
     job.killer = {}
     fight.time.e = os.time()
     fight.time.over = fight.time.e - fight.time.b
-
+    -- wait.make(function()
+    --     wait.time(1.5)
+    --     --fightoverweapon()
+    --     exe('drop corpse')
+    --     for i=1,4 do
+    --         exe('get ling pai from corpse '..i)
+    --         exe('qie corpse '..i)
+    --     end
+    --     create_timer_s('hscut1',1,'huashan_cut_dodo')
+    -- end)
     messageShowT("华山任务" .. Get_huashanjob_step() .. "：战斗用时:【" .. fight.time.over .. "】秒,搞定蒙面人：【" .. job.target .. "】。")
     return check_halt(huashan_cut_act)
+end
+huashan_cut_dodo = function()
+    --fightoverweapon()
+    exe("drop corpse")
+    for i = 1, 3 do
+        exe("get ling pai from corpse " .. i)
+        exe("qie corpse " .. i)
+    end
 end
 
 function huashan_cut_act()
     DeleteTimer("perform")
     weapon_unwield()
     weaponWieldCut()
+    wipe_kill = 0
     for i = 1, 5 do
         exe("halt;get ling pai from corpse " .. i)
         exe("qie corpse " .. i)
@@ -453,6 +577,8 @@ end
 -- 砍头事件执行触发
 -- ---------------------------------------------------------------
 function huashan_cut_con(n, l, w)
+    EnableTriggerGroup("huashan_cut", false) --关闭cut体触发
+    EnableTimer("hscut1", false)
     DeleteTriggerGroup("all_fight")
     kezhiwugongclose()
     exe("pfmset")
@@ -469,9 +595,21 @@ end
 -- 砍头后执行事件
 -- ---------------------------------------------------------------
 function huashan_cut_after()
+    EnableTriggerGroup("huashan_cut", false)
     -- 换上回内武器
     Weapon.RecoverNeili()
     return go(huashan_yls, "华山", "祭坛")
+end
+huashan_yls_ok1 = function()
+    exe("give yue corpse;hp")
+    --exe('give head to yue lingshan;hp')        --设置交首级计时器内容
+end
+huashan_yls_ok_c = function()
+    NewObserver("huashanGiveCorpseOb", "give corpse to yue lingshan;hp")
+end
+huashan_yls_ok_h = function()
+    NewObserver("huashanGiveHeadOb", "give head to yue lingshan;hp")
+ --增加交首级计时器
 end
 -- ---------------------------------------------------------------
 -- 去岳灵珊处交令牌
@@ -489,8 +627,15 @@ function huashan_yls()
     SetTriggerOption("huashan_yls1", "group", "huashan_yls")
     SetTriggerOption("huashan_yls2", "group", "huashan_yls")
     SetTriggerOption("huashan_yls3", "group", "huashan_yls")
-    -- 增加交首级计时器
-    NewObserver("huashanGiveHeadOb", "give head to yue lingshan;hp")
+    if hscheckhead == 0 then
+        --exe('give corpse to yue lingshan')
+        -- 增加交首级计时器
+        --NewObserver("huashanGiveHeadOb", 'give corpse to yue lingshan;hp')
+        return huashan_yls_ok_c()
+    else
+        --exe('give head to yue lingshan')
+        return huashan_yls_ok_h()
+    end
 end
 -- ---------------------------------------------------------------
 -- 交令牌给岳灵珊失败后的处理
@@ -498,6 +643,7 @@ end
 function huashan_yls_fail(n, l, w)
     -- 触发成功后删除交首级计时器
     RemoveObserver("huashanGiveHeadOb")
+    RemoveObserver("huashanGiveCorpseOb")
     EnableTriggerGroup("huashan_yls", false)
     if locl.room ~= "祭坛" then
         return go(huashan_yls, "华山", "祭坛")
@@ -512,6 +658,7 @@ end
 function huashan_yls_wronglingpai()
     -- 触发成功后删除交首级计时器
     RemoveObserver("huashanGiveHeadOb")
+    RemoveObserver("huashanGiveCorpseOb")
     DeleteTriggerGroup("huashan_yls")
     exe("drop ling pai")
     return check_halt(huashan_yls)
@@ -538,12 +685,13 @@ end
 function huashan_yls_lbcx()
     EnableTriggerGroup("huashan_yls_ask", true)
     -- weapon_unwield()
-    return exe("drop head;askk yue lingshan about 力不从心")
+    return exe("drop head;drop corpse;askk yue lingshan about 力不从心")
 end
 
 function huashan_yls_ask(n, l, w)
     -- 触发成功后删除交首级计时器
     RemoveObserver("huashanGiveHeadOb")
+    RemoveObserver("huashanGiveCorpseOb")
     DeleteTriggerGroup("huashan_yls")
     DeleteTriggerGroup("huashan_yls_ask")
     create_trigger_t("huashan_yls_ask1", "^(> )*你向岳灵珊打听有关『力不从心』的消息。", "", "huashan_yls_back")
@@ -577,9 +725,32 @@ function huashan_ysl_after()
     local backto_ybq = "out;w;s;se;su;su;s;give ling pai to yue buqun"
     exe(backto_ybq)
 end
+-- ---------------------------------------------------------------
+-- 检查身上的绳子是否足够, 用于进华山山洞
+-- ---------------------------------------------------------------
+huashan_over_dodo = function()
+    EnableTriggerGroup("huashan_over", false)
+    EnableTimer("walkWait3", false)
+    delete_all_timers()
+    if not Bag["绳子"] then
+        print("绳子不够")
+        exe("s;s;tell rope 交货")
+        wait.make(
+            function()
+                wait.time(2)
+                exe("get sheng zi;n;n")
+                return huashan_finish()
+            end
+        )
+    else
+        print("绳子够了")
+        return huashan_finish()
+    end
+end
 -- ------------------------------------
 -- 华山任务结束
 -- ------------------------------------
+
 function huashan_finish()
     -- weapon_unwield()
     EnableTriggerGroup("huashanQuest", true)
@@ -592,9 +763,13 @@ function huashan_finish()
     EnableTriggerGroup("huashanQuest", true)
     flag.times = 1
     huashanJob.jobStep = 0
-    exe("drop ling pai")
+    exe("drop ling pai;drop head;drop corpse")
     -- jobExpTongji()
     huashan_triggerDel()
+    job.statistics.Success = job.statistics.Success + 1
+    job.statistics.Category["华山"].Times = job.statistics.Category["华山"].Times + 1
+    job.statistics.Category["华山"].Success = job.statistics.Category["华山"].Success + 1
+    job.statistics_Update()
     -- setLocateRoomID = "huashan/zhengqi"
     return check_halt(check_food)
 end

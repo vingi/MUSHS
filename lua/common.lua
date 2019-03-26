@@ -142,7 +142,7 @@ function common.GetLastRebootTime()
     local day_gap = 0
     if tonumber(weektime) > 4 then
         day_gap = weektime - 4
-    elseif tonumber(weektime) == 4 then
+    elseif tonumber(weektime) == 4 and tonumber(os.date("%H", os.time())) >= 8 then
         day_gap = 0
     else
         day_gap = weektime + 3
