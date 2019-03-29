@@ -173,6 +173,7 @@ function hqgzcFail(n, l, w)
     hqgzcTriggerDel()
     if string.find(l, "潜能已经这么多了") and GetRoleConfig("Auto_hqgzc_10times") then
         hqgzcFinish_Over10TimesHandle()
+        print("check_pot")
         return check_pot()
     end
     -- job.last='hqgzc'

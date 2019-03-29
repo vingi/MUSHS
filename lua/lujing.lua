@@ -382,6 +382,8 @@ function go(job, area, room, sId)
         quest.location = area .. room
     end
     quest.update()
+    -- »»ÉÏ»ØÄÚÎäÆ÷
+    Weapon.RecoverNeili()
     go_setting(job, area, room, sId)
     -- if sour.id ~= nil then
     --   return check_busy(path_consider)
@@ -1144,7 +1146,7 @@ hsssl = function()
     exe('n;e;e')
     if flag.find == 1 then return end
     create_timer_s('walkWait9', 0.05, 'sslgo')
-    create_timer_s('walkWait10', 5, 'ssllook')
+    create_timer_s('walkWait10', 1, 'ssllook')
 end
 ssllook = function()
     exe('look')
@@ -4463,13 +4465,13 @@ MidNight = {
     ['º¥'] = true,
     ['×Ó'] = true,
     ['³ó'] = true,
-    ['Òú'] = false,
+    ['Òú'] = true,
     ['Ã®'] = false,
     ['³½'] = false,
     ['ËÈ'] = false,
     ['Îç'] = false,
     ['Î´'] = false,
-    ['Éê'] = false,
+    ['Éê'] = true,
 }
 
 MidDay = {

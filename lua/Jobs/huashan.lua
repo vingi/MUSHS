@@ -270,7 +270,7 @@ end
 
 function huashan_npc_get()
     EnableTriggerGroup("huashan_npc", true)
-    exe("unset wimpy;set wimpycmd pfmpfm\\hp")
+    -- exe("unset wimpy;set wimpycmd pfmpfm\\hp")
     exe("s")
     return huashan_npc_goon()
 end
@@ -318,8 +318,8 @@ function huashan_find(n, l, w)
     job.target = tostring(w[2])
     job.killer = {}
     job.killer[job.target] = true
-    locl.area='华山'
-	locl.room='树林'
+    locl.area = "华山"
+    locl.room = "树林"
     quest.target = job.target
     quest.update()
     DeleteTriggerGroup("huashan_find")
@@ -347,7 +347,7 @@ function huashan_find(n, l, w)
         messageShow("华山任务：任务地点【" .. job.where .. "】不可到达，任务放弃。", "Plum")
         return check_halt(huashanFindFail)
     end
-    print(dest.room,dest.area,job.room,job.area)
+    print(dest.room, dest.area, job.room, job.area)
     messageShow("华山任务" .. Get_huashanjob_step() .. "：追杀逃跑到【" .. job.where .. "】的【" .. job.target .. "】。")
     -- 优化华山任务路径(由于当前处于树林迷宫)
     -- 这里的目标有两种可能 1. 目标在当前迷宫里  2. 目标在当前迷宫之外
@@ -395,7 +395,7 @@ end
 function huashan_fight(n, l, w)
     EnableTrigger("huashan_find2", false)
     job.id = string.lower(w[2])
-    exe("unset no_kill_ap;yield no")
+    exe("unset no_kill_ap;unset double_attack")
     exe("follow " .. job.id)
     job.killer[job.target] = job.id
 
@@ -419,22 +419,24 @@ function huashan_fight(n, l, w)
     SetTriggerOption("huashan_fight5", "group", "huashan_fight")
     SetTriggerOption("huashan_fight6", "group", "huashan_fight")
 
-    exe("kill " .. job.id)
-    exe("set wimpycmd pfmpfm\\hp")
-    exe("pfmwu")
-    exe("set wimpy 100")
+    exe("unset wimpy;kill " .. job.id)
+    -- exe("set wimpycmd pfmpfm\\hp")
+    -- exe("pfmwu")
+    -- exe("set wimpy 100")
     huashanlocate()
 end
 
 function huashan_faint()
-    exe("kill " .. job.id)
+    -- 重新检查当前装备, 为装备回内武器作准备
+    checkWield()
+    exe("unset wimpy;kill " .. job.id)
 end
 function huashan_faint1()
     exe("worship zhao")
     wait.make(
         function()
             wait.time(1)
-            exe("kill " .. job.id)
+            exe("unset wimpy;kill " .. job.id)
         end
     )
 end
@@ -461,7 +463,9 @@ function huashan_getget()
     if locl.area == "绝情谷" then
         return check_bei(huashan_cut)
     else
-        exe("get corpse;i")
+        -- 重新检查当前装备, 为装备回内武器作准备
+        checkWield()
+        exe("get corpse")
         --fightoverweapon()
         for i = 1, 3 do
             exe("get ling pai from corpse " .. i)
@@ -482,12 +486,11 @@ function huashan_get_con(n, l, w)
         hscheckhead = 0
         return check_bei(huashan_backgogo)
     else
+        hscheckhead = 1
         return check_bei(huashan_cut)
     end
 end
-huashan_backgogo = function()
-    -- 换上回内武器
-    Weapon.RecoverNeili()
+function huashan_backgogo()
     --checkBags()
     return go(huashan_yls, "华山", "祭坛")
 end
@@ -517,6 +520,7 @@ function hs_getagain()
 end
 
 function huashan_cut()
+    hscheckhead = 1
     ------------关闭华山kill 计时器
     RemoveObserver("huashankillOb")
     EnableTriggerGroup("huashan_fight", false)
@@ -530,7 +534,7 @@ function huashan_cut()
     --SetTriggerOption("huashan_cut3", "group", "huashan_cut")    SetTriggerOption("huashan_cut1", "group", "huashan_cut")
     SetTriggerOption("huashan_cut2", "group", "huashan_cut")
     -- 因战斗中使用克制武功,通常会装备不同的武器,造成weapon_unwield()的不准确, 故在此处重新读取最新的物品列表信息
-    exe("i")
+    checkWield()
     -- 清空错误的road.id(临时方法)
     -- 后续考虑用 opposite path
     road.id = nil
@@ -596,8 +600,6 @@ end
 -- ---------------------------------------------------------------
 function huashan_cut_after()
     EnableTriggerGroup("huashan_cut", false)
-    -- 换上回内武器
-    Weapon.RecoverNeili()
     return go(huashan_yls, "华山", "祭坛")
 end
 huashan_yls_ok1 = function()
@@ -609,7 +611,7 @@ huashan_yls_ok_c = function()
 end
 huashan_yls_ok_h = function()
     NewObserver("huashanGiveHeadOb", "give head to yue lingshan;hp")
- --增加交首级计时器
+    --增加交首级计时器
 end
 -- ---------------------------------------------------------------
 -- 去岳灵珊处交令牌
@@ -649,6 +651,13 @@ function huashan_yls_fail(n, l, w)
         return go(huashan_yls, "华山", "祭坛")
     elseif not string.find(l, "这里没有这个人") then
         return go_direct(huashan_shibai_b, "华山", "祭坛", "华山", "正气堂", "huashan/jitan")
+    else
+        wait.make(
+            function()
+                wait.time(5)
+                return go(huashan_yls, "华山", "祭坛")
+            end
+        )
     end
 end
 -- ---------------------------------------------------------------

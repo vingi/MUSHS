@@ -1,8 +1,7 @@
-
 Weapon = {}
-weaponPrepare = { }
-weaponUsave = { }
-itemWield = { }
+weaponPrepare = {}
+weaponUsave = {}
+itemWield = {}
 weaponStore = {
     ["箫"] = "city/yueqidian",
     ["木剑"] = "xiangyang/mujiangpu",
@@ -95,19 +94,26 @@ unarmedKind = {
 }
 
 -- ---------------------------------------------------------------
--- 装备回内力武器, 前提是在之前的命令已经执行过 i 命令, 获得身上最新的装备着的武器信息 
+-- 装备回内力武器, 前提是在之前的命令已经执行过 i 命令, 获得身上最新的装备着的武器信息
 -- ---------------------------------------------------------------
-function Weapon.RecoverNeili()
-    -- 是否已经装备回内武器
-    if itemWield[GetItemChineseInBagByFullID(GetVariable("myweapon"))] ~= true then
-        weapon_unwield()
-        weapon_wield()
+function Weapon.RecoverNeili(force)
+    if force and FindRoleFunction("Wield_RecoverWeapon") then
+        GetRoleFunction("Wield_RecoverWeapon")
+    else
+        -- 是否已经装备回内武器
+        if itemWield[GetItemChineseInBagByFullID(GetVariable("myweapon"))] ~= true then
+            print("开始装备回内武器")
+            weapon_unwield()
+            weapon_wield()
+        else
+            print("已经装备回内武器")
+        end
     end
 end
 
 function weaponSet()
-    weaponPrepare = { }
-    local t = { }
+    weaponPrepare = {}
+    local t = {}
     for p in pairs(weaponStore) do
         t[p] = p
     end
@@ -123,7 +129,7 @@ function weaponSet()
     end
     if GetVariable("weaponprepare") then
         tmp.weapon = utils.split(GetVariable("weaponprepare"), "_")
-        tmp.pre = { }
+        tmp.pre = {}
         for _, p in pairs(tmp.weapon) do
             tmp.pre[p] = true
         end
@@ -164,7 +170,7 @@ function weaponSet()
     end
 end
 function weaponGetVar()
-    weaponPrepare = { }
+    weaponPrepare = {}
     if GetVariable("weaponprepare") then
         tmp.weapon = utils.split(GetVariable("weaponprepare"), "_")
         for _, p in pairs(tmp.weapon) do
@@ -189,11 +195,11 @@ end
 -- 重置,并重新检查包含里所有装备中的装备
 -- ---------------------------------------------------------------
 function checkWield()
-    itemWield = { }
+    itemWield = {}
     exe("i")
 end
 function checkWieldCatch(n, l, w)
-    itemWield = itemWield or { }
+    itemWield = itemWield or {}
     local l_item = w[1]
     for p in pairs(weaponThrowing) do
         if string.find(l_item, p) then
@@ -237,7 +243,7 @@ end
 -- ---------------------------------------------------------------
 function weapon_unwield()
     for p in pairs(Bag) do
-        if Bag[p].kind and(not itemWield or itemWield[p]) then
+        if Bag[p].kind and (not itemWield or itemWield[p]) then
             local _, l_cnt = isInBags(Bag[p].fullid)
             for i = 1, l_cnt do
                 exe("unwield " .. Bag[p].fullid .. " " .. i)
@@ -268,14 +274,13 @@ function weaponUnWalk()
     return walk_wait()
 end
 
-
 weaponWieldCut = function()
     if Bag["木剑"] then
         exe("wield " .. Bag["木剑"].fullid)
     else
         for p in pairs(Bag) do
             if Bag[p].kind and weaponKind[Bag[p].kind] and weaponKind[Bag[p].kind] == "cut" then
-                if not(Bag[p].kind == "xiao" and weaponUsave[p]) then
+                if not (Bag[p].kind == "xiao" and weaponUsave[p]) then
                     for q in pairs(Bag) do
                         if Bag[q].kind == "xiao" and weaponUsave[q] then
                             exe("unwield " .. Bag[q].fullid)
@@ -292,10 +297,10 @@ weaponUcheck = function()
     DeleteTriggerGroup("weapon")
     create_trigger_t("weapon1", '^(> )*你把 "action" 设定为 "checkUweapon" 成功完成。', "", "weaponUdone")
     create_trigger_t(
-    "weapon2",
-    "^(> )*这是一(柄)由\\D*(青铜|生铁|软铁|绿石|流花石|软银|金铁|玄铁|万年神铁|万年寒冰铁)制成，重\\D*的(\\D*)。$",
-    "",
-    "weaponUtmp"
+        "weapon2",
+        "^(> )*这是一(柄)由\\D*(青铜|生铁|软铁|绿石|流花石|软银|金铁|玄铁|万年神铁|万年寒冰铁)制成，重\\D*的(\\D*)。$",
+        "",
+        "weaponUtmp"
     )
     create_trigger_t("weapon3", "^(> )*看起来(需要修理|已经使用过一段时间|马上就要坏)了。", "", "weaponUneed")
     create_trigger_t("weapon4", "^(> )*看起来没有什么损坏。", "", "weaponUwell")
@@ -303,7 +308,7 @@ weaponUcheck = function()
     SetTriggerOption("weapon2", "group", "weapon")
     SetTriggerOption("weapon3", "group", "weapon")
     SetTriggerOption("weapon4", "group", "weapon")
-    weaponUcannt = weaponUcannt or { }
+    weaponUcannt = weaponUcannt or {}
     tmp.uweapon = nil
     for p in pairs(weaponUsave) do
         if Bag[p] and Bag[p].kind and weaponKind[Bag[p].kind] and not weaponUcannt[p] then
@@ -361,7 +366,7 @@ weaponRepairQuCheck = function()
     end
 end
 -- ---------------------------------------------------------------
--- 从采矿师傅 那里找铁锤 
+-- 从采矿师傅 那里找铁锤
 -- ---------------------------------------------------------------
 function Weapon.GetTiechui()
     weaponRepairFind()
@@ -449,7 +454,7 @@ weaponRepairDo = function()
     create_timer_m("repair", 3, "weaponRepairGoCun")
 end
 function weaponRepairCannt()
-    weaponUcannt = weaponUcannt or { }
+    weaponUcannt = weaponUcannt or {}
     return weaponRepairGoCun()
 end
 function weaponRepairGold()
@@ -495,12 +500,12 @@ function swjAsk()
     end
     exe("ask zhang sanfeng about 下山")
     wait.make(
-    function()
-        wait.time(3)
-        exe("ask zhang sanfeng about 教诲")
-        checkBags()
-        return check_bei(swjOver)
-    end
+        function()
+            wait.time(3)
+            exe("ask zhang sanfeng about 教诲")
+            checkBags()
+            return check_bei(swjOver)
+        end
     )
 end
 function swjOver()
@@ -535,7 +540,7 @@ armorUcheck = function()
     SetTriggerOption("armor2", "group", "armor")
     SetTriggerOption("armor3", "group", "armor")
     SetTriggerOption("armor4", "group", "armor")
-    armorUcannt = armorUcannt or { }
+    armorUcannt = armorUcannt or {}
     tmp.uarmor = nil
     for p in pairs(weaponUsave) do
         if Bag[p] and Bag[p].kind and armorKind[Bag[p].kind] and not armorUcannt[p] then
@@ -647,7 +652,7 @@ armorRepair = function(p_armor)
     return armorRepairGo()
 end
 function armorRepairCannt()
-    armorUcannt = armorUcannt or { }
+    armorUcannt = armorUcannt or {}
     return armorRepairGoCun()
 end
 armorRepairGoCun = function()

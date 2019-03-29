@@ -25878,6 +25878,7 @@ Room {
     {
         ["north"] = "shaolin/sengshe1",
     },
+    room_relative="…Æ…·£¸…Æ…·…Æ…·",
 }
 Room {
     id = "shaolin/sengshe4",
@@ -25892,6 +25893,7 @@ Room {
     {
         ["ª€–È◊’ﬂ"] = "huixu zunzhe",
     },
+    room_relative="…Æ…·£¸…Æ…·-----≤‡¿»£¸…Æ…·…Æ…·",
 }
 Room {
     id = "shaolin/sengshe5",
@@ -25901,6 +25903,7 @@ Room {
     {
         ["south"] = "shaolin/sengshe4",
     },
+    room_relative="…Æ…·£¸…Æ…·…Æ…·",
 }
 Room {
     id = "shaolin/sengshe6",
@@ -25910,6 +25913,7 @@ Room {
     {
         ["north"] = "shaolin/sengshe4",
     },
+    room_relative="…Æ…·£¸…Æ…·…Æ…·",
 }
 Room {
     id = "shaolin/shanlu1",
@@ -39268,7 +39272,7 @@ Room {
     {
         -- ["north"] = "if MidNight[locl.time] or job.name=='wudang' then return false else return 1 end",
         -- ["#yilicheckwd"] = "if job.name=='wudang' then return 5 else return false end",
-        ["#yilicheckwd"] = 2,
+        ["#yilicheckwd"] = "if MidNight[locl.time] then return false else return 2 end",
     },
 }
 Room {

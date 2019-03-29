@@ -4,8 +4,17 @@ wudangJob = {
     takeMissionTime = nil,
     -- 记录开始叫杀时间
     killStartTime = nil,
+    -- NPC
+    Npc = {
+        -- Npc情况描述
+        Condition = nil,
+        -- Npc 技能
+        Skill = nil,
+        -- 克制NPC的PFM CMD
+        AntiPfmCmd = nil
+    }
     -- Npc情况描述
-    NpcCondition = nil
+    -- NpcCondition = nil,
 }
 
 jobFindAgain = jobFindAgain or {}
@@ -36,6 +45,7 @@ function wudangTrigger()
     create_trigger_t("wudangAccept8", "^(> )*宋远桥说道：「\\D*，你太让我失望了，居然这么点活都干不好，先退下吧", "", "wudangFail")
     create_trigger_t("wudangAccept9", "^(> )*宋远桥说道：「\\D*，你又没在我这里领任务，瞎放弃什么呀", "", "wudangFail")
     create_trigger_t("wudangAccept10", "^(> )*宋远桥说道：「\\D*，这个任务确实比较难完成，下次给你简单的，先退下吧！", "", "wudangFail")
+    create_trigger_t("wudangAccept11", "^(> )*宋远桥在你的耳边悄声说道：据门派弟子来报，此人是来自(\\D*)的高手，尤为擅长(\\D*)的功夫。", "", "wudangNpc")
     create_trigger_t("wudangAccepta", "^(> )*宋远桥在你的耳边悄声说道：此人的武功(\\D*)，", "", "wudanglevel")
     create_trigger_t("wudangAcceptb", "^(> )*宋远桥\\D*你快去快回，一切小心啊。", "", "wudangFindGo")
     create_trigger_t("wudangAccept31", "^(> )*宋远桥在你的耳边悄声说道：老头子已追查到(\\D*)是我武当出身，尤为擅长(\\D*)的功夫。", "", "wudangNpc")
@@ -50,6 +60,7 @@ function wudangTrigger()
     SetTriggerOption("wudangAccept8", "group", "wudangAccept")
     SetTriggerOption("wudangAccept9", "group", "wudangAccept")
     SetTriggerOption("wudangAccept10", "group", "wudangAccept")
+    SetTriggerOption("wudangAccept11", "group", "wudangAccept")
     SetTriggerOption("wudangAccepta", "group", "wudangAccept")
     SetTriggerOption("wudangAcceptb", "group", "wudangAccept")
     EnableTriggerGroup("wudangAccept", false)
@@ -225,6 +236,15 @@ function wudangNpc(n, l, w)
     EnableTrigger("wudangAccepta", true)
     EnableTrigger("wudangAcceptb", true)
     sxjob.skills = tostring(w[3])
+    -- 技能描述修正/匹配
+    if sxjob.skills == "穿云腿" then
+        sxjob.skills = "穿云腿法"
+    end
+    wudangJob.Npc.Skill = sxjob.skills
+    local NPCSkillAttr = kezhiwugongAttribue(wudangJob.Npc.Skill)
+    print("武当任务NPC武功克制预设置: " .. wudangJob.Npc.Skill .. " " .. NPCSkillAttr)
+    local pfmcmd = kezhiwugongGetPerform(NPCSkillAttr)
+    wudangJob.Npc.AntiPfmCmd = pfmcmd
 end
 function wudangFindGo()
     EnableTriggerGroup("wudangAccept", false)
@@ -270,6 +290,7 @@ end
 function wudangFangqiGo()
     DeleteTimer("wudang")
     messageShow("被武当任务NPC打晕了，任务放弃！")
+    exe("i")
     geta()
     go(wudangFangqi, "武当山", "三清殿")
 end
@@ -316,9 +337,7 @@ function wudangFind()
     SetTriggerOption("wudangFind3", "group", "wudangFind")
     flag.times = 1
     flag.robber = false
-    local tmppfm = GetVariable("pfmsanqing")
-    -- 古墓派合气最高大招设置防止遇到kezhiwugong.lua识别不了的npc招式
-    create_alias("kezhiwugongpfm", "kezhiwugongpfm", "alias pfmpfm " .. tmppfm)
+    create_alias("kezhiwugongpfm", "kezhiwugongpfm", "alias pfmpfm " .. wudangJob.Npc.AntiPfmCmd)
     exe("kezhiwugongpfm")
     exe("unset wimpy;set wimpycmd pfmpfm\\hp")
     print("当前位置: " .. locl.area .. locl.room)
@@ -392,7 +411,7 @@ function wudangLost(n, l, w)
     job.lost = job.lost + 1
     if job.lost > 3 then
         job.lost = 0
-        messageShow("武当任务：搜索丢失【" .. job.target .. "】两次！回去放弃！")
+        messageShow("武当任务：搜索丢失【" .. job.target .. "】" .. tostring(job.lost) .. "次！回去放弃！")
         return check_halt(wudangFindFail)
     end
     if job.id == Trim(w[2]) then
@@ -412,7 +431,7 @@ end
 function wudangKillAct()
     fight.time.b = os.time()
     flag.robber = true
-    exe("set wimpy 100;yield no")
+    exe("set wimpy 100;set wimpycmd pfmpfm\\hp;yield no")
     exe("kick " .. job.id)
     exe("kill " .. job.id)
     kezhiwugong()
@@ -429,8 +448,11 @@ end
 -- ---------------------------------------------------------------
 function wudangKillObserver()
     local timegap = common.timediff(common.string2time(common.time()), common.string2time(wudangJob.killStartTime))
-    if (timegap.min > 0 or timegap.sec > 30) and wudangJob.killStartTime ~= nil and wudangJob.NpcCondition ~= quest.note then
-        wudangJob.NpcCondition = quest.note
+    if
+        (timegap.min > 0 or timegap.sec > 30) and wudangJob.killStartTime ~= nil and
+            wudangJob.Npc.Condition ~= quest.note
+     then
+        wudangJob.Npc.Condition = quest.note
         messageShowT("武当任务战斗时间超过30秒：" .. quest.note)
         RemoveObserver("wudangJobKillOb")
     end
@@ -452,13 +474,19 @@ function wudangBack(n, l, w)
     end
 end
 function wudangBackGet()
-    -- 重置身上装备状态, 以备装备恢复内力武器
-    exe("i")
     geta()
+    -- 强制装备回内武器
+    Weapon.RecoverNeili(true)
     wudangCk = 0
     EnableTriggerGroup("wudangFinish", true)
     -- return go(wudangFinishWait,'武当山','三清殿')
-    return go(wudangFinishC, "武当山", "三清殿")
+    return wudangGoBack()
+end
+-- ---------------------------------------------------------------
+-- 回宋远桥处领赏.
+-- ---------------------------------------------------------------
+function wudangGoBack()
+    go(wudangFinishC, "武当山", "三清殿")
 end
 function wudangFinishWait()
     if locl.id["宋远桥"] then

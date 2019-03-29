@@ -12,8 +12,7 @@
 eg.
 
 --]]
-
-MissionPunishment = { }
+MissionPunishment = {}
 
 function MissionPunishment.PunishmentHandle(busySecond)
     local func = test
@@ -27,16 +26,17 @@ function MissionPunishment.PunishmentHandle(busySecond)
         quest.update()
     end
     if hp.pot > 100 then
-        print("Mission Punishment Gap, going to Study")
         func = check_pot
-    else
-        print("Mission Punishment Gap, going to Check_Food")
-        func = function()
-            check_food(true)
-            -- 强制 full 饮食
-        end
     end
---    beiok()
+    if not Bag["绳子"] then
+        CheckRope(check_food)
+    end
+
+    func = function()
+        check_food(true)
+        -- 强制 full 饮食
+    end
+    --    beiok()
     check_busy(func)
     -- 给 beihook 赋值, 即赋值后续要执行的function
     -- beihook = function xxx()
@@ -44,4 +44,3 @@ function MissionPunishment.PunishmentHandle(busySecond)
     -- beiok()
     -- switch study/prepare/food/repair/doing LL
 end -- function check
-
