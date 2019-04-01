@@ -277,7 +277,7 @@ function songxin_consider(n, l, w)
 end
 function songxin_find()
     DeleteTriggerGroup("songxin_find")
-    create_trigger_t('songxin_find1', '^>*\\s*\\D*' .. job.target .. '\\((\\D*)\\)', '', 'songxin_send')
+    create_trigger_t('songxin_find1', '^>*\\s*\\D*\\s*' .. job.target .. '\\((\\D*)\\)', '', 'songxin_send')
     create_trigger_t('songxin_find2', '^>*\\s*你要送给谁', '', 'songxin_goon')
     create_trigger_t('songxin_find3', '^>*\\s*\\D*道：(这封信不是给我的，|你看清楚，)', '', 'songxin_add')
     create_trigger_t('songxin_find4', '^>*\\s*(这封信不是送给这个人的。|看清楚点，那是活人吗？！)', '', 'songxin_add')
