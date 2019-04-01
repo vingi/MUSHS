@@ -240,11 +240,21 @@ function wudangNpc(n, l, w)
     if sxjob.skills == "穿云腿" then
         sxjob.skills = "穿云腿法"
     end
+    if sxjob.skills == "昆仑掌法" then
+        sxjob.skills = "昆仑叠掌"
+    end
+    if sxjob.skills == "六脉神剑" then
+        sxjob.skills = "一阳指"
+    end
     wudangJob.Npc.Skill = sxjob.skills
     local NPCSkillAttr = kezhiwugongAttribue(wudangJob.Npc.Skill)
-    print("武当任务NPC武功克制预设置: " .. wudangJob.Npc.Skill .. " " .. NPCSkillAttr)
-    local pfmcmd = kezhiwugongGetPerform(NPCSkillAttr)
-    wudangJob.Npc.AntiPfmCmd = pfmcmd
+    if NPCSkillAttr ~= nil then
+        print("武当任务NPC武功克制预设置: " .. wudangJob.Npc.Skill .. " " .. NPCSkillAttr)
+        local pfmcmd = kezhiwugongGetPerform(NPCSkillAttr)
+        wudangJob.Npc.AntiPfmCmd = pfmcmd
+    else
+        messageShow("武当任务NPC武功克制预设置: " .. wudangJob.Npc.Skill .. " 技能名称异常, 找不到对应技能!")
+    end
 end
 function wudangFindGo()
     EnableTriggerGroup("wudangAccept", false)
