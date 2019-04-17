@@ -427,6 +427,8 @@ function wudangLost(n, l, w)
     if job.id == Trim(w[2]) then
         dis_all()
         EnableTriggerGroup("wudangdebug", true)
+        locl.area = job.area
+        locl.room = job.room
         return wudangFind()
     end
 end

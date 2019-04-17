@@ -28,11 +28,12 @@ function MissionPunishment.PunishmentHandle(busySecond)
     if hp.pot > 100 then
         func = check_pot
     end
-    if not Bag["绳子"] then
-        CheckRope(check_food)
-    end
+    -- if not Bag["绳子"] then
+    --     CheckRope(check_food)
+    -- end
 
     func = function()
+        exe('yun jing;yun qi;yun jingli;')
         check_food(true)
         -- 强制 full 饮食
     end

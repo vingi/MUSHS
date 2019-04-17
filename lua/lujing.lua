@@ -495,7 +495,7 @@ function path_consider(skip_stepto)
         return checkWait(goContinue, 0.3)
     end
     if locl.room == '梅林' then
-        quick_locate = 0
+        -- quick_locate = 0
         exe('n')
         return mlOutt()
     end
@@ -1432,83 +1432,120 @@ function inmzcheck()
 end
 -----------------------------------------------出梅林-------------------------------------
 function mlOutt()
+    tmp.cnt=0
     exe('look')
-    wait.make( function()
-        wait.time(2.5)
-        if flag.find == 1 then return end
+    wait.make(function() 
+    wait.time(2.5)
+    if flag.find==1 then return end         
         exe('n')
-        return mloutdo()
-    end )
+    return mloutdo()
+end) 
 end
 function mloutdo()
     fastLocate()
-    wait.make( function()
-        wait.time(1)
-        if flag.find == 1 then return end
-        if locl.room ~= '梅林' then
-            return walk_wait()
+    wait.make(function() 
+    wait.time(1)
+    if flag.find==1 then return end         
+        if locl.room~='梅林' then
+            return path_consider()
         else
             return mlOut()
         end
-    end )
+    end)
 end
 function mlOut()
-    tmp.way = "north"
+tmp.way = "north"
     tmp.ml = "out"
     exe('w;e;n')
     fastLocate()
-    return checkWait(wayMl, 0.1)
+    return checkWait(wayMl,0.5)
+end
+function wait_seconds()
+    wait.make(function()
+     wait.time(5)
+    return wayMl()
+end)
 end
 function wayMl()
-    local ways = {
-        ["north"] = "east",
-        ["east"] = "south",
-        ["south"] = "west",
-        ["west"] = "north",
+    tmp.cnt=tmp.cnt+1
+    if tmp.cnt>50 then
+       tmp.cnt=0
+       return wait_seconds()
+    end
+local ways = {
+            ["north"] = "east",
+            ["east"]  = "south",
+            ["south"] = "west",
+            ["west"]  = "north",
     }
     local wayt = {
-        ["north"] = "west",
-        ["east"] = "north",
-        ["south"] = "east",
-        ["west"] = "south",
+            ["north"] = "west",
+            ["east"]  = "north",
+            ["south"] = "east",
+            ["west"]  = "south",
     }
     if not tmp.way or not ways[tmp.way] then
-        tmp.way = 'south'
+       tmp.way = 'south'
     end
-    if locl.room == "青石板大路" then
-        if tmp.ml and tmp.ml == "in" then
-            return wayMlOver()
-        else
-            tmp.way = "north"
-            exe(tmp.way)
-            fastLocate()
-            return checkWait(wayMl, 0.07)
-        end
-    end
-    if locl.room == "小路" then
-        if tmp.ml and tmp.ml == "out" then
-            return wayMlOver()
-        else
-            tmp.way = "south"
-            exe('south;south')
-            locate()
-            return checkWait(wayMl, 0.1)
-        end
-    end
-    if locl.room ~= "小路" and locl.room ~= "青石板大路" and locl.room ~= "梅林" then
-        return wayMlOver()
-    end
+    if locl.room=="青石板大路" then
+       if tmp.ml and tmp.ml=="in" then
+          return wayMlOver()
+       else
+          tmp.way = "north"
+          exe(tmp.way)
+              fastLocate()
+              return checkWait(wayMl,0.5)
+       end 
+end
+if locl.room=="小路" then
+       if tmp.ml and tmp.ml=="out" then
+              print('出来了')
+              exe('n')
+          return wayMlOver()
+       else
+          tmp.way = "south"
+          exe('south;south')
+              locate()
+              return checkWait(wayMl,0.5)
+       end 
+end
+if locl.room~="小路" and locl.room~="青石板大路" and locl.room~="梅林" then
+   return wayMlOver()
+end        
     tmp.way = ways[tmp.way]
-    while not locl.exit[tmp.way] do
+    --[[while not locl.exit[tmp.way] do
         Note(tmp.way)
         tmp.way = wayt[tmp.way]
+    end]]
+    repeat 
+   if not locl.exit[tmp.way] then
+          Note(tmp.way)
+          tmp.way = wayt[tmp.way]
+   end
+    until(locl.exit[tmp.way])
+    --[[if not locl.exit[tmp.way] then
+       Note(tmp.way)
+       tmp.way = wayt[tmp.way]
     end
+    if not locl.exit[tmp.way] then
+       Note(tmp.way)
+       tmp.way = wayt[tmp.way]
+    end
+    if not locl.exit[tmp.way] then
+       Note(tmp.way)
+       tmp.way = wayt[tmp.way]
+    end
+    if not locl.exit[tmp.way] then
+       Note(tmp.way)
+       tmp.way = wayt[tmp.way]
+    end]]
     exe(tmp.way)
     fastLocate()
-    return checkWait(wayMl, 0.1)
+    return checkWait(wayMl,0.5)
 end
 function wayMlOver()
-    return walk_wait()
+    return path_consider()
+--return walk_wait()
 end
 ------------------------------蝴蝶谷-----------------------------------------
 bohuacong = function()
@@ -1840,7 +1877,7 @@ duhe_enter_check = function()
     if string.find(locl.room, '船') or string.find(locl.room, '舟') then
         prepare_neili_stop()
     else
-        exe('sxlian')
+        lianxi()
         return exe('yun qi;dazuo ' .. hp.dazuo)
     end
 end
@@ -1983,7 +2020,7 @@ dujiang_enter_check = function()
     if string.find(locl.room, '船') or string.find(locl.room, '舟') then
         return prepare_neili_stop()
     else
-        exe('sxlian')
+        lianxi()
         return exe('yun qi;dazuo ' .. hp.dazuo)
     end
 end
@@ -2001,7 +2038,9 @@ end
 dujiang_wait = function()
     -- exe('set 积蓄')
     if hp.exp > 2000000 then
-        exe('yun jing;yun qi;yun jingli;sxlian;dazuo ' .. hp.dazuo)
+        exe('yun jing;yun qi;yun jingli;')
+        lianxi()
+        exe('dazuo ' .. hp.dazuo)
     else
         exe('yun jing;yun qi;yun jingli;dazuo ' .. hp.dazuo)
     end
@@ -2036,6 +2075,9 @@ jqgin = function()
     road.temp = 0
     exe('look boat')
     create_timer_s('walkWait111', 0.5, 'jqglook')
+end
+jqglian = function()
+    lianxi()
 end
 jqglook = function()
     exe('look boat')
@@ -2920,6 +2962,7 @@ end
 function boatWait()
     DeleteTimer('boat')
     boatOutTrigger()
+    lianxi()
     create_timer_s('boat', 20, 'boatCheck')
 end
 function CboatWait()
@@ -2944,6 +2987,7 @@ end
 function boatCheck()
     DeleteTimer('boat')
     locate()
+    lianxi()
     return check_halt(boatOutCheck)
 end
 function boatReCheck()
@@ -3195,6 +3239,7 @@ function ptoSld()
 end
 function ptoSldCheck()
     locate()
+    lianxi()
     check_halt(ptosldDukou, 2)
 end
 function ptosldDukou()
@@ -3215,6 +3260,8 @@ sld_unwield = function()
             end
         end
     end
+    -- 重置背包武器记录
+    checkWield()
 end
 sld_weaponWieldCut = function()
     for p in pairs(Bag) do
@@ -3255,7 +3302,7 @@ function toSldTrigger()
     create_trigger_t('mufabusy2', '^(> )*只见(\\D*)轻轻一跃，已坐在木筏上。', '', 'mufaok')
     create_trigger_t('mufabusy3', '^(> )*你好象没有武器，拿手砍？', '', 'sld_need_weapon')
     create_trigger_t('mufabusy4', '^(> )*你要绑什么？', '', 'wait_mufa')
-    create_trigger_t('mufabusy5', '^*什么？', '', 'wait_mufa')
+    create_trigger_t('mufabusy5', '^(> )*什么','','wait_mufa') 
     create_trigger_t('mufabusy6', '^(> )*你拿起木筏上的一根木头，将木筏向前划去。', '', 'toSldHua')
     SetTriggerOption("mufabusy1", "group", "mufabusy")
     SetTriggerOption("mufabusy2", "group", "mufabusy")
@@ -3307,6 +3354,7 @@ function toSldCheck()
 end
 function toSldHua()
     print("toSldHua")
+    lianxi()
     sld_unwield()
     exe('hua mufa')
     wait.make( function()
@@ -3513,13 +3561,112 @@ end
 function outXtjOver()
     walk_wait()
 end
--------- 峨嵋洗象池
+-------------------------------慕容--------------------------------------------
+--燕子坞厢房到书房，之前的room函数等待<<EOF
+yzwxiangfang2shufang=function()
+    exe('n')
+    return walk_wait()
+end--EOF
+--燕子坞大厅到书房，之前的room函数等待<<EOF
+yzwdating2shufang=function()
+    exe('e')
+    return walk_wait()
+end--EOF
+--燕子坞长廊到书房，之前的room函数等待<<EOF
+yzwchanglang2shufang=function()
+    exe('w')
+    return walk_wait()
+end--EOF
+--燕子坞私塾到书房，之前的room函数等待<<EOF
+yzwsishu2shufang=function()
+    exe('s')
+    return walk_wait()
+end--EOF
+--燕子坞书房到夹壁，之前的room函数等待<<EOF
+yzwshufang2jiabi=function()
+    exe('sit chair;zhuan')
+    return walk_wait()
+end--EOF
+------------------------------ 峨嵋洗象池  ----------------------------------
 function emxxc()
     wait.make(function()
         wait.time(3)
         exe("ed")
         return walk_wait()
     end)
+end
+------------------------------福州吊桥----------------------------------------
+function fznm()
+   if flag.find==1 then return end
+   return check_halt(fznmcheck)
+end
+function fznmcheck()
+           wait.make(function()
+               wait.time(3)
+               exe('n;n;w;w;w;w;nw;sw;sw;w;sw;sw;sw;sw;w;s;sd;sd;s;s;s;s;e;e;e;e;e;e')
+               return fznmcheckdo1()
+           end)
+end
+function fznmcheckdo1()
+        if flag.find==1 then return end
+    exe('e')
+        return checkWait(fznmcheckdo2,0.1)
+end
+function fznmcheckdo2()
+        if flag.find==1 then return end
+    exe('ne')
+        return checkWait(fznmcheckdo3,0.1)
+end
+function fznmcheckdo3()
+        if flag.find==1 then return end
+    exe('ne')
+        return checkWait(fznmcheckdo4,0.1)
+end
+function fznmcheckdo4()
+        if flag.find==1 then return end
+    exe('ne')
+        return checkWait(fznmcheckdo5,0.1)
+end
+function fznmcheckdo5()
+        if flag.find==1 then return end
+    exe('n')
+        return walk_wait()
+end
+function fznmdq()
+        return fznmdqcheck()
+end
+function fznmdqcheck()
+           wait.make(function()
+               wait.time(3)
+                   if flag.find==1 then return end
+               exe('s;sw;sw;sw;w;w;w;w;w;w;w;n;n;n;n;nu;nu;n;e;ne;ne;ne;ne;e;ne;ne;se;e')
+               return fznmdqcheckdo1()
+           end)
+end
+function fznmdqcheckdo1()
+        if flag.find==1 then return end
+    exe('e')
+        return checkWait(fznmdqcheckdo2,0.1)
+end
+function fznmdqcheckdo2()
+        if flag.find==1 then return end
+    exe('e')
+        return checkWait(fznmdqcheckdo3,0.1)
+end
+function fznmdqcheckdo3()
+        if flag.find==1 then return end
+    exe('e')
+        return checkWait(fznmdqcheckdo4,0.1)
+end
+function fznmdqcheckdo4()
+        if flag.find==1 then return end
+    exe('s')
+        return checkWait(fznmdqcheckdo5,0.1)
+end
+function fznmdqcheckdo5()
+        if flag.find==1 then return end
+    exe('s')
+        return walk_wait()
 end
 -----------by fqyy 2017-05-24 星宿海山洞
 function xingxiushandong()

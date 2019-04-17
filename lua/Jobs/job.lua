@@ -477,7 +477,7 @@ function hp_heqi_check(n, l, w)
         -- 内力小于10%，嗑内息丸！
         exe("eat " .. drug.neili1)
     end
-    if hp.neili < 1000 and hp.neili_max > 3000 and hp.heqi > 350 and GetRoleConfig("Recover_neili") ~= "" then
+    if hp.neili < 1000 and hp.neili_max > 3000 and hp.heqi > 150 and GetRoleConfig("Recover_neili") ~= "" then
         exe(GetRoleConfig("Recover_neili"))
     end
     if hp.jingli < hp.jingli_max * 0.5 or hp.jingli < 500 then
@@ -3240,11 +3240,11 @@ function checkJob()
     if job.zuhe["tmonk"] and job.last ~= "tmonk" then
         return tmonk()
     end
-    if job.zuhe["songxin"] and job.last ~= "songxin" then
-        return songxin()
-    end
     if job.zuhe["wudang"] and job.last ~= "wudang" then
         return wudang()
+    end
+    if job.zuhe["songxin"] and job.last ~= "songxin" then
+        return songxin()
     end
     if job.zuhe["gaibang"] and job.last ~= "gaibang" then
         return gaibang()
@@ -3361,8 +3361,7 @@ function job.Switch()
     if job.zuhe["songmoya"] and job.last ~= "songmoya" and mytime <= os.time() then
         return songmoya()
     end
-    if
-        job.zuhe["hubiao"] and job.last ~= "hubiao" and job.teamname and
+    if job.zuhe["hubiao"] and job.last ~= "hubiao" and job.teamname and
             ((not condition.hubiao) or (condition.hubiao and condition.hubiao <= 0))
      then
         return hubiao()

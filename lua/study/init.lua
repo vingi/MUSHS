@@ -18,6 +18,7 @@ require "check
 
 require "/Study/lingwu"
 require "/Study/xuexi"
+require "/Study/lianxi"
 require "/Study/literate"
 require "/Study/duanzhao"
 require "/Study/zhizhao"

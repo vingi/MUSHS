@@ -11,6 +11,7 @@ dmlsucceedCnt = 0
 dmlPrestige = 0
 dmlCompetitionCoin = 0
 dmlFightCnt = 0
+dmlLastTime = nil
 l_cnt = 0
 askCnt = 0
 targetName = ""
@@ -112,7 +113,7 @@ function dmlTriggers()
     create_trigger_t("dmlfight6", "^(> )*你不能挑战自己！", "", "dmlCheckNextTarget")
     create_trigger_t("dmlfight7", "^(> )*没有发现一个id是\\D*的玩家。请注意在线玩家列表！", "", "dmlTakePlace")
     create_trigger_t("dmlfight8", "^(> )*竞技时间已过，你无法向\\D*发起挑战。", "", "dmlOver")
-    create_trigger_t("dmlfight9", "^(> )*突然一道神光笼罩着你，你的精气神竟然全部恢复了！", "", "dmlFailed")
+    create_trigger_t("dmlfight9", "^(> )*(突然一道神光笼罩着你，你的精气神竟然全部恢复了！|你满脸笑容，慢声和气地说道：对呀！这事不能就这么了了，好戏还在后头呢！)", "", "dmlFailed")
     create_trigger_t("dmlfight10", "^(> )*你们排名和实力悬殊太大，你无法向(\\D*)发起挑战。", "", "dmlCheckNextTarget")
     for i = 1, 10 do
         SetTriggerOption("dmlfight" .. i, "group", "dmlfight")
@@ -267,6 +268,7 @@ function dml_check()
             return dmlSettings()
         end
     end
+    dmlLastTime = common.time()
     DeleteTimer("idle")
     dmlTriggers()
     EnableTrigger("dmlfight1", true)
@@ -289,6 +291,10 @@ end
 -- ---------------------------------------------------------------
 function dml_CheckAutoDML()
     local isTrue = false
+    if common.time() < common.date() .. " 08:05:00" then
+        -- 新的一天记录, 重置蝶梦楼战斗次数
+        dmlFightCnt = 0
+    end
     if GetRoleConfig("AutoDML") == true and hp.exp > 2000000 then
         if dmlFightCnt < 5 and (not condition.busy or condition.busy == 0) then
             -- 判断 DB记录, 以及是否蝶梦楼开启时间

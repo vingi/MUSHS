@@ -26,8 +26,12 @@ settings = {
 	Auto_hqgzc_10times = false,
 	-- 是否 作任务之前 先double内力
 	CheckNeili_InAdvance = false,
+	-- 回内武器, 没有可置空
+	RecoverWeapon = "kunlun sword",
 	-- 当打架无内力时(吃药在CD状态),执行的加内动作(无则可不填), 一些门派有恢复内力的内功, 如华山有yun zixia
 	Recover_neili = "",
+		-- 练习的指令
+	PracticeCMD = "lian sword 5;lian dodge 5;unwield kunlun sword;lian cuff 5;wield kunlun sword;",
 	-- 是否作华山2任务
 	HuashanJob_Step2 = true,
 	-- 是否自动蝶梦楼刷分

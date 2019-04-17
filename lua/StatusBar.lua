@@ -31,11 +31,10 @@ require "gauge"
 require "serialize"
 
 SetOption("convert_ga_to_newline", 1)
-SendNoEcho("unset hpbrief");
+SendNoEcho("unset hpbrief")
 
 print("ÈËÎï×´Ì¬²å¼þÒÑ×°ÔØ£¬ÃüÁî£ºhps [on][off][refresh]")
 -- print(GetPluginID())
-
 
 -- ¹«ÓÃ
 local FONT_NAME = "f1"
@@ -46,11 +45,10 @@ local hp_checktime = 60
 local hp_checktimecur = hp_checktime
 local hp_win = "hp_window"
 local hp_win_width = 300
-local hp_win_height = 385
+local hp_win_height = 390
 
-local actorname = ""-- GetVariable("actorname") or utils.inputbox("ÊäÈëÄãµÄ½ÇÉ«Ãû³Æ")
-
-
+local actorname = ""
+ -- GetVariable("actorname") or utils.inputbox("ÊäÈëÄãµÄ½ÇÉ«Ãû³Æ")
 
 ---------------------------------------------------------------------------
 -- ¹«ÓÃµÄÒ»Ð©º¯ÊýºÍ¶¨Òå
@@ -68,19 +66,16 @@ local actorname = ""-- GetVariable("actorname") or utils.inputbox("ÊäÈëÄãµÄ½ÇÉ«Ã
 	Fun_TimeChangeText(Time)					---°ÑÃë»»Ëã³ÉÒÔÌì¡¢Ð¡Ê±¡¢·ÖÖÓ¡¢ÃëÏÔÊ¾µÄÎÄ×Ö
 	Fun_TimeChange(Time)						---°ÑÃë»»Ëã³ÉÒÔÐ¡Ê±¡¢·ÖÖÓ¡¢Ãë
 	Fun_CHNum(str)								---°ÑÖÐÎÄÊý×Ö×ª»»³ÉÕý³£Êý×Ö
-]]	
-
-
-
-local nPluginIDStatus = "";
+]]
+local nPluginIDStatus = ""
 function GetPluginVariableSave(strKey)
     -- local strValue = GetVariable(strKey);
     -- if strValue == nil then strValue = "10000"; end
     -- return strValue;
-    return tonumber(strKey) or 1000;
+    return tonumber(strKey) or 1000
 end
 
-Status = Status or { };
+Status = Status or {}
 
 function GetStatusHP()
     return GetPluginVariableSave(Status.HP)
@@ -141,7 +136,6 @@ end
 function GetStatusPot()
     return GetPluginVariableSave(Status.S_POT)
 end
-
 
 -- ------------------------------------
 -- ÃèÊö: Õ½¶·Ïà¹Ø
@@ -236,9 +230,6 @@ end
 -- 	Battle.FightStart();
 -- end
 
-
-
-
 -- ------------------------------------
 -- ÃèÊö: ÐÞ¸Ä¾­ÑéµÄK¡¢MÎªÕý³£ÊýÖµÄ£Ê½
 -- ------------------------------------
@@ -260,32 +251,32 @@ end
 -- ÃèÊö: °ÑÃë»»Ëã³ÉÒÔÌì¡¢Ð¡Ê±¡¢·ÖÖÓ¡¢ÃëÏÔÊ¾µÄÎÄ×Ö
 -- ------------------------------------
 function Fun_TimeChangeText(Time)
-    local szText = ''
-    local nTime = 0;
+    local szText = ""
+    local nTime = 0
 
-    local Day = math.floor(Time /(3600 * 24))
+    local Day = math.floor(Time / (3600 * 24))
     if Day > 0 then
-        nTime = 60;
-        szText = szText .. Day .. 'Ìì'
-        Time = math.fmod(Time,(3600 * 24))
+        nTime = 60
+        szText = szText .. Day .. "Ìì"
+        Time = math.fmod(Time, (3600 * 24))
     end
 
     local Hour = math.floor(Time / 3600)
     if Hour > 0 then
-        nTime = 60;
-        szText = szText .. Hour .. 'Ð¡Ê±'
+        nTime = 60
+        szText = szText .. Hour .. "Ð¡Ê±"
         Time = math.fmod(Time, 3600)
     end
 
     local Min = math.floor(Time / 60)
     if Min > 0 then
-        nTime = nTime + Min;
-        szText = szText .. Min .. '·Ö'
-        Time = math.fmod(Time, 60);
-        SetVariable("FULLME_TIME", "" .. nTime);
+        nTime = nTime + Min
+        szText = szText .. Min .. "·Ö"
+        Time = math.fmod(Time, 60)
+        SetVariable("FULLME_TIME", "" .. nTime)
     end
 
-    szText = szText .. Time .. 'Ãë'
+    szText = szText .. Time .. "Ãë"
 
     return szText
 end
@@ -302,8 +293,7 @@ function Fun_TimeChange(Time)
     return Hour, Min, Sec
 end
 
-local CH_NUM =
-{
+local CH_NUM = {
     ["Ò»"] = 1,
     ["¶þ"] = 2,
     ["Èý"] = 3,
@@ -312,7 +302,7 @@ local CH_NUM =
     ["Áù"] = 6,
     ["Æß"] = 7,
     ["°Ë"] = 8,
-    ["¾Å"] = 9,
+    ["¾Å"] = 9
 }
 -- ------------------------------------
 -- ÃèÊö: °ÑÖÐÎÄÊý×Ö×ª»»³ÉÕý³£Êý×Ö
@@ -354,7 +344,9 @@ function format_number(str)
     formated = string.gsub(formated, "(%d)(%d%d%d)$", "%1,%2", 1)
     while true do
         formated, found = string.gsub(formated, "(%d)(%d%d%d),", "%1,%2,", 1)
-        if found == 0 then break end
+        if found == 0 then
+            break
+        end
     end
     return formated
 end
@@ -362,55 +354,44 @@ end
 -- ×´Ì¬Ä£¿é
 ---------------------------------------------------------------------------
 
-local status =
-{
+local status = {
     -- ¾«Éñ
     jing = 1000,
     jing_curmax = 1000,
     jing_max = 1000,
     jing_per = 100,
-
     -- ÆøÑª
     qi = 1000,
     qi_curmax = 1000,
     qi_max = 1000,
     qi_per = 100,
-
     -- ¾«Á¦
     jingli = 10000,
     jingli_curmax = 10000,
     jingli_canadd = 0,
-
     -- ÄÚÁ¦
     neili = 10000,
     neili_curmax = 10000,
     neili_canadd = 0,
-
     -- ÕæÆø
     heqi = 0,
-
     -- Ê³Îï
     shiwu = 1000,
     shiwu_max = 1000,
-
     -- ÒûË®
     yinsui = 1000,
     yinsui_max = 1000,
-
     -- Ç±ÄÜ
     pot = 0,
     pot_lastadd = 0,
-
     -- ¾­Ñé
     exp = "0",
     exp_lastadd = 0,
-
     -- ÔËÆø¾« 1ÔËÆø2ÔË¾«
     yun = 0,
     yuntime = 0,
     -- Ì«¼«¼ÓÁ¦
-    jiali = false,
-
+    jiali = false
 }
 
 -- ÈÎÎñÏà¹Ø
@@ -422,7 +403,6 @@ quest = {
     misc = "",
     misc2 = ""
 }
-
 
 ---------------------------------------------------------------------------
 -- ¼ÇÂ¼ÉúÃüÐÅÏ¢
@@ -436,7 +416,21 @@ function hp_draw_win()
     -- 	WindowResize(hp_win, hp_win_width, hp_win_height+15, 0x000010)
     -- 	WindowCircleOp (hp_win, miniwin.circle_round_rectangle, 0, 2, hp_win_width - 2, hp_win_height+15, 0xc0c0c0, 0, 1,0, 0, 9, 9)
     -- else
-    WindowCircleOp(hp_win, miniwin.circle_round_rectangle, 0, 2, hp_win_width - 2, hp_win_height, 0xc0c0c0, 0, 1, 0, 0, 9, 9)
+    WindowCircleOp(
+        hp_win,
+        miniwin.circle_round_rectangle,
+        0,
+        2,
+        hp_win_width - 2,
+        hp_win_height,
+        0xc0c0c0,
+        0,
+        1,
+        0,
+        0,
+        9,
+        9
+    )
     -- end
     local left = 5
     local top = 10
@@ -447,175 +441,328 @@ function hp_draw_win()
 
     -- Title & Bank account information
     local win_title = GetPluginVariable("", "id_ch")
-    if win_title == nil then win_title = "" end
+    if win_title == nil then
+        win_title = ""
+    end
     if score.id ~= nil and score.name ~= nil then
         win_title = win_title .. score.name .. "(" .. score.id .. ")"
     else
         win_title = win_title .. "µ±Ç°×´Ì¬"
     end
-    if lv_info == nil then lv_info = "Lv. 10" end
+    if lv_info == nil then
+        lv_info = "Lv. 10"
+    end
     if score.level ~= nil then
         lv_info = "Lv. " .. score.level
     end
     local win_title_left = 0
-    if (hp_win_width / 2 - WindowTextWidth(hp_win, FONT_NAME, win_title) / 2 - 45) < WindowTextWidth(hp_win, FONT_NAME, lv_info) then
-        win_title_left = hp_win_width - WindowTextWidth(hp_win, FONT_NAME, win_title) -45 - WindowTextWidth(hp_win, FONT_NAME, lv_info)
+    if
+        (hp_win_width / 2 - WindowTextWidth(hp_win, FONT_NAME, win_title) / 2 - 45) <
+            WindowTextWidth(hp_win, FONT_NAME, lv_info)
+     then
+        win_title_left =
+            hp_win_width - WindowTextWidth(hp_win, FONT_NAME, win_title) - 45 -
+            WindowTextWidth(hp_win, FONT_NAME, lv_info)
     else
         win_title_left = hp_win_width / 2 - WindowTextWidth(hp_win, FONT_NAME, win_title) / 2
     end
-    WindowText(hp_win, FONT_NAME, win_title,
-    win_title_left, top, 0, 0,
-    ColourNameToRGB("white"), false)
+    WindowText(hp_win, FONT_NAME, win_title, win_title_left, top, 0, 0, ColourNameToRGB("white"), false)
     -- Level info
-    WindowText(hp_win, FONT_NAME, lv_info,
-    hp_win_width - 6 - WindowTextWidth(hp_win, FONT_NAME, lv_info), top, 0, 0,
-    ColourNameToRGB("yellow"), false)
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        lv_info,
+        hp_win_width - 6 - WindowTextWidth(hp_win, FONT_NAME, lv_info),
+        top,
+        0,
+        0,
+        ColourNameToRGB("yellow"),
+        false
+    )
 
     top = top + 20
     -- ¾«Éñ
-    WindowText(hp_win, FONT_NAME, "¾«Éñ",
-    left, top, 0, 0,
-    ColourNameToRGB("white"), false)
-    Fun_DrawGrid2(hp_win, status.jing, status.jing_curmax, status.jing_max,
-    left + title_length, top + 1, grid_length, grid_height,
-    0x40FF40, ColourNameToRGB("red"), ColourNameToRGB("white"))
-    WindowText(hp_win, FONT_NAME, status.jing .. "/" .. status.jing_curmax .. "(" .. status.jing_per .. "%)",
-    left + title_length + grid_length + 2, top, 0, 0,
-    0x40FF40, false)
+    WindowText(hp_win, FONT_NAME, "¾«Éñ", left, top, 0, 0, ColourNameToRGB("white"), false)
+    Fun_DrawGrid2(
+        hp_win,
+        status.jing,
+        status.jing_curmax,
+        status.jing_max,
+        left + title_length,
+        top + 1,
+        grid_length,
+        grid_height,
+        0x40FF40,
+        ColourNameToRGB("red"),
+        ColourNameToRGB("white")
+    )
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        status.jing .. "/" .. status.jing_curmax .. "(" .. status.jing_per .. "%)",
+        left + title_length + grid_length + 2,
+        top,
+        0,
+        0,
+        0x40FF40,
+        false
+    )
 
     top = top + 15
     -- ÆøÑª
-    WindowText(hp_win, FONT_NAME, "ÆøÑª",
-    left, top, 0, 0,
-    ColourNameToRGB("white"), false)
-    Fun_DrawGrid2(hp_win, status.qi, status.qi, status.qi_max,
-    left + title_length, top + 1, grid_length, grid_height,
-    0x40FF40, ColourNameToRGB("red"), ColourNameToRGB("white"))
-    WindowText(hp_win, FONT_NAME, status.qi .. "/" .. status.qi_max .. "(" .. status.qi_per .. "%)",
-    left + title_length + grid_length + 2, top, 0, 0,
-    0x40FF40, false)
+    WindowText(hp_win, FONT_NAME, "ÆøÑª", left, top, 0, 0, ColourNameToRGB("white"), false)
+    Fun_DrawGrid2(
+        hp_win,
+        status.qi,
+        status.qi,
+        status.qi_max,
+        left + title_length,
+        top + 1,
+        grid_length,
+        grid_height,
+        0x40FF40,
+        ColourNameToRGB("red"),
+        ColourNameToRGB("white")
+    )
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        status.qi .. "/" .. status.qi_max .. "(" .. status.qi_per .. "%)",
+        left + title_length + grid_length + 2,
+        top,
+        0,
+        0,
+        0x40FF40,
+        false
+    )
 
     top = top + 15
     -- ¾«Á¦
-    WindowText(hp_win, FONT_NAME, "¾«Á¦",
-    left, top, 0, 0,
-    ColourNameToRGB("white"), false)
+    WindowText(hp_win, FONT_NAME, "¾«Á¦", left, top, 0, 0, ColourNameToRGB("white"), false)
     if status.jingli > status.jingli_curmax then
-        Fun_DrawGrid(hp_win, status.jingli - status.jingli_curmax, status.jingli_curmax,
-        left + title_length, top + 1, grid_length, grid_height,
-        0xFFDA58, 0xFF6060)
-        WindowText(hp_win, FONT_NAME, status.jingli .. "/" .. status.jingli_curmax .. "(" .. status.jingli_canadd .. ")",
-        left + title_length + grid_length + 2, top, 0, 0,
-        0xFFDA58, false)
+        Fun_DrawGrid(
+            hp_win,
+            status.jingli - status.jingli_curmax,
+            status.jingli_curmax,
+            left + title_length,
+            top + 1,
+            grid_length,
+            grid_height,
+            0xFFDA58,
+            0xFF6060
+        )
+        WindowText(
+            hp_win,
+            FONT_NAME,
+            status.jingli .. "/" .. status.jingli_curmax .. "(" .. status.jingli_canadd .. ")",
+            left + title_length + grid_length + 2,
+            top,
+            0,
+            0,
+            0xFFDA58,
+            false
+        )
     else
-        Fun_DrawGrid(hp_win, status.jingli, status.jingli_curmax,
-        left + title_length, top + 1, grid_length, grid_height,
-        0xFF6060, ColourNameToRGB("white"))
-        WindowText(hp_win, FONT_NAME, status.jingli .. "/" .. status.jingli_curmax .. "(" .. status.jingli_canadd .. ")",
-        left + title_length + grid_length + 2, top, 0, 0,
-        0x40FF40, false)
+        Fun_DrawGrid(
+            hp_win,
+            status.jingli,
+            status.jingli_curmax,
+            left + title_length,
+            top + 1,
+            grid_length,
+            grid_height,
+            0xFF6060,
+            ColourNameToRGB("white")
+        )
+        WindowText(
+            hp_win,
+            FONT_NAME,
+            status.jingli .. "/" .. status.jingli_curmax .. "(" .. status.jingli_canadd .. ")",
+            left + title_length + grid_length + 2,
+            top,
+            0,
+            0,
+            0x40FF40,
+            false
+        )
     end
 
     top = top + 15
     -- ÄÚÁ¦
-    WindowText(hp_win, FONT_NAME, "ÄÚÁ¦",
-    left, top, 0, 0,
-    ColourNameToRGB("white"), false)
+    WindowText(hp_win, FONT_NAME, "ÄÚÁ¦", left, top, 0, 0, ColourNameToRGB("white"), false)
     if status.neili > status.neili_curmax then
-        Fun_DrawGrid(hp_win, status.neili - status.neili_curmax, status.neili_curmax,
-        left + title_length, top + 1, grid_length, grid_height,
-        0xFFDA58, 0xFF6060)
-        WindowText(hp_win, FONT_NAME, status.neili .. "/" .. status.neili_curmax .. "(" .. status.neili_canadd .. ")",
-        left + title_length + grid_length + 2, top, 0, 0,
-        0xFFDA58, false)
+        Fun_DrawGrid(
+            hp_win,
+            status.neili - status.neili_curmax,
+            status.neili_curmax,
+            left + title_length,
+            top + 1,
+            grid_length,
+            grid_height,
+            0xFFDA58,
+            0xFF6060
+        )
+        WindowText(
+            hp_win,
+            FONT_NAME,
+            status.neili .. "/" .. status.neili_curmax .. "(" .. status.neili_canadd .. ")",
+            left + title_length + grid_length + 2,
+            top,
+            0,
+            0,
+            0xFFDA58,
+            false
+        )
     else
-        Fun_DrawGrid(hp_win, status.neili, status.neili_curmax,
-        left + title_length, top + 1, grid_length, grid_height,
-        0xFF6060, ColourNameToRGB("white"))
-        WindowText(hp_win, FONT_NAME, status.neili .. "/" .. status.neili_curmax .. "(" .. status.neili_canadd .. ")",
-        left + title_length + grid_length + 2, top, 0, 0,
-        0x40FF40, false)
+        Fun_DrawGrid(
+            hp_win,
+            status.neili,
+            status.neili_curmax,
+            left + title_length,
+            top + 1,
+            grid_length,
+            grid_height,
+            0xFF6060,
+            ColourNameToRGB("white")
+        )
+        WindowText(
+            hp_win,
+            FONT_NAME,
+            status.neili .. "/" .. status.neili_curmax .. "(" .. status.neili_canadd .. ")",
+            left + title_length + grid_length + 2,
+            top,
+            0,
+            0,
+            0x40FF40,
+            false
+        )
     end
 
     top = top + 15
     -- Ê³Îï
-    WindowText(hp_win, FONT_NAME, "Ê³Îï",
-    left, top, 0, 0,
-    ColourNameToRGB("white"), false)
-    Fun_DrawGrid(hp_win, status.shiwu, status.shiwu_max,
-    left + title_length, top + 1, grid_length, grid_height,
-    0x58A7FF, ColourNameToRGB("white"))
-    WindowText(hp_win, FONT_NAME, status.shiwu .. "%",
-    left + title_length + grid_length + 2, top, 0, 0,
-    0x40FF40, false)
+    WindowText(hp_win, FONT_NAME, "Ê³Îï", left, top, 0, 0, ColourNameToRGB("white"), false)
+    Fun_DrawGrid(
+        hp_win,
+        status.shiwu,
+        status.shiwu_max,
+        left + title_length,
+        top + 1,
+        grid_length,
+        grid_height,
+        0x58A7FF,
+        ColourNameToRGB("white")
+    )
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        status.shiwu .. "%",
+        left + title_length + grid_length + 2,
+        top,
+        0,
+        0,
+        0x40FF40,
+        false
+    )
 
     -- ºÏÆø TEXT
-    WindowText(hp_win, FONT_NAME, "ºÏÆø¶È",
-    hp_win_width - 6 - WindowTextWidth(hp_win, FONT_NAME, "ºÏÆø¶È"), top, 0, 0,
-    ColourNameToRGB("white"), false)
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "ºÏÆø¶È",
+        hp_win_width - 6 - WindowTextWidth(hp_win, FONT_NAME, "ºÏÆø¶È"),
+        top,
+        0,
+        0,
+        ColourNameToRGB("white"),
+        false
+    )
 
     top = top + 15
     -- ÒûË®
-    WindowText(hp_win, FONT_NAME, "ÒûË®",
-    left, top, 0, 0,
-    ColourNameToRGB("white"), false)
-    Fun_DrawGrid(hp_win, status.yinsui, status.yinsui_max,
-    left + title_length, top + 1, grid_length, grid_height,
-    0x58A7FF, ColourNameToRGB("white"))
-    WindowText(hp_win, FONT_NAME, status.yinsui .. "%",
-    left + title_length + grid_length + 2, top, 0, 0,
-    0x40FF40, false)
+    WindowText(hp_win, FONT_NAME, "ÒûË®", left, top, 0, 0, ColourNameToRGB("white"), false)
+    Fun_DrawGrid(
+        hp_win,
+        status.yinsui,
+        status.yinsui_max,
+        left + title_length,
+        top + 1,
+        grid_length,
+        grid_height,
+        0x58A7FF,
+        ColourNameToRGB("white")
+    )
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        status.yinsui .. "%",
+        left + title_length + grid_length + 2,
+        top,
+        0,
+        0,
+        0x40FF40,
+        false
+    )
 
     -- ºÏÆøÖµ
     -- local timetext = Fun_TimeChangeText(status.fullmetime)
-    WindowText(hp_win, FONT_NAME, status.heqi,
-    hp_win_width - 6 - WindowTextWidth(hp_win, FONT_NAME, status.heqi), top, 0, 0,
-    ColourNameToRGB("white"), false)
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        status.heqi,
+        hp_win_width - 6 - WindowTextWidth(hp_win, FONT_NAME, status.heqi),
+        top,
+        0,
+        0,
+        ColourNameToRGB("white"),
+        false
+    )
 
     top = top + 15
     -- Ç±ÄÜ
-    WindowText(hp_win, FONT_NAME, "Ç±ÄÜ",
-    left, top, 0, 0,
-    ColourNameToRGB("white"), false)
-    WindowText(hp_win, FONT_NAME, format_number(status.pot) .. "(" .. status.pot_lastadd .. ")",
-    left + title_length, top, 0, 0,
-    0x40FF40, false)
+    WindowText(hp_win, FONT_NAME, "Ç±ÄÜ", left, top, 0, 0, ColourNameToRGB("white"), false)
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        format_number(status.pot) .. "(" .. status.pot_lastadd .. ")",
+        left + title_length,
+        top,
+        0,
+        0,
+        0x40FF40,
+        false
+    )
 
     -- ´æ¿î
-    WindowText(hp_win, FONT_NAME, "´æ¿î£º" .. score.gold,
-    left + 130, top, 0, 0,
-    ColourNameToRGB("white"), false)
+    WindowText(hp_win, FONT_NAME, "´æ¿î£º" .. score.gold, left + 130, top, 0, 0, ColourNameToRGB("white"), false)
 
     if status.yun == 1 then
         -- ÔË¾«Æø
-        WindowText(hp_win, FONT_NAME, "ÔËÆøÖÐ",
-        hp_win_width - 41, top, 0, 0,
-        ColourNameToRGB("yellow"), false)
+        WindowText(hp_win, FONT_NAME, "ÔËÆøÖÐ", hp_win_width - 41, top, 0, 0, ColourNameToRGB("yellow"), false)
     elseif status.yun == 2 then
-        WindowText(hp_win, FONT_NAME, "ÔË¾«ÖÐ",
-        hp_win_width - 41, top, 0, 0,
-        0xFFDA58, false)
+        WindowText(hp_win, FONT_NAME, "ÔË¾«ÖÐ", hp_win_width - 41, top, 0, 0, 0xFFDA58, false)
     end
 
     top = top + 15
     -- ¾­Ñé
-    WindowText(hp_win, FONT_NAME, "¾­Ñé",
-    left, top, 0, 0,
-    ColourNameToRGB("white"), false)
-    WindowText(hp_win, FONT_NAME, status.exp .. "(" .. status.exp_lastadd .. ")",
-    left + title_length, top, 0, 0,
-    0x40FF40, false)
-
-
+    WindowText(hp_win, FONT_NAME, "¾­Ñé", left, top, 0, 0, ColourNameToRGB("white"), false)
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        status.exp .. "(" .. status.exp_lastadd .. ")",
+        left + title_length,
+        top,
+        0,
+        0,
+        0x40FF40,
+        false
+    )
 
     -- Ì«¼«¼ÓÁ¦
     if status.jiali == true then
-        WindowText(hp_win, FONT_NAME, "ÔË¹¦ÖÐ",
-        hp_win_width - 41, top, 0, 0,
-        ColourNameToRGB("red"), false)
-        ---------//ÎÞBUFF×Ô¶¯BUFF
-        -- else
-        -- Execute("BUFF");
+        WindowText(hp_win, FONT_NAME, "ÔË¹¦ÖÐ", hp_win_width - 41, top, 0, 0, ColourNameToRGB("red"), false)
+    ---------//ÎÞBUFF×Ô¶¯BUFF
+    -- else
+    -- Execute("BUFF");
     end
 
     -- ÈÎÎñÏà¹ØÐÅÏ¢
@@ -634,65 +781,184 @@ function hp_draw_win()
     -- if quest_qishi==nil then quest_qishi="0" end
 
     top = top + 15
-    WindowText(hp_win, FONT_NAME, "ÈÎÎñ£º" .. quest.name,
-    left - 1, top, 0, 0, ColourNameToRGB("white"), false)
-    WindowText(hp_win, FONT_NAME, "µØµã£º" .. quest.location,
-    left + 130, top, 0, 0, ColourNameToRGB("white"), false)
+    WindowText(hp_win, FONT_NAME, "ÈÎÎñ£º" .. quest.name, left - 1, top, 0, 0, ColourNameToRGB("white"), false)
+    WindowText(hp_win, FONT_NAME, "µØµã£º" .. quest.location, left + 130, top, 0, 0, ColourNameToRGB("white"), false)
     top = top + 15
-    WindowText(hp_win, FONT_NAME, "×´Ì¬£º" .. quest.status,
-    left, top, 0, 0, ColourNameToRGB("white"), false)
-    WindowText(hp_win, FONT_NAME, "Ä¿±ê£º" .. quest.target,
-    left + 130, top, 0, 0, ColourNameToRGB("white"), false)
+    WindowText(hp_win, FONT_NAME, "×´Ì¬£º" .. quest.status, left, top, 0, 0, ColourNameToRGB("white"), false)
+    WindowText(hp_win, FONT_NAME, "Ä¿±ê£º" .. quest.target, left + 130, top, 0, 0, ColourNameToRGB("white"), false)
     top = top + 15
-    WindowText(hp_win, FONT_NAME, "ÃèÊö£º" .. quest.misc,
-    left, top, 0, 0, ColourNameToRGB("white"), false)
+    WindowText(hp_win, FONT_NAME, "ÃèÊö£º" .. quest.misc, left, top, 0, 0, ColourNameToRGB("white"), false)
     top = top + 15
-    WindowText(hp_win, FONT_NAME, "±¸×¢£º" .. quest.misc2,
-    left, top, 0, 0, ColourNameToRGB("white"), false)
+    WindowText(hp_win, FONT_NAME, "±¸×¢£º" .. quest.misc2, left, top, 0, 0, ColourNameToRGB("white"), false)
     top = top + 25
-    WindowText(hp_win, FONT_NAME, "±¾´ÎÔËÐÐÊ±¼ä£º" .. job.statistics.Duration,
-    left, top, 0, 0, ColourNameToRGB("gold"), false)
+    local jobDuration = ""
+    if job.statistics.Duration ~= nil then
+        jobDuration = job.statistics.Duration
+    end
+    WindowText(hp_win, FONT_NAME, "±¾´ÎÔËÐÐÊ±¼ä£º" .. jobDuration, left, top, 0, 0, ColourNameToRGB("gold"), false)
     top = top + 15
-    WindowText(hp_win, FONT_NAME, "¹²½ÓÈ¡ÈÎÎñ: " ..job.statistics.Times.." ´Î",
-    left, top, 0, 0, ColourNameToRGB("cyan"), false)
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "¹²½ÓÈ¡ÈÎÎñ: " .. job.statistics.Times .. " ´Î",
+        left,
+        top,
+        0,
+        0,
+        ColourNameToRGB("cyan"),
+        false
+    )
     top = top + 15
-    WindowText(hp_win, FONT_NAME, "ÈÎÎñÍê³É£º" .. job.statistics.Success,
-    left - 1, top, 0, 0, ColourNameToRGB("cyan"), false)
-    WindowText(hp_win, FONT_NAME, "ÈÎÎñÊ§°Ü£º" .. job.statistics.Failure,
-    left + 130, top, 0, 0, ColourNameToRGB("cyan"), false)
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "ÈÎÎñÍê³É£º" .. job.statistics.Success,
+        left - 1,
+        top,
+        0,
+        0,
+        ColourNameToRGB("cyan"),
+        false
+    )
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "ÈÎÎñÊ§°Ü£º" .. job.statistics.Failure,
+        left + 130,
+        top,
+        0,
+        0,
+        ColourNameToRGB("cyan"),
+        false
+    )
     top = top + 15
-    WindowText(hp_win, FONT_NAME, "»ªÉ½Íê³É£º" .. job.statistics.Category["»ªÉ½"].Success,
-    left - 1, top, 0, 0, ColourNameToRGB("cyan"), false)
-    WindowText(hp_win, FONT_NAME, "Ê§°Ü£º" .. job.statistics.Category["»ªÉ½"].Failure,
-    left + 130, top, 0, 0, ColourNameToRGB("cyan"), false)
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "»ªÉ½Íê³É£º" .. job.statistics.Category["»ªÉ½"].Success,
+        left - 1,
+        top,
+        0,
+        0,
+        ColourNameToRGB("cyan"),
+        false
+    )
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "Ê§°Ü£º" .. job.statistics.Category["»ªÉ½"].Failure,
+        left + 130,
+        top,
+        0,
+        0,
+        ColourNameToRGB("cyan"),
+        false
+    )
     top = top + 15
-    WindowText(hp_win, FONT_NAME, "Îäµ±Íê³É£º" .. job.statistics.Category["Îäµ±"].Success,
-    left - 1, top, 0, 0, ColourNameToRGB("cyan"), false)
-    WindowText(hp_win, FONT_NAME, "Ê§°Ü£º" .. job.statistics.Category["Îäµ±"].Failure,
-    left + 130, top, 0, 0, ColourNameToRGB("cyan"), false)
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "Îäµ±Íê³É£º" .. job.statistics.Category["Îäµ±"].Success,
+        left - 1,
+        top,
+        0,
+        0,
+        ColourNameToRGB("cyan"),
+        false
+    )
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "Ê§°Ü£º" .. job.statistics.Category["Îäµ±"].Failure,
+        left + 130,
+        top,
+        0,
+        0,
+        ColourNameToRGB("cyan"),
+        false
+    )
     top = top + 15
-    WindowText(hp_win, FONT_NAME, "ËÍÐÅÍê³É£º" .. job.statistics.Category["ËÍÐÅ"].Success,
-    left - 1, top, 0, 0, ColourNameToRGB("cyan"), false)
-    WindowText(hp_win, FONT_NAME, "Ê§°Ü£º" .. job.statistics.Category["ËÍÐÅ"].Failure,
-    left + 130, top, 0, 0, ColourNameToRGB("cyan"), false)
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "ËÍÐÅÍê³É£º" .. job.statistics.Category["ËÍÐÅ"].Success,
+        left - 1,
+        top,
+        0,
+        0,
+        ColourNameToRGB("cyan"),
+        false
+    )
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "Ê§°Ü£º" .. job.statistics.Category["ËÍÐÅ"].Failure,
+        left + 130,
+        top,
+        0,
+        0,
+        ColourNameToRGB("cyan"),
+        false
+    )
     top = top + 15
-    WindowText(hp_win, FONT_NAME, "ËÌÄ¦ÑÂÍê³É£º" .. job.statistics.Category["ËÌÄ¦ÑÂ"].Success,
-    left - 1, top, 0, 0, ColourNameToRGB("cyan"), false)
-    WindowText(hp_win, FONT_NAME, "ËÀÍö£º" .. job.statistics.Category["ËÌÄ¦ÑÂ"].Failure,
-    left + 130, top, 0, 0, ColourNameToRGB("deeppink"), false)
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "ËÌÄ¦ÑÂÍê³É£º" .. job.statistics.Category["ËÌÄ¦ÑÂ"].Success,
+        left - 1,
+        top,
+        0,
+        0,
+        ColourNameToRGB("cyan"),
+        false
+    )
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "ËÀÍö£º" .. job.statistics.Category["ËÌÄ¦ÑÂ"].Failure,
+        left + 130,
+        top,
+        0,
+        0,
+        ColourNameToRGB("deeppink"),
+        false
+    )
     top = top + 15
-    WindowText(hp_win, FONT_NAME, "Ê§ÂäµÄÐÅ¼ãÍê³É£º" .. job.statistics.Category["Ê§ÂäµÄÐÅ¼ã"].Times,
-    left - 1, top, 0, 0, ColourNameToRGB("cyan"), false)
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "Ê§ÂäµÄÐÅ¼ãÍê³É£º" .. job.statistics.Category["Ê§ÂäµÄÐÅ¼ã"].Times,
+        left - 1,
+        top,
+        0,
+        0,
+        ColourNameToRGB("cyan"),
+        false
+    )
     top = top + 15
     local ExpScore = 0
     if job.statistics.PreviousExp ~= 0 then
         ExpScore = hp.exp - job.statistics.PreviousExp
     end
-    WindowText(hp_win, FONT_NAME, "¹²¼Æ»ñÈ¡¾­Ñé£º" .. ExpScore,
-    left, top, 0, 0, ColourNameToRGB("red"), false)
+    WindowText(hp_win, FONT_NAME, "¹²¼Æ»ñÈ¡¾­Ñé£º" .. ExpScore, left, top, 0, 0, ColourNameToRGB("red"), false)
     top = top + 15
-    WindowText(hp_win, FONT_NAME, "Ã¿Ð¡Ê±»ñÈ¡¾­Ñé£º" .. job.statistics.Efficiency,
-    left, top, 0, 0, ColourNameToRGB("red"), false)
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "Ã¿Ð¡Ê±»ñÈ¡¾­Ñé£º" .. job.statistics.Efficiency,
+        left,
+        top,
+        0,
+        0,
+        ColourNameToRGB("red"),
+        false
+    )
+    top = top + 15
+    local idletime = 0
+    if flag.idle ~= nil then
+        idletime = flag.idle
+    end
+    WindowText(hp_win, FONT_NAME, "µ±Ç°·¢´ô¼ÆÊ±£º" .. idletime * 30 .. " Ãë", left, top, 0, 0, ColourNameToRGB("gray"), false)
 
     WindowShow(hp_win, true)
     movewindow.save_state(hp_win)
@@ -737,7 +1003,6 @@ function hp_hpbrief(w)
             status.pot_lastadd = "+" .. status.pot_lastadd
         end
     end
-
 
     Status.HP = tonumber(w.qixue)
     Status.HP_MAX = tonumber(w.qixue_max)
@@ -897,11 +1162,9 @@ end
 --    lv_info = balance .. "(" .. bank_percent .. "%)"
 -- end
 
-
 ---------------------------------------------------------------------------
-local HideTriggerList =
-{
-    "^#(.+),(.+),(\\d+),(\\d+),(\\d+),(\\d+)",
+local HideTriggerList = {
+    "^#(.+),(.+),(\\d+),(\\d+),(\\d+),(\\d+)"
 }
 function AddHideTriggerList()
     for i = 1, #HideTriggerList do
@@ -930,7 +1193,7 @@ function hp_status(w)
         movewindow.add_drag_handler(hp_win, 0, 0, hp_win_width, 30)
         WindowFont(hp_win, FONT_NAME, "Arial", FONT_SIZE)
         hp_draw_win()
-        -- show_skill_win=true
+    -- show_skill_win=true
     end
 end
 
@@ -982,7 +1245,16 @@ function Status_Bar_Install()
     -- Init ³õÊ¼»¯Status_bar
     WindowCreate(hp_win, 0, 0, hp_win_width, hp_win_height, miniwin.pos_bottom_left, 0, 0x000010)
     local hp_win_info = movewindow.install(hp_win, miniwin.pos_bottom_left, miniwin.create_absolute_location, true)
-    WindowCreate(hp_win, hp_win_info.window_left, hp_win_info.window_top, hp_win_width, hp_win_height, hp_win_info.window_mode, hp_win_info.window_flags, 0x000010)
+    WindowCreate(
+        hp_win,
+        hp_win_info.window_left,
+        hp_win_info.window_top,
+        hp_win_width,
+        hp_win_height,
+        hp_win_info.window_mode,
+        hp_win_info.window_flags,
+        0x000010
+    )
     movewindow.add_drag_handler(hp_win, 0, 0, hp_win_width, 30)
     WindowFont(hp_win, FONT_NAME, "Arial", FONT_SIZE)
     -- ³õÊ¼»¯Status_bar -- Íê³É ------------------------------------------------
@@ -1035,4 +1307,3 @@ function Init()
     -- AddHideTriggerList()
     Activate()
 end
-

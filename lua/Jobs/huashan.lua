@@ -12,7 +12,12 @@ eg.
 
 --]]
 huashanJob = {
-    jobStep = 0
+    jobStep = 0,
+    Progress = 0
+    -- Progress = 1  华山1 找NPC
+    -- Progress = 2  华山2 找NPC
+    -- Progress = 5  华山找岳灵珊交任务
+    -- Progress = 6  华山交给岳灵珊后, 找岳不群回复
 }
 
 huashanJob.jobStep = 0
@@ -70,6 +75,7 @@ job.list["huashan"] = "华山惩恶扬善"
 
 function huashan()
     huashanJob.jobStep = 0
+    huashanJob.Progress = 0
     dis_all()
     huashan_trigger()
     delete_all_timers()
@@ -244,6 +250,7 @@ function huashan_npc()
     job.last = "huashan"
     if huashanJob.jobStep < 1 then
         job.time.b = os.time()
+        huashanJob.Progress = 1
         messageShow("华山任务①：开始任务。")
         quest.name = "华山任务㈠"
         quest.desc = ""
@@ -251,6 +258,7 @@ function huashan_npc()
         quest.update()
         return check_bei(huashan_npc_go)
     else
+        huashanJob.Progress = 2
         messageShow("华山任务②：开始任务。")
         quest.name = "华山任务㈡"
         quest.desc = ""
@@ -492,6 +500,7 @@ function huashan_get_con(n, l, w)
 end
 function huashan_backgogo()
     --checkBags()
+    huashanJob.Progress = 5
     return go(huashan_yls, "华山", "祭坛")
 end
 huashan_get_con1 = function()
@@ -581,6 +590,7 @@ end
 -- 砍头事件执行触发
 -- ---------------------------------------------------------------
 function huashan_cut_con(n, l, w)
+    huashanJob.Progress = 5
     EnableTriggerGroup("huashan_cut", false) --关闭cut体触发
     EnableTimer("hscut1", false)
     DeleteTriggerGroup("all_fight")
@@ -647,17 +657,15 @@ function huashan_yls_fail(n, l, w)
     RemoveObserver("huashanGiveHeadOb")
     RemoveObserver("huashanGiveCorpseOb")
     EnableTriggerGroup("huashan_yls", false)
-    if locl.room ~= "祭坛" then
-        return go(huashan_yls, "华山", "祭坛")
-    elseif not string.find(l, "这里没有这个人") then
-        return go_direct(huashan_shibai_b, "华山", "祭坛", "华山", "正气堂", "huashan/jitan")
-    else
+    if locl.room ~= "祭坛" or (string.find(l, "这里没有这个人") and huashanJob.Progress == 5) then
         wait.make(
             function()
                 wait.time(5)
                 return go(huashan_yls, "华山", "祭坛")
             end
         )
+    else
+        return go_direct(huashan_shibai_b, "华山", "祭坛", "华山", "正气堂", "huashan/jitan")
     end
 end
 -- ---------------------------------------------------------------
@@ -698,6 +706,7 @@ function huashan_yls_lbcx()
 end
 
 function huashan_yls_ask(n, l, w)
+    huashanJob.Progress = 6
     -- 触发成功后删除交首级计时器
     RemoveObserver("huashanGiveHeadOb")
     RemoveObserver("huashanGiveCorpseOb")
@@ -709,7 +718,7 @@ function huashan_yls_ask(n, l, w)
     if w[2] == "二" then
         return huashan_yls_back()
     end
-    if w[2] == "一" and GetRoleConfig("HuashanJob_Step2") ~= true then
+    if w[2] == "一" and (GetRoleConfig("HuashanJob_Step2") ~= true or (lostletter == 1 and needdolost == 1)) then
         return check_bei(huashan_yls_lbcx)
     else
         return check_bei(huashan_heal)
@@ -727,39 +736,31 @@ end
 -- 从 岳灵珊 处返回 岳不群 path
 -- ------------------------------------
 function huashan_ysl_after()
+    DeleteTriggerGroup("huashan_over")
     create_trigger_t("huashan_over1", "^(> )*你给岳不群一块令牌。", "", "huashan_finish")
-    create_trigger_t("huashan_over2", "^(> )*这里没有这个人。", "", "")
+    create_trigger_t("huashan_over2", "^(> )*这里没有这个人。", "", "huashan_ysl_after_safety")
     SetTriggerOption("huashan_over1", "group", "huashan_over")
     SetTriggerOption("huashan_over2", "group", "huashan_over")
     local backto_ybq = "out;w;s;se;su;su;s;give ling pai to yue buqun"
     exe(backto_ybq)
 end
--- ---------------------------------------------------------------
--- 检查身上的绳子是否足够, 用于进华山山洞
--- ---------------------------------------------------------------
-huashan_over_dodo = function()
-    EnableTriggerGroup("huashan_over", false)
-    EnableTimer("walkWait3", false)
-    delete_all_timers()
-    if not Bag["绳子"] then
-        print("绳子不够")
-        exe("s;s;tell rope 交货")
-        wait.make(
-            function()
-                wait.time(2)
-                exe("get sheng zi;n;n")
-                return huashan_finish()
-            end
-        )
-    else
-        print("绳子够了")
-        return huashan_finish()
-    end
+function huashan_ysl_after_safety()
+    DeleteTriggerGroup("huashan_over")
+    create_trigger_t("huashan_over1", "^(> )*你给岳不群一块令牌。", "", "huashan_finish")
+    create_trigger_t("huashan_over2", "^(> )*这里没有这个人。", "", "huashan_ysl_after_safety")
+    SetTriggerOption("huashan_over1", "group", "huashan_over")
+    SetTriggerOption("huashan_over2", "group", "huashan_over")
+    go(
+        function()
+            exe("give ling pai to yue buqun")
+        end,
+        "华山",
+        "正气堂"
+    )
 end
 -- ------------------------------------
 -- 华山任务结束
 -- ------------------------------------
-
 function huashan_finish()
     -- weapon_unwield()
     EnableTriggerGroup("huashanQuest", true)
@@ -772,6 +773,7 @@ function huashan_finish()
     EnableTriggerGroup("huashanQuest", true)
     flag.times = 1
     huashanJob.jobStep = 0
+    huashanJob.Progress = 0
     exe("drop ling pai;drop head;drop corpse")
     -- jobExpTongji()
     huashan_triggerDel()

@@ -101,12 +101,12 @@ function Weapon.RecoverNeili(force)
         GetRoleFunction("Wield_RecoverWeapon")
     else
         -- 是否已经装备回内武器
-        if itemWield[GetItemChineseInBagByFullID(GetVariable("myweapon"))] ~= true then
-            print("开始装备回内武器")
-            weapon_unwield()
-            weapon_wield()
-        else
-            print("已经装备回内武器")
+        local recoverwield = GetRoleConfig("RecoverWeapon")
+        if recoverwield ~= nil and string.len(recoverwield) > 0 then
+            if itemWield[GetItemChineseInBagByFullID(recoverwield)] ~= true then
+                weapon_unwield()
+                exe("wield " .. recoverwield)
+            end
         end
     end
 end
@@ -212,16 +212,14 @@ end
 -- 装备所有武器
 -- ---------------------------------------------------------------
 function weapon_wield()
-    --[[       if hp.neili<hp.neili_max*0.5 and cbb_cur>0 then
-          exe('eat '.. drug.neili2)
-	   end                     ]]
+    -- 优先装备回内武器
+    local recoverwield = GetRoleConfig("RecoverWeapon")
+    if recoverwield ~= nil and string.len(recoverwield) > 0 then
+        exe("wield " .. recoverwield)
+    end
     if perform and perform.skill and skillEnable[perform.skill] and weaponKind[skillEnable[perform.skill]] then
         if weapon.first and Bag[weapon.first] then
             exe("wield " .. Bag[weapon.first].fullid)
-        end
-        -- 默认myweapon为回内武器
-        if GetVariable("myweapon") and string.len(GetVariable("myweapon")) > 1 then
-            exe("wield " .. GetVariable("myweapon"))
         end
         for p in pairs(Bag) do
             if Bag[p].kind and Bag[p].kind == skillEnable[perform.skill] and perform.skill ~= "yuxiao-jian" then
