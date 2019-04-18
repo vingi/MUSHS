@@ -174,7 +174,7 @@ function wudangBusyDazuo()
     exe("n")
     return prepare_lianxi(wudang)
 end
-function wudangFail()
+function wudangFail(n, l, w)
     EnableTriggerGroup("wudangAccept", false)
     if job.level == "已入化境" then
         job.level = "未知"
@@ -191,6 +191,9 @@ function wudangFail()
     setLocateRoomID = "wudang/sanqing"
     -- 任务计数补1
     job.statistics_JobTimePlus()
+    if not string.find(l, "你正忙着别的事情呢") then 
+        MissionPunishment.AlreadyGiveUp = true
+    end
     if score.party == "华山派" and hp.shen < 0 then
         return clb()
     end
@@ -201,6 +204,7 @@ function wudangFail()
     end
 end
 function wudangConsider(n, l, w)
+    MissionPunishment.AlreadyGiveUp = false
     local x
     nobusy = 1
     job.time.b = os.time()

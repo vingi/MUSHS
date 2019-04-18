@@ -18,8 +18,15 @@ require "check
 local lianxitime_max = 5
 
 function lianxi()
-    if string.len(GetRoleConfig("PracticeCMD")) > 0 then
-        exe(GetRoleConfig("PracticeCMD"))
+    if GetRoleConfig("PracticeCMD") ~= nil then
+        local pracmd = GetRoleConfig("PracticeCMD")
+        if type(pracmd) == "table" then
+            exe(common.RandomValueInTable(pracmd))
+        else
+            if string.len(pracmd) > 0 then
+                exe(GetRoleConfig("PracticeCMD"))
+            end
+        end
     else
         intelligent_lianxi(5)
     end

@@ -12,7 +12,9 @@
 eg.
 
 --]]
-MissionPunishment = {}
+MissionPunishment = {
+    AlreadyGiveUp = false
+}
 
 function MissionPunishment.PunishmentHandle(busySecond)
     local func = test

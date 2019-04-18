@@ -360,7 +360,9 @@ score_busy_check = function(n, l, w)
         end
         if w[1] == "任务繁忙状态" then
             condition.busy = l_cnt * 60
-            MissionPunishment.PunishmentHandle(condition.busy)
+            if MissionPunishment.AlreadyGiveUp == true then
+                MissionPunishment.PunishmentHandle(condition.busy)
+            end
         end
         if w[1] == "福州镖局护镖倒计时" then
             condition.hubiao = l_cnt * 60
@@ -395,7 +397,9 @@ score_busy_check = function(n, l, w)
         end
         if w[1] == "任务繁忙状态" then
             condition.busy = l_cnt
-            MissionPunishment.PunishmentHandle(condition.busy)
+            if MissionPunishment.AlreadyGiveUp == true then
+                MissionPunishment.PunishmentHandle(condition.busy)
+            end
         end
         if w[1] == "福州镖局护镖倒计时" then
             condition.hubiao = l_cnt

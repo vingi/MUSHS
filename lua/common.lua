@@ -225,6 +225,12 @@ function common.GetValueByRange(num, min, max)
     return num
 end
 -- ---------------------------------------------------------------
+-- 随机获取table数组表中的一条集合, 不适用于key/value集合
+-- ---------------------------------------------------------------
+function common.RandomValueInTable(Table)
+    return Table[math.random(#Table)]
+end
+-- ---------------------------------------------------------------
 -- 字符转换lc.dll的帮助文件
 
 -- a2w(ansi to unicode)

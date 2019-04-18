@@ -30,8 +30,13 @@ settings = {
 	RecoverWeapon = "taiji sword",
 	-- 当打架无内力时(吃药在CD状态),执行的加内动作(无则可不填), 一些门派有恢复内力的内功, 如华山有yun zixia
 	Recover_neili = "yun zixia",
-	-- 练习的指令
-	PracticeCMD = "wield taiji;jifa sword huashan-jianfa;lian sword 20;jifa sword jinshe-jianfa;lian sword 20;jifa sword huashan-jianfa;lian dodge 20;unwield taiji;bei none;jifa strike jinshe-zhangfa;lian strike 20;lian cuff 20;wield taiji;lian force 20;unwield taiji;wield taibai;lian blade 20;unwield taibai;wield taiji;yun jingli;",
+	-- 练习的指令 (建议单条练习不要超过10条指令, 容易引发flood,从而idle, 如需练习很多, 可选择使用table数组表的方式, 分多段进行)
+	-- PracticeCMD = "wield taiji;jifa sword huashan-jianfa;lian sword 20;jifa sword jinshe-jianfa;lian sword 20;jifa sword huashan-jianfa;lian dodge 20;unwield taiji;bei none;jifa strike jinshe-zhangfa;lian strike 20;lian strike 20;lian cuff 20;wield taiji;lian force 20;unwield taiji;wield taibai;lian blade 20;unwield taibai;wield taiji;yun jingli;",
+	PracticeCMD = {
+		"wield taiji;jifa sword huashan-jianfa;lian sword 20;lian dodge 20;unwield taiji;bei none;jifa strike jinshe-zhangfa;lian strike 20;lian strike 20;lian cuff 20;lian force 20;unwield taiji;wield taibai;lian blade 20;unwield taibai;wield taiji;yun jingli;",
+		
+		"wield taiji;jifa sword jinshe-jianfa;lian sword 20;jifa sword huashan-jianfa;lian dodge 20;unwield taiji;bei none;jifa strike jinshe-zhangfa;lian strike 20;lian strike 20;lian cuff 20;wield taiji;yun jingli;"
+	},
 	-- 是否作华山2任务
 	HuashanJob_Step2 = true,
 	-- 是否自动蝶梦楼刷分
@@ -42,8 +47,7 @@ settings = {
 	-- 是否每周四自动领取会员福利
 	AutoVipBenefit = true,
 	-- 是否自动吃满Ebook双倍经验书
-	AutoEbook = false,
-
+	AutoEbook = false
 }
 
 -- ---------------------------------------------------------------

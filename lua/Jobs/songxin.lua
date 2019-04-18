@@ -192,6 +192,7 @@ function songxin_fangqi_ask()
 end
 function songxin_fangqi_heal()
     songxin_triggerDel()
+    MissionPunishment.AlreadyGiveUp = true
     return check_halt(check_food)
 end
 function songxin_rest()
@@ -215,6 +216,7 @@ function songxin_xin()
     EnableTriggerGroup("songxin_accept", false)
     EnableTriggerGroup("songxin_letter", true)
     job.last = "songxin"
+    MissionPunishment.AlreadyGiveUp = false
     sxkiller1 = 0
     sxkiller2 = 0
     create_timer_s('songxin_checklookletter', 1.5, 'Execute_lookletter')

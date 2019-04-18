@@ -218,6 +218,7 @@ function huashan_shibai_b()
         mjlujingLog("侠客岛")
     end
     messageShow("华山任务：任务失败。", "deepskyblue")
+    MissionPunishment.AlreadyGiveUp = true
     job.statistics.Failure = job.statistics.Failure + 1
     job.statistics.Category["华山"].Times = job.statistics.Category["华山"].Times + 1
     job.statistics.Category["华山"].Failure = job.statistics.Category["华山"].Failure + 1
@@ -246,6 +247,7 @@ end
 
 function huashan_npc()
     exe("nick 华山任务中")
+    MissionPunishment.AlreadyGiveUp = false
     EnableTriggerGroup("huashan_accept", false)
     job.last = "huashan"
     if huashanJob.jobStep < 1 then
@@ -550,16 +552,6 @@ function huashan_cut()
     job.killer = {}
     fight.time.e = os.time()
     fight.time.over = fight.time.e - fight.time.b
-    -- wait.make(function()
-    --     wait.time(1.5)
-    --     --fightoverweapon()
-    --     exe('drop corpse')
-    --     for i=1,4 do
-    --         exe('get ling pai from corpse '..i)
-    --         exe('qie corpse '..i)
-    --     end
-    --     create_timer_s('hscut1',1,'huashan_cut_dodo')
-    -- end)
     messageShowT("华山任务" .. Get_huashanjob_step() .. "：战斗用时:【" .. fight.time.over .. "】秒,搞定蒙面人：【" .. job.target .. "】。")
     return check_halt(huashan_cut_act)
 end
