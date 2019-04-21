@@ -190,7 +190,7 @@ function wudangFail(n, l, w)
     wudangJob.killStartTime = nil
     setLocateRoomID = "wudang/sanqing"
     -- 任务计数补1
-    job.statistics_JobTimePlus()
+    -- job.statistics_JobTimePlus()
     if not string.find(l, "你正忙着别的事情呢") then 
         MissionPunishment.AlreadyGiveUp = true
     end
@@ -317,6 +317,8 @@ function wudangFangqi()
     job.level = nil
     job.lost = 0
     nobusy = 0
+    -- 执行任务数自增1
+    job.statistics_JobTimePlus()
     job.statistics.Failure = job.statistics.Failure + 1
     job.statistics.Category["武当"].Times = job.statistics.Category["武当"].Times + 1
     job.statistics.Category["武当"].Failure = job.statistics.Category["武当"].Failure + 1
@@ -516,6 +518,8 @@ function wudangFinishT()
     -- 重置叫杀时间
     wudangJob.killStartTime = nil
     -- setLocateRoomID='wudang/sanqing'
+     -- 执行任务数自增1
+    job.statistics_JobTimePlus()
     job.statistics.Success = job.statistics.Success + 1
     job.statistics.Category["武当"].Times = job.statistics.Category["武当"].Times + 1
     job.statistics.Category["武当"].Success = job.statistics.Category["武当"].Success + 1

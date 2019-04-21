@@ -360,9 +360,7 @@ score_busy_check = function(n, l, w)
         end
         if w[1] == "任务繁忙状态" then
             condition.busy = l_cnt * 60
-            if MissionPunishment.AlreadyGiveUp == true then
-                MissionPunishment.PunishmentHandle(condition.busy)
-            end
+            MissionPunishment.PunishmentHandle(condition.busy)
         end
         if w[1] == "福州镖局护镖倒计时" then
             condition.hubiao = l_cnt * 60
@@ -397,9 +395,7 @@ score_busy_check = function(n, l, w)
         end
         if w[1] == "任务繁忙状态" then
             condition.busy = l_cnt
-            if MissionPunishment.AlreadyGiveUp == true then
-                MissionPunishment.PunishmentHandle(condition.busy)
-            end
+            MissionPunishment.PunishmentHandle(condition.busy)
         end
         if w[1] == "福州镖局护镖倒计时" then
             condition.hubiao = l_cnt
@@ -1110,91 +1106,7 @@ function checkPrepareOver()
         return check_job()
     end
 end
-function letterLost()
-    sLetterlost()
-    go(letterLostBegin, "襄阳城", "当铺")
-end
-function letterLostBegin()
-    if needvpearl == 1 and(condition.vpearl == 0 or not condition.vpearl) then
-        return Govpearl()
-    end
-    if lostletter == 1 then
-        exe("chakan letter")
-        exe("look letter")
-    end
-end
-function sLetterlost()
-    DeleteTriggerGroup("lostletter")
-    create_trigger_t("lostletter1", "^(> )*请打开网页(\\N*)查看收信人。$", "", "goMark")
-    create_trigger_t("lostletter2", "^(> )*你乘人不注意，偷偷把失落的信笺扔进了路边的草丛。$", "", "sendOk")
-    create_trigger_t("lostletter3", "^(> )*信封上的字迹模糊不清，不知何人遗落到此处。$", "", "sendOk")
-    create_trigger_t("lostletter4", "^(> )*你将失落的信笺交给", "", "sendOk")
-    create_trigger_t("lostletter5", "^(> )*你在信卦上写上收信人的名字。$", "", "lookXin")
-    create_trigger_t("lostletter6", "^(> )*你再看清楚一点。$", "", "letterLostBegin")
-    create_trigger_t("lostletter7", "^(> )*信封上写着：(\\D*)\\((\\D*)\\)", "", "lostName")
-    -- create_trigger_t('lostletter8',"^[> ]*好象收信人曾在(\\D*)一带出现。$",'','get_lost_locate')
-    SetTriggerOption("lostletter1", "group", "lostletter")
-    SetTriggerOption("lostletter2", "group", "lostletter")
-    SetTriggerOption("lostletter3", "group", "lostletter")
-    SetTriggerOption("lostletter4", "group", "lostletter")
-    SetTriggerOption("lostletter5", "group", "lostletter")
-    SetTriggerOption("lostletter6", "group", "lostletter")
-    SetTriggerOption("lostletter7", "group", "lostletter")
-    -- SetTriggerOption("lostletter8","group","lostletter")
-    llgo()
-    EnableTriggerGroup("lostletter", true)
-end
-function goMark(n, l, w)
-    print("开始填写失落信件人物ID")
-    local m_cmd = w[2]
-    OpenBrowser(m_cmd)
-    return Markletter()
-end
-function Markletter()
-    l_result = utils.inputbox("输入信件人物ID，放弃请输入discard。", "lostname", GetVariable("lostname"), "宋体", "12")
-    if not isNil(l_result) then
-        SetVariable("lostname", l_result)
-    end
-    return MarkName()
-end
-function MarkName()
-    local lost_cmd = GetVariable("lostname")
-    if lost_cmd == "discard" then
-        return exe("discard letter")
-    else
-        return exe("mark " .. lost_cmd)
-    end
-end
-function lookXin()
-    lookxin = 1
-    exe("look letter")
-end
-function lostName(n, l, w)
-    lost_name = string.lower(w[3])
-    return create_timer_s("sendTo", 0.5, "sendTo")
-end
-function sendXin()
-    sLetterlost()
-    return create_timer_s("sendTo", 0.5, "sendTo")
-end
-function sendTo()
-    exe("follow " .. lost_name)
-    exe("sendto " .. lost_name)
-end
-function sendOk()
-    lookxin = 0
-    lostletter = 0
-    m_cmd = nil
-    lostletter_locate = ""
-    mousedown_lostletter()
-    -- 马上刷新地点
-    condition.vpearl = 0
-    DeleteTimer("sendTo")
-    DeleteTriggerGroup("lostletter")
-    exe("follow none;cond;jobtimes")
-    sendOk_fix()
-    return check_food()
-end
+
 function check_xuexi()
     if MidHsDay[locl.time] and score.master == "风清扬" then
         return check_job()
@@ -1552,7 +1464,7 @@ function idle_set()
     if not flag.idle or type(flag.idle) ~= "number" then
         flag.idle = 0
     end
-    flag.idle = flag.idle + 1
+    flag.idle = tonumber(flag.idle) + 1
     if flag.idle < 8 then
         return
     end
@@ -1560,7 +1472,7 @@ function idle_set()
         -- 说明已进入叫杀阶段, 鉴于武当任务的busy时间超长, 所以将允许的战斗时间延长至12分钟, 避免太长的战斗时间进入idle的判断
         return
     end
-    if flag.idle < 10 then
+    if tonumber(flag.idle) < 10 then
         DeleteTimer("walkWait10")
         DeleteTimer("walkWait9")
         if dest.area == nil then return end
@@ -1575,15 +1487,14 @@ function idle_set()
                 if job.name == 'songxin' or job.name == 'songxin2' then return songxin_find_go() end
             end
         end
+        chats_log("ROBOT 可能已发呆" .. tonumber(flag.idle) / 2 .. "分钟!", "deepskyblue")
         return
     end
-    if flag.idle < 10 then
-        chats_log("ROBOT 可能已发呆" .. flag.idle / 2 .. "分钟!", "deepskyblue")
-        return
-    end
+
     scrLog()
     dis_all()
-    chats_locate("定位系统：发呆" ..(flag.idle / 2) .. "分钟后，于【" .. locl.area .. locl.room .. "】重新启动系统！", "red")
+    job.statistics.IdleTime = job.statistics.IdleTime + 1
+    chats_locate("定位系统：发呆" ..(tonumber(flag.idle) / 2) .. "分钟后，于【" .. locl.area .. locl.room .. "】重新启动系统！", "red")
     Disconnect()
     Connect()
 end

@@ -260,6 +260,12 @@ end
 function xueshan_fangqi_heal()
     EnableTriggerGroup("xueshan_accept",false)
     job.last = "xueshan"
+    -- 执行任务数自增1
+    job.statistics_JobTimePlus()
+    job.statistics.Success = job.statistics.Success + 1
+    job.statistics.Category["雪山"].Times = job.statistics.Category["雪山"].Times + 1
+    job.statistics.Category["雪山"].Failure = job.statistics.Category["雪山"].Failure + 1
+    job.statistics_Update()
     return check_food()
 end
 function xueshan_rest()
@@ -313,6 +319,12 @@ function xueshan_over()
     EnableTriggerGroup("xueshan_finish",false)
     xueshan_triggerDel()
     --print('雪山job完成，检查food...')
+    -- 执行任务数自增1
+    job.statistics_JobTimePlus()
+    job.statistics.Success = job.statistics.Success + 1
+    job.statistics.Category["雪山"].Times = job.statistics.Category["雪山"].Times + 1
+    job.statistics.Category["雪山"].Success = job.statistics.Category["雪山"].Success + 1
+    job.statistics_Update()
     messageShowT('雪山任务：任务完成，用时:【'..job.time.over..'】秒。')
     setLocateRoomID='xueshan/shanlu4'
 	check_halt(check_food)

@@ -27,6 +27,29 @@ function MissionPunishment.PunishmentHandle(busySecond)
         quest.note = ""
         quest.update()
     end
+    -- 判断是否已放弃任务, 避免二次busy
+    if MissionPunishment.AlreadyGiveUp ~= true then
+        if job.last == "huashan" then
+            func = huashanFindFail
+        end
+        if job.last == "wudang" then
+            func = function()
+                go(wudangFangqi, "武当山", "三清殿")
+            end
+        end
+        if job.last == "songxin" then
+            func = function()
+                go(wudangFangqi, "武当山", "三清殿")
+            end
+        end
+        if job.last == "xueshan" then
+            func = function()
+                go(xueshan_fangqi, "大雪山", "入幽口")
+            end
+        end
+        return check_busy(func)
+    end
+
     if hp.pot > 100 then
         func = check_pot
     end
@@ -35,7 +58,7 @@ function MissionPunishment.PunishmentHandle(busySecond)
     -- end
 
     func = function()
-        exe('yun jing;yun qi;yun jingli;')
+        exe("yun jing;yun qi;yun jingli;")
         check_food(true)
         -- 强制 full 饮食
     end

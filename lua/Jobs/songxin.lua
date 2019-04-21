@@ -180,6 +180,8 @@ function songxin_fangqi()
     dis_all()
     flag.idle = nil
     EnableTriggerGroup("songxin_accept", false)
+    -- 执行任务数自增1
+    job.statistics_JobTimePlus()
     job.statistics.Failure = job.statistics.Failure + 1
     job.statistics.Category["送信"].Times = job.statistics.Category["送信"].Times + 1
     job.statistics.Category["送信"].Failure = job.statistics.Category["送信"].Failure + 1
@@ -394,6 +396,8 @@ function songxin_finish()
     EnableTrigger("hpheqi1", true)
     EnableTriggerGroup("sx2refuse", true)
     EnableTriggerGroup("songxin2_check", true)
+    -- 执行任务数自增1
+    job.statistics_JobTimePlus()
     job.statistics.Success = job.statistics.Success + 1
     job.statistics.Category["送信"].Times = job.statistics.Category["送信"].Times + 1
     job.statistics.Category["送信"].Success = job.statistics.Category["送信"].Success + 1
@@ -760,7 +764,6 @@ function sx2overok()
 end
 function sxCondconsider()
     if condition.busy and condition.busy > 60 then
-        job.statistics_JobTimePlus()
         return huashan()
     end
     return check_halt(check_food)

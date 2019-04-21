@@ -1,5 +1,6 @@
 job = {}
 job.statistics = {
+    IdleTime = 0,
     PreviousExp = 0,
     StartTime = os.time()
 }
@@ -477,7 +478,7 @@ function hp_heqi_check(n, l, w)
         -- 内力小于10%，嗑内息丸！
         exe("eat " .. drug.neili1)
     end
-    if hp.neili < 1000 and hp.neili_max > 3000 and hp.heqi > 150 and GetRoleConfig("Recover_neili") ~= "" then
+    if hp.neili < 2000 and hp.neili_max > 3000 and GetRoleConfig("Recover_neili") ~= "" then
         exe(GetRoleConfig("Recover_neili"))
     end
     if hp.jingli < hp.jingli_max * 0.5 or hp.jingli < 500 then
@@ -1647,6 +1648,7 @@ end
 function job.statistics_Init()
     if job.statistics.PreviousExp == 0 then
         job.statistics = {
+            IdleTime = 0,
             PreviousExp = hp.exp,
             StartTime = os.time(),
             -- 持续时间
@@ -1665,6 +1667,10 @@ function job.statistics_Init()
         job.statistics.Category["武当"].Times = 0
         job.statistics.Category["武当"].Success = 0
         job.statistics.Category["武当"].Failure = 0
+        job.statistics.Category["雪山"] = {}
+        job.statistics.Category["雪山"].Times = 0
+        job.statistics.Category["雪山"].Success = 0
+        job.statistics.Category["雪山"].Failure = 0
         job.statistics.Category["送信"] = {}
         job.statistics.Category["送信"].Times = 0
         job.statistics.Category["送信"].Success = 0
@@ -2933,7 +2939,7 @@ function tmonkFinish()
     return check_heal()
 end
 
-zhunbeineili = function(func, p_cmd)
+function zhunbeineili(func, p_cmd)
     if func ~= nil then
         job.prepare = func
     else
@@ -3285,8 +3291,6 @@ end
 -- job切换具体实现方法
 -- ---------------------------------------------------------------
 function job.Switch()
-    -- 执行任务数自增1
-    job.statistics_JobTimePlus()
 
     -- ---------------------------------------------------------------
     -- 公共任务, 限次数

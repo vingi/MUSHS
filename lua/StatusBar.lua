@@ -45,7 +45,7 @@ local hp_checktime = 60
 local hp_checktimecur = hp_checktime
 local hp_win = "hp_window"
 local hp_win_width = 300
-local hp_win_height = 390
+local hp_win_height = 440
 
 local actorname = ""
  -- GetVariable("actorname") or utils.inputbox("输入你的角色名称")
@@ -881,6 +881,29 @@ function hp_draw_win()
     WindowText(
         hp_win,
         FONT_NAME,
+        "雪山完成：" .. job.statistics.Category["雪山"].Success,
+        left - 1,
+        top,
+        0,
+        0,
+        ColourNameToRGB("cyan"),
+        false
+    )
+    WindowText(
+        hp_win,
+        FONT_NAME,
+        "失败：" .. job.statistics.Category["雪山"].Failure,
+        left + 130,
+        top,
+        0,
+        0,
+        ColourNameToRGB("cyan"),
+        false
+    )
+    top = top + 15
+    WindowText(
+        hp_win,
+        FONT_NAME,
         "送信完成：" .. job.statistics.Category["送信"].Success,
         left - 1,
         top,
@@ -953,6 +976,13 @@ function hp_draw_win()
         ColourNameToRGB("red"),
         false
     )
+    top = top + 15
+    local idletime = 0
+    if flag.idle ~= nil then
+        idletime = flag.idle
+    end
+    WindowText(hp_win, FONT_NAME, "发呆次数：" .. job.statistics.IdleTime, left, top, 0, 0, ColourNameToRGB("darkred"), false)
+    
     top = top + 15
     local idletime = 0
     if flag.idle ~= nil then

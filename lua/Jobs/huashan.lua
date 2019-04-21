@@ -219,6 +219,8 @@ function huashan_shibai_b()
     end
     messageShow("华山任务：任务失败。", "deepskyblue")
     MissionPunishment.AlreadyGiveUp = true
+    -- 执行任务数自增1
+    job.statistics_JobTimePlus()
     job.statistics.Failure = job.statistics.Failure + 1
     job.statistics.Category["华山"].Times = job.statistics.Category["华山"].Times + 1
     job.statistics.Category["华山"].Failure = job.statistics.Category["华山"].Failure + 1
@@ -649,6 +651,7 @@ function huashan_yls_fail(n, l, w)
     RemoveObserver("huashanGiveHeadOb")
     RemoveObserver("huashanGiveCorpseOb")
     EnableTriggerGroup("huashan_yls", false)
+    messageShow("华山任务：岳灵珊交尸体失败, 原因: "..tostring(l), "deepskyblue")
     if locl.room ~= "祭坛" or (string.find(l, "这里没有这个人") and huashanJob.Progress == 5) then
         wait.make(
             function()
@@ -721,7 +724,6 @@ function huashan_yls_back()
     DeleteTriggerGroup("huashan_yls_ask")
     EnableTriggerGroup("huashanQuest", true)
     DeleteTriggerGroup("huashan_over")
-    -- return go(huashan_over, "华山", "正气堂", "huashan/jitan")
     return check_busy(huashan_ysl_after)
 end
 -- ------------------------------------
@@ -735,8 +737,10 @@ function huashan_ysl_after()
     SetTriggerOption("huashan_over2", "group", "huashan_over")
     local backto_ybq = "out;w;s;se;su;su;s;give ling pai to yue buqun"
     exe(backto_ybq)
+    NewObserverByFunc("huashanFinishOb", "huashan_ysl_after_safety", 5)
 end
 function huashan_ysl_after_safety()
+    RemoveObserver("huashanFinishOb")
     DeleteTriggerGroup("huashan_over")
     create_trigger_t("huashan_over1", "^(> )*你给岳不群一块令牌。", "", "huashan_finish")
     create_trigger_t("huashan_over2", "^(> )*这里没有这个人。", "", "huashan_ysl_after_safety")
@@ -755,6 +759,7 @@ end
 -- ------------------------------------
 function huashan_finish()
     -- weapon_unwield()
+    RemoveObserver("huashanFinishOb")
     EnableTriggerGroup("huashanQuest", true)
     job.time.e = os.time()
     job.time.over = job.time.e - job.time.b
@@ -769,6 +774,8 @@ function huashan_finish()
     exe("drop ling pai;drop head;drop corpse")
     -- jobExpTongji()
     huashan_triggerDel()
+    -- 执行任务数自增1
+    job.statistics_JobTimePlus()
     job.statistics.Success = job.statistics.Success + 1
     job.statistics.Category["华山"].Times = job.statistics.Category["华山"].Times + 1
     job.statistics.Category["华山"].Success = job.statistics.Category["华山"].Success + 1
