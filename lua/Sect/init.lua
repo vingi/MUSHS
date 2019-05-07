@@ -40,6 +40,11 @@ function Sect.Onload()
         require "/Sect/gumu"
         gmpfmExceptionOn()
     end
+    if score.party == "华山派" then
+        print("正在加载 华山派的档案.")
+        require "/Sect/huashan"
+        -- gmpfmExceptionOn()
+    end
 end
 
 -- ---------------------------------------------------------------

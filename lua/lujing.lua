@@ -132,7 +132,11 @@ function local_start()
     locl.dir = "east"
 end
 local_unknown_room = function(n, l, w)
-    local s = w[2]
+    local s=w[2]
+    if s=='梅林' then 
+        locl.room='梅林'
+        return
+    end
     unknown_room_relation =(string.gsub(s, ' ', ''))
     r_r = string.reverse(unknown_room_relation)
     _, i = string.find(r_r, '[\n]')
@@ -416,6 +420,10 @@ function go_direct(job, localarea, localroom, destarea, destroom, sID)
         quest.location = area .. room
     end
     quest.update()
+    -- 检查 长江船夫
+    check_cjn()
+    -- 检查 黄河船夫
+    -- check_hh()  
     go_direct_pre(localarea, localroom, sID)
     go_setting(job, destarea, destroom, sId)
     check_busy(path_consider)
@@ -429,12 +437,20 @@ function go_direct_pure(job, localarea, localroom, destarea, destroom, sID)
         quest.location = area .. room
     end
     quest.update()
+    -- 检查 长江船夫
+    check_cjn()
+    -- 检查 黄河船夫
+    -- check_hh()  
     go_direct_pre(localarea, localroom, sID)
     go_setting(job, destarea, destroom, sId)
     path_consider()
 end
 
 function go_locate()
+    -- 检查 长江船夫
+    check_cjn()
+    -- 检查 黄河船夫
+    -- check_hh()  
     locate()
     checkWait(path_consider, 0.3)
 end
@@ -1939,6 +1955,7 @@ dujiang_trigger = function()
     create_trigger_t('dujiang12', '^(> )*你在江中渡船上轻轻一点，又提气飞', '', 'dujiang_fly')
     create_trigger_t('dujiang13', "^(> )*(过了片刻，你感觉自己已经将玄天无极神功|你将寒冰真气按周天之势搬运了一周|你只觉真力运转顺畅，周身气力充沛|你将纯阳神通功运行完毕|你只觉神元归一，全身精力弥漫|你将内息走了个一个周天|你将内息游走全身，但觉全身舒畅|你将真气逼入体内，将全身聚集的蓝色气息|你将紫气在体内运行了一个周天|你运功完毕，站了起来|你一个周天行将下来，精神抖擞的站了起来|你分开双手，黑气慢慢沉下|你将内息走满一个周天，只感到全身通泰|你真气在体内运行了一个周天，冷热真气收于丹田|你真气在体内运行了一个周天，缓缓收气于丹田|你双眼微闭，缓缓将天地精华之气吸入体内|你慢慢收气，归入丹田，睁开眼睛|你将内息又运了一个小周天，缓缓导入丹田|你感觉毒素越转越快，就快要脱离你的控制了！|你将周身内息贯通经脉，缓缓睁开眼睛，站了起来|你呼翕九阳，抱一含元，缓缓睁开双眼|你吸气入丹田，真气运转渐缓，慢慢收功|你将真气在体内沿脉络运行了一圈，缓缓纳入丹田|你将内息在体内运行十二周天，返回丹田|你将内息走了个小周天，流回丹田，收功站了起来|过了片刻，你已与这大自然融合在一起，精神抖擞的站了起|你感到自己和天地融为一体，全身清爽如浴春风，忍不住舒畅的呻吟了一声，缓缓睁开了眼睛)", '', 'dujiang_jump')
     create_trigger_t('dujiang14', '^>*\\s*你气息不匀，暂时不能施用内功。', '', 'dujiang_jump')
+    create_trigger_t('dujiang15', '^(> )*设定环境变量：dujiang ', '', 'dujiang_antiflood')
     -- SetTriggerOption("dujiang1","group","dujiang")
     SetTriggerOption("dujiang2", "group", "dujiang")
     SetTriggerOption("dujiang3", "group", "dujiang")
@@ -1953,6 +1970,7 @@ dujiang_trigger = function()
     SetTriggerOption("dujiang12", "group", "dujiang")
     SetTriggerOption("dujiang13", "group", "dujiang")
     SetTriggerOption("dujiang14", "group", "dujiang")
+    SetTriggerOption("dujiang15", "group", "dujiang")
     EnableTriggerGroup("dujiang", true)
 end
 duCjiang = function()
@@ -1996,9 +2014,11 @@ dujiang_dujiang = function()
     end
 end
 dujiang_jump = function()
+    RemoveObserver("dujianWaitOb")
     exe('yun qi;yell boat;dujiang')
 end
 dujiang_go_enter = function()
+    RemoveObserver("dujianWaitOb")
     if flag.dujiang == 1 then
         -- exe('set 积蓄')
         exe('yun qi;dazuo ' .. hp.dazuo)
@@ -2030,36 +2050,66 @@ dujiang_out = function()
 end
 dujiang_over = function()
     EnableTriggerGroup("dujiang", false)
+    EnableTriggerGroup("dujiangchuanfu", true)
     DeleteTriggerGroup("dujiang")
+    djdh_open()
+    check_step_time = os.clock()
+    check_step_num = 0
+    need_waittime = 0
+    common_walk = 0.01
     weapon_unwield()
     weapon_wield()
     return walk_wait()
 end
 dujiang_wait = function()
     -- exe('set 积蓄')
+    RemoveObserver("dujianWaitOb")
     if hp.exp > 2000000 then
         exe('yun jing;yun qi;yun jingli;')
         lianxi()
-        exe('dazuo ' .. hp.dazuo)
+        NewObserver("dujianWaitOb", 'dazuo ' .. hp.dazuo..';set dujiang 打坐', 5)
     else
         exe('yun jing;yun qi;yun jingli;dazuo ' .. hp.dazuo)
     end
 end
+function dujiang_antiflood()
+    RemoveObserver("dujianWaitOb")
+end
 dujiang_jingli = function()
+    RemoveObserver("dujianWaitOb")
     return exe('yun jingli;dujiang')
 end
 dujiang_cannt = function()
+    RemoveObserver("dujianWaitOb")
     flag.dujiang = 0
     jifaDodge()
     return checkWait(duCjiang_start, 0.5)
 end
 dujiang_fly = function()
-    -- ain
+    RemoveObserver("dujianWaitOb")
     return check_bei(dujiang_over)
 end
 dujiang_move = function()
     exe('e;e;w')
     return dujiang_dujiang()
+end
+-- ---------------------------------------------------------------
+-- 有船夫的渡河和渡河路径
+-- ---------------------------------------------------------------
+function djdh_open()                                                                             
+    --重新打开被封闭的渡江渡河路径
+	map.rooms["dali/dalisouth/jiangnan"].ways["#duCjiang"]='dali/dalisouth/jiangbei'
+	map.rooms["dali/dalisouth/jiangbei"].ways["#duCjiang"]='dali/dalisouth/jiangnan'
+	map.rooms["city/jiangbei"].ways["#duCjiang"]='city/jiangnan'		
+	map.rooms["city/jiangnan"].ways["#duCjiang"]='city/jiangbei'
+	map.rooms["lanzhou/road3"].ways["#duHhe"]='lanzhou/road2'
+	map.rooms["lanzhou/road2"].ways["#duHhe"]='lanzhou/road3'
+	map.rooms["lanzhou/dukou3"].ways["#duHhe"]='lanzhou/dukou2'		
+	map.rooms["lanzhou/dukou2"].ways["#duHhe"]='lanzhou/dukou3'
+	map.rooms["changan/road3"].ways["#duHhe"]='changan/road2'
+	map.rooms["changan/road2"].ways["#duHhe"]='changan/road3'
+	map.rooms["huanghe/road3"].ways["#duHhe"]='huanghe/road2'		
+	map.rooms["huanghe/road2"].ways["#duHhe"]='huanghe/road3'
 end
 
 jqgin = function()
@@ -3939,70 +3989,6 @@ function xsMianbiChk()
     end
 end
 function xsMianbiOver()
-    return walk_wait()
-end
-
-function mlIn()
-    tmp.way = "south"
-    tmp.ml = "in"
-    locate()
-    return checkWait(wayMl, 0.1)
-end
-function mlOut()
-    tmp.way = "north"
-    tmp.ml = "out"
-    locate()
-    return checkWait(wayMl, 0.1)
-end
-function wayMl()
-    local ways = {
-        ["north"] = "east",
-        ["east"] = "south",
-        ["south"] = "west",
-        ["west"] = "north",
-    }
-    local wayt = {
-        ["north"] = "west",
-        ["east"] = "north",
-        ["south"] = "east",
-        ["west"] = "south",
-    }
-    if not tmp.way or not ways[tmp.way] then
-        tmp.way = 'south'
-    end
-    if locl.room == "青石板大路" then
-        if tmp.ml and tmp.ml == "in" then
-            return wayMlOver()
-        else
-            tmp.way = "north"
-            exe(tmp.way)
-            locate()
-            return checkWait(wayMl, 0.1)
-        end
-    end
-    if locl.room == "小路" then
-        if tmp.ml and tmp.ml == "out" then
-            return wayMlOver()
-        else
-            tmp.way = "south"
-            exe('south;south')
-            locate()
-            return checkWait(wayMl, 0.1)
-        end
-    end
-    if locl.room ~= "小路" and locl.room ~= "青石板大路" and locl.room ~= "梅林" then
-        return wayMlOver()
-    end
-    tmp.way = ways[tmp.way]
-    while not locl.exit[tmp.way] do
-        Note(tmp.way)
-        tmp.way = wayt[tmp.way]
-    end
-    exe(tmp.way)
-    locate()
-    return checkWait(wayMl, 0.2)
-end
-function wayMlOver()
     return walk_wait()
 end
 

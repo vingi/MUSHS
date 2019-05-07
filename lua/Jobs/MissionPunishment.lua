@@ -17,7 +17,12 @@ MissionPunishment = {
 }
 
 function MissionPunishment.PunishmentHandle(busySecond)
-    local func = test
+    local func = function()
+        exe("yun jing;yun qi;yun jingli;")
+        check_food(true)
+        -- 强制 full 饮食
+    end
+
     if busySecond > 10 then
         quest.desc = "任务惩罚 " .. busySecond .. "秒"
         quest.note = ""
@@ -34,12 +39,14 @@ function MissionPunishment.PunishmentHandle(busySecond)
         end
         if job.last == "wudang" then
             func = function()
+                wudangTrigger()
                 go(wudangFangqi, "武当山", "三清殿")
             end
         end
         if job.last == "songxin" then
             func = function()
-                go(wudangFangqi, "武当山", "三清殿")
+                songxin_trigger()
+                go(songxin_fangqi, '大理城', '驿站')
             end
         end
         if job.last == "xueshan" then
@@ -57,11 +64,6 @@ function MissionPunishment.PunishmentHandle(busySecond)
     --     CheckRope(check_food)
     -- end
 
-    func = function()
-        exe("yun jing;yun qi;yun jingli;")
-        check_food(true)
-        -- 强制 full 饮食
-    end
     --    beiok()
     check_busy(func)
     -- 给 beihook 赋值, 即赋值后续要执行的function

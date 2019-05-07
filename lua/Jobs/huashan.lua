@@ -622,12 +622,8 @@ end
 -- ---------------------------------------------------------------
 function huashan_yls()
     DeleteTriggerGroup("huashan_yls")
-    create_trigger_t(
-        "huashan_yls1",
-        "^(> )*(这里没有这个人。|你身上没有这样东西。|这人好象不是你杀的吧？|你的令牌呢|你还没有去找恶贼，怎么就来祭坛了？)",
-        "",
-        "huashan_yls_fail"
-    )
+    --create_trigger_t('huashan_yls1','^(> )*(这里没有这个人。|你身上没有这样东西。|这人好象不是你杀的吧？|你的令牌呢|你还没有去找恶贼，怎么就来祭坛了？)','','huashan_yls_fail')
+	create_trigger_t('huashan_yls1','^(> )*(这人好象不是你杀的吧？|你身上没有这样东西。|你的令牌呢|你还没有去找恶贼，怎么就来祭坛了？)','','huashan_yls_fail')
     create_trigger_t("huashan_yls2", "^(> )*岳灵珊在你的令牌上写下了一个 (一|二) 字。", "", "huashan_yls_ask")
     create_trigger_t("huashan_yls3", "^(> )*这好象不是你领的令牌吧？", "", "huashan_yls_wronglingpai")
     SetTriggerOption("huashan_yls1", "group", "huashan_yls")

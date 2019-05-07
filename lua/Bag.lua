@@ -562,8 +562,10 @@ function checkHxdBuy()
     tmp.cnt = tmp.cnt + 1
     if tmp.cnt > 30 then
         return checkNxwOver()
-    else
-        exe("buy " .. drug.heal)
+	else
+		if Bag["²õÍÉ½ğ´¯Ò©"] == nil or Bag["²õÍÉ½ğ´¯Ò©"].cnt < 20 then
+	        exe("buy " .. drug.heal)
+		end
         checkYaoBags()
         return check_bei(checkHxdBag)
     end

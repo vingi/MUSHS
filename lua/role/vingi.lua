@@ -35,8 +35,14 @@ settings = {
 	PracticeCMD = {
 		"wield taiji;jifa sword huashan-jianfa;lian sword 20;lian dodge 20;unwield taiji;bei none;jifa strike jinshe-zhangfa;lian strike 20;lian strike 20;lian cuff 20;lian force 20;unwield taiji;wield taibai;lian blade 20;unwield taibai;wield taiji;yun jingli;",
 		
-		"wield taiji;jifa sword jinshe-jianfa;lian sword 20;jifa sword huashan-jianfa;lian dodge 20;unwield taiji;bei none;jifa strike jinshe-zhangfa;lian strike 20;lian strike 20;lian cuff 20;wield taiji;yun jingli;"
+		"wield taiji;jifa sword jinshe-jianfa;lian sword 20;jifa sword huashan-jianfa;lian dodge 20;unwield taiji;bei none;jifa strike jinshe-zhangfa;lian strike 20;lian strike 20;lian cuff 20;wield taiji;yun jingli;",
+
+		"wield taiji;jifa sword dugu-jiujian;lian sword 20;lian dodge 20;unwield taiji;bei none;jifa strike jinshe-zhangfa;lian strike 20;lian strike 20;lian cuff 20;wield taiji;yun jingli;"
+
+		-- "wield taiji;jifa sword huashan-jianfa;lian sword 20;lian sword 20;lian sword 20;yun jingli;"
 	},
+	-- 强制练习模式, 即不作任何任务, 强制练习某些技能, 用于补技能时使用, 身上最好有回内武器
+	PracticeForce = false,
 	-- 是否作华山2任务
 	HuashanJob_Step2 = true,
 	-- 是否自动蝶梦楼刷分

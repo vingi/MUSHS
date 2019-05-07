@@ -6,6 +6,7 @@ require "Role"
 require "DBHelper"
 require "rooms"
 require "lujing"
+require "duhe"
 require "Member"
 require "Sect"
 require "chat"
@@ -435,6 +436,7 @@ function SJ.Init()
     create_trigger_t("main", "^「书剑\\D*」\\D*已经连续执行了", "", "login")
     create_trigger_t("main1", "^Are you using BIG5 font\\(y/N\\)? ", "", "login_choose")
     lujing_trigger()
+    duheduhe_trigger()  ------加载渡河函数
     chat_trigger()
     hp_trigger()
     fight_trigger()
@@ -529,6 +531,7 @@ function disAll()
     EnableTrigger("main1", true)
     EnableTriggerGroup("hp", true)
     EnableTriggerGroup("score", true)
+    EnableTriggerGroup("duheduhe", true)
     -- ain
     EnableTrigger("pk1", true)
     EnableTrigger("pk2", true)
@@ -553,6 +556,7 @@ function dis_all()
     EnableTriggerGroup("count", true)
     EnableTriggerGroup("fight", true)
     EnableTriggerGroup("job_exp", true)
+    EnableTriggerGroup("duheduhe", true)
     EnableTrigger("hp12", false)
     if lookxin == 1 then
         sendXin()

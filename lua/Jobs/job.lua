@@ -99,70 +99,9 @@ yptjob = {}
 yptjob.fengzhao = false
 yptjob.name1 = ""
 yptjob.name2 = ""
-yptsetpo = {
-    ["ÐÞÂÞµ¶"] = "set po µ¶",
-    ["»ðÑæµ¶"] = "set po µ¶",
-    ["´È±¯µ¶"] = "set po µ¶",
-    ["ÁÒÑæµ¶"] = "set po µ¶",
-    ["Ñªµ¶¾­"] = "set po µ¶",
-    ["ÁÒÑæµ¶"] = "set po µ¶",
-    ["·´Á½ÒÇµ¶"] = "set po µ¶",
-    ["ÐþÐéµ¶·¨"] = "set po µ¶",
-    ["ÁøÒ¶µ¶·¨"] = "set po µ¶",
-    ["È¼Ä¾µ¶·¨"] = "set po µ¶",
-    ["ÑãÐÐµ¶·¨"] = "set po µ¶",
-    ["Ä½ÈÝµ¶·¨"] = "set po µ¶",
-    ["Îå»¢¶ÏÃÅµ¶"] = "set po µ¶",
-    ["ËÄÏóÁùºÏµ¶"] = "set po µ¶",
-    ["ÁÒ»ð½£"] = "set po ½£",
-    ["·üÄ§½£"] = "set po ½£",
-    ["´ïÄ¦½£"] = "set po ½£",
-    ["³åÁé½£·¨"] = "set po ½£",
-    ["Ä½ÈÝ½£·¨"] = "set po ½£",
-    ["±ÙÐ°½£·¨"] = "set po ½£",
-    ["Ì«¼«½£·¨"] = "set po ½£",
-    ["½ðÉß½£·¨"] = "set po ½£",
-    ["Á½ÒÇ½£·¨"] = "set po ½£",
-    ["Óñóï½£·¨"] = "set po ½£",
-    ["¶Î¼Ò½£·¨"] = "set po ½£",
-    ["È«Õæ½£·¨"] = "set po ½£",
-    ["»ªÉ½½£·¨"] = "set po ½£",
-    ["áÔÉ½½£·¨"] = "set po ½£",
-    ["ÐþÌú½£·¨"] = "set po ½£",
-    ["Ãç¼Ò½£·¨"] = "set po ½£",
-    ["ÐþÒõ½£·¨"] = "set po ½£",
-    ["¶À¹Â¾Å½£"] = "set po ½£",
-    ["Ñ¸À×Ê®Áù½£"] = "set po ½£",
-    ["»Ø·ç·÷Áø½£"] = "set po ½£",
-    ["ÓñÅ®ËØÐÄ½£"] = "set po ½£",
-    ["ÁÑÌì¸«"] = "set po ±Þ",
-    ["Ê¥»ðÁî·¨"] = "set po ±Þ",
-    ["Òø¹³±Ê·¨"] = "set po ±Þ",
-    ["ÌÚÁúØ°·¨"] = "set po ±Þ",
-    ["ÅÌ¸ù´í½á¸«"] = "set po ±Þ",
-    ["½ð¸Õ½µ·üÂÖ"] = "set po ±Þ",
-    ["ÌìÉ½×·»ê¹³"] = "set po ±Þ",
-    ["µ¯Ö¸ÉñÍ¨"] = "set po ¼ý",
-    ["º¬É³ÉäÓ°"] = "set po ¼ý",
-    ["ÂþÌì»¨Óê"] = "set po ¼ý",
-    ["¶áÃü½ð»¨"] = "set po ¼ý",
-    ["»Ø·ç±Þ"] = "set po Ë÷",
-    ["áÔÑô±Þ"] = "set po Ë÷",
-    ["´Èº½±Þ"] = "set po Ë÷",
-    ["ÁéÉß±Þ·¨"] = "set po Ë÷",
-    ["ÈÕÔÂ±Þ·¨"] = "set po Ë÷",
-    ["ÒøË÷½ðÁå"] = "set po Ë÷",
-    ["¾ÅÒõÒøÁú±Þ"] = "set po Ë÷",
-    ["Î¤ÍÓèÆ"] = "set po Ç¹",
-    ["·èÄ§ÕÈ"] = "set po Ç¹",
-    ["ÎÞ³£ÕÈ"] = "set po Ç¹",
-    ["ÆÕ¶ÉÕÈ"] = "set po Ç¹",
-    ["Î¤ÍÔ¹÷"] = "set po Ç¹",
-    ["ÉÙÁÖ×í¹÷"] = "set po Ç¹",
-    ["´ò¹·°ô·¨"] = "set po Ç¹",
-    ["ÌìÉ½ÕÈ·¨"] = "set po Ç¹",
-    ["ÎÞÉÏ´óÁ¦èÆ"] = "set po Ç¹"
-}
+if DGJJ_setpo ~= nill then
+    yptsetpo = DGJJ_setpo
+end
 
 WdjIgnores = {
     ["Ãç½®Éß·¿"] = true,
@@ -1250,7 +1189,11 @@ function prepareLianxi()
         return dummyfind()
     end
     if (not condition.busy or condition.busy == 0) and job.prepare ~= duHhe_start and job.prepare ~= duCjiang_start then
-        return prepare_neili(job.prepare)
+        if GetRoleConfig("CheckNeili_InAdvance") == true then 
+            return prepare_neili(job.prepare)
+        else
+            return check_bei(job.prepare)
+        end
     end
     if condition.busy > 60 then
         if
@@ -3291,6 +3234,15 @@ end
 -- jobÇÐ»»¾ßÌåÊµÏÖ·½·¨
 -- ---------------------------------------------------------------
 function job.Switch()
+
+    -- ---------------------------------------------------------------
+    -- Ç¿ÖÆÁ·Ï°Ä£Ê½
+    -- ---------------------------------------------------------------
+    if GetRoleConfig("PracticeForce") then
+        exe("yun jing;yun qi;yun jingli;")
+        return check_food(true)
+    end
+
 
     -- ---------------------------------------------------------------
     -- ¹«¹²ÈÎÎñ, ÏÞ´ÎÊý
