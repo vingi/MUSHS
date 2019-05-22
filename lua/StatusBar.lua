@@ -705,6 +705,7 @@ function hp_draw_win()
 
     -- ºÏÆøÖµ
     -- local timetext = Fun_TimeChangeText(status.fullmetime)
+    status.heqi = status.heqi or 0
     WindowText(
         hp_win,
         FONT_NAME,

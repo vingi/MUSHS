@@ -3238,7 +3238,7 @@ function job.Switch()
     -- ---------------------------------------------------------------
     -- 强制练习模式
     -- ---------------------------------------------------------------
-    if GetRoleConfig("PracticeForce") then
+    if GetRoleConfig("PracticeForce") == true then
         exe("yun jing;yun qi;yun jingli;")
         return check_food(true)
     end

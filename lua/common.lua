@@ -603,10 +603,14 @@ end
 -- args:
 -- obname: 监视器名称
 -- ticktime: 间隔时间
--- cmd: 需要执行的命令
+-- cmd: 需要执行的命令 --(重要: 该cmd只允许单行命令, 即不可含有;的多个命令, 因该命令不会被解析成多行命令)
 -- ---------------------------------------------------------------
 function NewObserver(obname, cmd, ticktime)
     if not ExistObserver(obname) then
+        -- 检测cmd是否为复合命令, 如为复合命令,即含有;的多个命令集合,则抛出显式错误
+        if string.find(cmd,";") then
+            error("NewObserver 参数cmd 只允许单行命令, 即不可含有;的多个命令, 因该命令不会被解析成多行命令")
+        end
         exe(cmd)
         local ticktime = ticktime or 2
         AddTimer(obname, 0, 0, ticktime, cmd, timer_flag.Enabled + timer_flag.ActiveWhenClosed, "")

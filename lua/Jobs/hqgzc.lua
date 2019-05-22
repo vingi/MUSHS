@@ -1,5 +1,7 @@
 -- hqgzc
 
+hqgzcjl = 0  -- 洪七公作菜,拿gold (0) 还是拿 pot(1), ps(10次任务后洪七公不再给gold,只会给pot)
+
 hqgzcJob = {
     Over10Times = false,
     Cnt = 0
@@ -419,7 +421,7 @@ function hqgzcFinishC()
 end
 function hqgzcFinishT()
     EnableTriggerGroup("hqgzcFinish", true)
-    if hqgzcjl and hqgzcjl * 1 == 0 then
+    if hqgzcjl and hqgzcjl * 1 == 0 and GetRoleConfig("GetPotForce") ~= true then
         create_trigger_t(
             "hqgzcFinish_exception_case1",
             "^(> )*洪七公说道：「今天我还是先指点你武功吧。」",
@@ -584,6 +586,9 @@ function CheckAutohqgzc()
                 isTrue = true
             end
         end
+    end
+    if GetRoleConfig("GetPotForce") == true then
+        isTrue = true
     end
     return isTrue
 end

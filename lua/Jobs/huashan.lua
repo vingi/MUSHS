@@ -13,7 +13,12 @@ eg.
 --]]
 huashanJob = {
     jobStep = 0,
-    Progress = 0
+    Progress = 0,
+    killStartTime = "",
+    KezhiObserver = "",
+    -- 重新再从尸体上获取一次令牌(记录)
+    GetLingPaiAgain = 0
+
     -- Progress = 1  华山1 找NPC
     -- Progress = 2  华山2 找NPC
     -- Progress = 5  华山找岳灵珊交任务
@@ -76,12 +81,14 @@ job.list["huashan"] = "华山惩恶扬善"
 function huashan()
     huashanJob.jobStep = 0
     huashanJob.Progress = 0
+    huashanJob.GetLingPaiAgain = 0
     dis_all()
     huashan_trigger()
     delete_all_timers()
     idle()
     job.name = "huashan"
     job.target = "任务目标"
+    huashanJob.KezhiObserver = ""
     return huashan_start()
 end
 
@@ -106,6 +113,8 @@ function huashanFindAgain()
 end
 
 function huashanFindFail()
+    -- 移除战斗监视器
+    RemoveObserver("huashanJobKillOb")
     return go(huashan_shibai, "华山", "正气堂")
 end
 
@@ -203,6 +212,8 @@ function huashan_nobody()
 end
 
 function huashan_shibai()
+    -- 移除战斗监视器
+    RemoveObserver("huashanJobKillOb")
     EnableTriggerGroup("huashan_accept", false)
     kezhiwugongclose()
     return check_busy(huashan_shibai_b)
@@ -308,7 +319,11 @@ end
 -- 未发现蒙面人抢令牌, 开始闲逛
 -- ---------------------------------------------------------------
 function huashan_npc_ssl()
-    NewObserver("huashanhangout", "w;s;s;alias hsjob 闲逛中", 5)
+    NewObserverByFunc("huashanhangout", "huashan_hangout", 5)
+end
+
+function huashan_hangout()
+    exe("w;s;s;alias hsjob 闲逛中")
 end
 
 function huashan_where(n, l, w)
@@ -431,6 +446,12 @@ function huashan_fight(n, l, w)
     SetTriggerOption("huashan_fight5", "group", "huashan_fight")
     SetTriggerOption("huashan_fight6", "group", "huashan_fight")
 
+    -- if huashanJob.killStartTime == nil then
+    -- 初始化叫杀时间
+    huashanJob.killStartTime = common.time()
+    -- 添加计时器
+    NewObserverByFunc("huashanJobKillOb", "huashanKillObserver")
+    -- end
     exe("unset wimpy;kill " .. job.id)
     -- exe("set wimpycmd pfmpfm\\hp")
     -- exe("pfmwu")
@@ -438,7 +459,24 @@ function huashan_fight(n, l, w)
     huashanlocate()
 end
 
+-- ---------------------------------------------------------------
+-- 华山任务监视器, 用于杀人时间过长时, 打印目标武功技能
+-- ---------------------------------------------------------------
+function huashanKillObserver()
+    local timegap = common.timediff(common.string2time(common.time()), common.string2time(huashanJob.killStartTime))
+    if
+        (timegap.min > 0 or timegap.sec > 30) and huashanJob.killStartTime ~= nil and
+            huashanJob.KezhiObserver ~= quest.note
+     then
+        messageShowT(quest.name .. "战斗时间超过30秒：" .. quest.note)
+        RemoveObserver("huashanJobKillOb")
+        huashanJob.KezhiObserver = quest.note
+    end
+end
+
 function huashan_faint()
+    -- 移除战斗监视器
+    RemoveObserver("huashanJobKillOb")
     -- 重新检查当前装备, 为装备回内武器作准备
     checkWield()
     exe("unset wimpy;kill " .. job.id)
@@ -463,6 +501,8 @@ function huashanlocate()
     -- end)
 end
 function huashan_getget()
+    -- 移除战斗监视器
+    RemoveObserver("huashanJobKillOb")
     EnableTriggerGroup("huashan_fight", false)
     EnableTriggerGroup("huashan_find", false)
     DeleteTriggerGroup("huashan_getnpc")
@@ -607,14 +647,16 @@ function huashan_cut_after()
     return go(huashan_yls, "华山", "祭坛")
 end
 huashan_yls_ok1 = function()
-    exe("give yue corpse;hp")
-    --exe('give head to yue lingshan;hp')        --设置交首级计时器内容
+    exe("give corpse to yue lingshan;hp")
+end
+huashan_yls_ok2 = function()
+    exe("give head to yue lingshan;hp")
 end
 huashan_yls_ok_c = function()
-    NewObserver("huashanGiveCorpseOb", "give corpse to yue lingshan;hp")
+    NewObserverByFunc("huashanGiveCorpseOb", "huashan_yls_ok1")
 end
 huashan_yls_ok_h = function()
-    NewObserver("huashanGiveHeadOb", "give head to yue lingshan;hp")
+    NewObserverByFunc("huashanGiveHeadOb", "huashan_yls_ok2")
     --增加交首级计时器
 end
 -- ---------------------------------------------------------------
@@ -623,7 +665,7 @@ end
 function huashan_yls()
     DeleteTriggerGroup("huashan_yls")
     --create_trigger_t('huashan_yls1','^(> )*(这里没有这个人。|你身上没有这样东西。|这人好象不是你杀的吧？|你的令牌呢|你还没有去找恶贼，怎么就来祭坛了？)','','huashan_yls_fail')
-	create_trigger_t('huashan_yls1','^(> )*(这人好象不是你杀的吧？|你身上没有这样东西。|你的令牌呢|你还没有去找恶贼，怎么就来祭坛了？)','','huashan_yls_fail')
+    create_trigger_t("huashan_yls1", "^(> )*(这人好象不是你杀的吧？|你身上没有这样东西。|你的令牌呢|你还没有去找恶贼，怎么就来祭坛了？)", "", "huashan_yls_fail")
     create_trigger_t("huashan_yls2", "^(> )*岳灵珊在你的令牌上写下了一个 (一|二) 字。", "", "huashan_yls_ask")
     create_trigger_t("huashan_yls3", "^(> )*这好象不是你领的令牌吧？", "", "huashan_yls_wronglingpai")
     SetTriggerOption("huashan_yls1", "group", "huashan_yls")
@@ -631,8 +673,7 @@ function huashan_yls()
     SetTriggerOption("huashan_yls3", "group", "huashan_yls")
     if hscheckhead == 0 then
         --exe('give corpse to yue lingshan')
-        -- 增加交首级计时器
-        --NewObserver("huashanGiveHeadOb", 'give corpse to yue lingshan;hp')
+        -- 增加交尸体计时器
         return huashan_yls_ok_c()
     else
         --exe('give head to yue lingshan')
@@ -647,11 +688,24 @@ function huashan_yls_fail(n, l, w)
     RemoveObserver("huashanGiveHeadOb")
     RemoveObserver("huashanGiveCorpseOb")
     EnableTriggerGroup("huashan_yls", false)
-    messageShow("华山任务：岳灵珊交尸体失败, 原因: "..tostring(l), "deepskyblue")
+    messageShow("华山任务：岳灵珊交尸体失败, 原因: " .. tostring(l), "deepskyblue")
+    if string.find(l, "你的令牌呢") and Bag["一具" .. job.target .. "的尸体"] ~= nil and huashanJob.GetLingPaiAgain == 0 then
+        huashanJob.GetLingPaiAgain = 1
+        wait.make(
+            function()
+                wait.time(1.5)
+                for i = 1, 3 do
+                    exe("get ling pai from corpse " .. i)
+                end
+                return go(huashan_yls, "华山", "祭坛")
+            end
+        )
+    end
     if locl.room ~= "祭坛" or (string.find(l, "这里没有这个人") and huashanJob.Progress == 5) then
         wait.make(
             function()
                 wait.time(5)
+                exe("out")
                 return go(huashan_yls, "华山", "祭坛")
             end
         )

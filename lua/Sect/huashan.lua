@@ -75,7 +75,3 @@ DGJJ_setpo = {
     ["天山杖法"] = "set po 枪",
     ["无上大力杵"] = "set po 枪"
 }
-
-function GetDGJJ_Po()
-    
-end

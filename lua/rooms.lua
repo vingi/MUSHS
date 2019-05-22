@@ -27059,6 +27059,7 @@ Room {
     {
         ["east"] = "sld/blm",
     },
+    room_relative = "练功房----白龙门议事厅练功房",
 }
 Room {
     id = "sld/blmws",
@@ -27068,6 +27069,7 @@ Room {
     {
         ["west"] = "sld/blm",
     },
+    room_relative = "白龙门议事厅-----卧室卧室",
 }
 Room {
     id = "sld/cf",
@@ -27099,6 +27101,7 @@ Room {
     {
         ["east"] = "sld/clm",
     },
+    room_relative = "练功房----赤龙门议事厅练功房",
 }
 Room {
     id = "sld/clmws",
@@ -27108,6 +27111,7 @@ Room {
     {
         ["west"] = "sld/clm",
     },
+    room_relative = "赤龙门议事厅-----卧室卧室",
 }
 Room {
     id = "sld/dt",
@@ -27179,6 +27183,7 @@ Room {
     {
         ["east"] = "sld/hlm",
     },
+    room_relative = "练功房----黑龙门议事厅练功房",
 }
 Room {
     id = "sld/hlmws",
@@ -27188,6 +27193,7 @@ Room {
     {
         ["west"] = "sld/hlm",
     },
+    room_relative = "黑龙门议事厅-----卧室卧室",
 }
 Room {
     id = "sld/ht",
@@ -27219,6 +27225,7 @@ Room {
     {
         ["east"] = "sld/hulm",
     },
+    room_relative = "练功房----黄龙门议事厅练功房",
 }
 Room {
     id = "sld/hulmws",
@@ -27228,6 +27235,7 @@ Room {
     {
         ["west"] = "sld/hulm",
     },
+    room_relative = "黄龙门议事厅-----卧室卧室",
 }
 Room {
     id = "sld/jitan",
@@ -27263,6 +27271,7 @@ Room {
     {
         ["双钩"] = "shuang gou",
     },
+    room_relative = "练功房｜走廊练功房",
 }
 Room {
     id = "sld/lgxroom",
@@ -27290,6 +27299,7 @@ Room {
     {
         ["south"] = "sld/lgxroom",
     },
+    room_relative = "卧室｜陆府正厅卧室",
 }
 Room {
     id = "sld/lgxys",
@@ -27334,6 +27344,7 @@ Room {
     {
         ["east"] = "sld/qlm",
     },
+    room_relative = "练功房----青龙门议事厅练功房",
 }
 Room {
     id = "sld/qlmws",
@@ -27343,6 +27354,7 @@ Room {
     {
         ["west"] = "sld/qlm",
     },
+    room_relative = "青龙门议事厅-----卧室卧室",
 }
 Room {
     id = "sld/road1",
@@ -27353,6 +27365,7 @@ Room {
         ["east"] = "sld/slj",
         ["west"] = "sld/road2",
     },
+    room_relative = "走廊-----走廊-----走廊｜卧室走廊",
 }
 Room {
     id = "sld/road2",
@@ -27363,6 +27376,7 @@ Room {
         ["north"] = "sld/lgf",
         ["west"] = "sld/tz",
     },
+    room_relative = "练功房｜走廊-----走廊-----走廊走廊",
 }
 Room {
     id = "sld/sande",
@@ -27373,6 +27387,7 @@ Room {
         ["northwest"] = "sld/sandn",
         ["west"] = "sld/treee1",
     },
+    room_relative = "沙滩↖树林-----沙滩↙渡口沙滩",
 }
 Room {
     id = "sld/sandn",
@@ -27383,6 +27398,7 @@ Room {
         ["southwest"] = "sld/sandw",
         ["south"] = "sld/treen1",
     },
+    room_relative = "沙滩↙｜↘沙滩树林沙滩沙滩",
 }
 Room {
     id = "sld/sandw",
@@ -27393,6 +27409,7 @@ Room {
         ["east"] = "sld/treew1",
         ["northeast"] = "sld/sandn",
     },
+    room_relative = "沙滩↗沙滩-----树林↘渡口沙滩",
 }
 Room {
     id = "sld/sanpo1",
@@ -27403,6 +27420,7 @@ Room {
         ["north"] = "sld/sanroad6",
         ["down"] = "sld/sanroad2",
     },
+    room_relative = "山路｜山坡→山路〓山路山坡",
 }
 Room {
     id = "sld/sanpo2",
@@ -27453,7 +27471,7 @@ Room {
         ["enter"] = "sld/blm",
         ["north"] = "sld/sanroada",
     },
-    -- room_relative="白龙门议事厅∧山坡→山路山坡",
+    room_relative = "山路｜山路→山坡山坡",
 }
 Room {
     id = "sld/sanroad1",
@@ -27463,6 +27481,7 @@ Room {
         ["southdown"] = "sld/kongdi",
         ["up"] = "sld/sanroad2",
     },
+    room_relative = "山路〓山路↑林间空地山路",
 }
 Room {
     id = "sld/sanroad2",
@@ -27473,6 +27492,7 @@ Room {
         ["down"] = "sld/sanroad1",
         ["up"] = "sld/sanpo1",
     },
+    room_relative = "山路↑山路〓山路山路",
 }
 Room {
     id = "sld/sanroad3",
@@ -27482,6 +27502,7 @@ Room {
         ["eastup"] = "sld/sanroad4",
         ["southdown"] = "sld/sanroad2",
     },
+    room_relative = "山路→山路↑山路山路",
 }
 Room {
     id = "sld/sanroad4",
@@ -27491,6 +27512,7 @@ Room {
         ["westdown"] = "sld/sanroad3",
         ["eastup"] = "sld/sanpo2",
     },
+    room_relative = "山路→山路→山坡山路",
 }
 Room {
     id = "sld/sanroad5",
@@ -27501,6 +27523,7 @@ Room {
         ["eastup"] = "sld/sanroad8",
         ["westdown"] = "sld/sanpo1",
     },
+    room_relative = "山路↑山坡→山路→山路山路",
 }
 Room {
     id = "sld/sanroad6",
@@ -27510,6 +27533,7 @@ Room {
         ["south"] = "sld/sanpo1",
         ["northdown"] = "sld/sanroad7",
     },
+    room_relative = "山路↓山路｜山坡山路",
 }
 Room {
     id = "sld/sanroad7",
@@ -27519,6 +27543,7 @@ Room {
         ["southup"] = "sld/sanroad6",
         ["northdown"] = "sld/sanpo3",
     },
+    room_relative = "山坡↓山路↓山路山路",
 }
 Room {
     id = "sld/sanroad8",
@@ -27529,6 +27554,7 @@ Room {
         ["eastup"] = "sld/sanpo6",
         ["northdown"] = "sld/sanpo5",
     },
+    room_relative = "山坡↓山路→山路→山坡山路",
 }
 Room {
     id = "sld/sanroad9",
@@ -27539,6 +27565,7 @@ Room {
         ["eastup"] = "sld/sanpo7",
         ["southdown"] = "sld/sanroad5",
     },
+    room_relative = "山坡↑山路→山崖↑山路山路",
 }
 Room {
     id = "sld/sanroada",
@@ -27548,6 +27575,7 @@ Room {
         ["south"] = "sld/sanpo6",
         ["up"] = "sld/sanroadb",
     },
+    room_relative = "山路〓山路｜山坡山路",
 }
 Room {
     id = "sld/sanroadb",
@@ -27557,6 +27585,7 @@ Room {
         ["down"] = "sld/sanroada",
         ["up"] = "sld/sfd",
     },
+    room_relative = "山峰顶〓山路〓山路山路",
 }
 Room {
     id = "sld/sfd",
@@ -27610,6 +27639,7 @@ Room {
         ["west"] = "sld/road1",
         ["out"] = "sld/sfd",
     },
+    room_relative = " 大厅｜走廊-----走廊∨山峰顶走廊",
 }
 Room {
     id = "sld/th",
@@ -27630,6 +27660,7 @@ Room {
         ["northwest"] = "sld/treen2",
         ["east"] = "sld/sande",
     },
+    room_relative = "树林↖树林-----沙滩↙树林树林",
 }
 Room {
     id = "sld/treen1",
@@ -27641,6 +27672,7 @@ Room {
         ["south"] = "sld/treen2",
         ["north"] = "sld/sandn",
     },
+    room_relative = "沙滩｜树林↙｜↘树林树林树林树林",
 }
 Room {
     id = "sld/treen2",
@@ -27652,6 +27684,7 @@ Room {
         ["south"] = "sld/kongdi",
         ["north"] = "sld/treen1",
     },
+    room_relative = "树林｜树林↙｜↘树林林间空地树林树林",
 }
 Room {
     id = "sld/trees1",
@@ -27663,6 +27696,7 @@ Room {
         ["north"] = "sld/trees2",
         ["northeast"] = "sld/treee1",
     },
+    room_relative = "树林树林树林↖｜↗树林｜渡口树林",
 }
 Room {
     id = "sld/trees2",
@@ -27674,6 +27708,7 @@ Room {
         ["north"] = "sld/kongdi",
         ["northeast"] = "sld/treee1",
     },
+    room_relative = "树林林间空地树林↖｜↗树林｜树林树林",
 }
 Room {
     id = "sld/treew1",
@@ -27684,6 +27719,7 @@ Room {
         ["northeast"] = "sld/treen2",
         ["west"] = "sld/sandw",
     },
+    room_relative = "树林↗沙滩-----树林↘树林树林",
 }
 Room {
     id = "sld/tz",
@@ -27693,6 +27729,7 @@ Room {
         ["east"] = "sld/road2",
         ["out"] = "sld/zl1",
     },
+    room_relative = "走廊-----走廊∨竹林走廊",
 }
 Room {
     id = "sld/ws",
@@ -27702,6 +27739,7 @@ Room {
     {
         ["north"] = "sld/road1",
     },
+    room_relative = "走廊｜卧室卧室",
 }
 Room {
     id = "sld/xiaolu",
@@ -27808,6 +27846,7 @@ Room {
         ["enter"] = "sld/tz",
         ["west"] = "sld/zl2",
     },
+    room_relative = "走廊∧竹林-----竹林竹林",
 }
 Room {
     id = "sld/zl2",
@@ -27817,6 +27856,7 @@ Room {
         ["east"] = "sld/zl1",
         ["west"] = "sld/pt",
     },
+    room_relative = "平台-----竹林-----竹林竹林",
 }
 Room {
     id = "songshan/cangshu-ge",

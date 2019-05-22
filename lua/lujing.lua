@@ -23,7 +23,7 @@ road.wipe_who = nil
 road.wipe_con = nil
 road.resume = nil
 road.wait = 0.13
-road.steps = 20
+road.steps = 16
 locate_finish = 0
 road.cmd = nil
 road.cmd_save = nil
@@ -1842,8 +1842,8 @@ duHhe = function()
         flag.duhe = 0
     end
     duhe_trigger()
-    locate()
-    return check_bei(duHhe_start)
+    locate_finish='duHhe_start'
+    return locate()
 end
 duHhe_start = function()
     if string.find(locl.room, '渡') then
@@ -1980,8 +1980,8 @@ duCjiang = function()
         flag.dujiang = 0
     end
     dujiang_trigger()
-    locate()
-    return check_bei(duCjiang_check)
+    locate_finish='duCjiang_check'
+    return locate()
 end
 duCjiang_check = function()
     if string.find(locl.room, '江南官道') then
@@ -2067,10 +2067,13 @@ dujiang_wait = function()
     if hp.exp > 2000000 then
         exe('yun jing;yun qi;yun jingli;')
         lianxi()
-        NewObserver("dujianWaitOb", 'dazuo ' .. hp.dazuo..';set dujiang 打坐', 5)
+        NewObserverByFunc("dujianWaitOb", "dujiang_wait_Antiflood", 5)
     else
         exe('yun jing;yun qi;yun jingli;dazuo ' .. hp.dazuo)
     end
+end
+function dujiang_wait_Antiflood()
+    exe('dazuo ' .. hp.dazuo..';set dujiang 打坐')
 end
 function dujiang_antiflood()
     RemoveObserver("dujianWaitOb")

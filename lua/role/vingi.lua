@@ -33,16 +33,18 @@ settings = {
 	-- 练习的指令 (建议单条练习不要超过10条指令, 容易引发flood,从而idle, 如需练习很多, 可选择使用table数组表的方式, 分多段进行)
 	-- PracticeCMD = "wield taiji;jifa sword huashan-jianfa;lian sword 20;jifa sword jinshe-jianfa;lian sword 20;jifa sword huashan-jianfa;lian dodge 20;unwield taiji;bei none;jifa strike jinshe-zhangfa;lian strike 20;lian strike 20;lian cuff 20;wield taiji;lian force 20;unwield taiji;wield taibai;lian blade 20;unwield taibai;wield taiji;yun jingli;",
 	PracticeCMD = {
-		"wield taiji;jifa sword huashan-jianfa;lian sword 20;lian dodge 20;unwield taiji;bei none;jifa strike jinshe-zhangfa;lian strike 20;lian strike 20;lian cuff 20;lian force 20;unwield taiji;wield taibai;lian blade 20;unwield taibai;wield taiji;yun jingli;",
-		
-		"wield taiji;jifa sword jinshe-jianfa;lian sword 20;jifa sword huashan-jianfa;lian dodge 20;unwield taiji;bei none;jifa strike jinshe-zhangfa;lian strike 20;lian strike 20;lian cuff 20;wield taiji;yun jingli;",
+		"unwield taiji;wield taibai blade;lian blade 20;lian blade 20;unwield taibai blade;wield taiji;yun jingli;",
 
-		"wield taiji;jifa sword dugu-jiujian;lian sword 20;lian dodge 20;unwield taiji;bei none;jifa strike jinshe-zhangfa;lian strike 20;lian strike 20;lian cuff 20;wield taiji;yun jingli;"
+		-- "wield taiji;jifa sword huashan-jianfa;lian sword 20;lian dodge 20;unwield taiji;bei none;jifa strike hunyuan-zhang;lian strike 20;jifa cuff poyu-quan;lian cuff 20;lian force 20;wield taiji;yun jingli;",
 
-		-- "wield taiji;jifa sword huashan-jianfa;lian sword 20;lian sword 20;lian sword 20;yun jingli;"
+		-- "wield taiji;jifa sword dugu-jiujian;lian sword 20;lian dodge 20;unwield taiji;bei none;jifa cuff taizu-quan;lian cuff 20;jifa strike hunyuan-zhang;lian strike 20;lian force 20;wield taiji;yun jingli;"
+
+		-- "drop mi tao;unwield taiji;jifa cuff taizu-quan;lian cuff 20;lian cuff 20;lian cuff 20;lian cuff 20;lian cuff 20;lian cuff 20;lian cuff 20;lian cuff 20;lian cuff 20;yun jingli;wield taiji;"
 	},
 	-- 强制练习模式, 即不作任何任务, 强制练习某些技能, 用于补技能时使用, 身上最好有回内武器
 	PracticeForce = false,
+	-- 强制补技能模式, 即一直作洪七公任务来补pot, 满pot后去学习/领悟
+	GetPotForce = true,
 	-- 是否作华山2任务
 	HuashanJob_Step2 = true,
 	-- 是否自动蝶梦楼刷分

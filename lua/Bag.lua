@@ -511,7 +511,9 @@ function checkXqwOver()
     checkBags()
     return check_bei(checkPrepare, 1)
 end
-
+-- ---------------------------------------------------------------
+-- 检查内力药是否足够
+-- ---------------------------------------------------------------
 function checkNxw()
     tmp.cnt = 0
     if score.gold and score.gold > 100 and(nxw_cur < count.nxw_max or cbw_cur < count.cbw_max or hqd_cur < count.hqd_max) then
