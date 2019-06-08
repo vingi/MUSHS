@@ -29,6 +29,7 @@ function Miner.Mining()
     local password = GetVariable("passwd")
     -- 调用API进行收矿
     local ret = Miner.CallMinerAPI(Miner.APIUrl, username, password)
+    print("采矿API返回结果: "..ret)
     if ret ~= nil and string.len(ret) > 2 then
         messageShow("论坛收矿： " .. common.u2a(ret))
         -- 将收矿动作记录DB
@@ -44,7 +45,7 @@ function Miner.CallMinerAPI(requesturl, username, password)
     local request_body = "username=" .. username .. "&password=" .. password
     local response_body = { }
     local http = require("socket.http")
-    http.TIMEOUT = 2
+    http.TIMEOUT = 20
     local res, code, response_headers = http.request {
         url = requesturl,
         method = "POST",

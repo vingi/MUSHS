@@ -504,6 +504,7 @@ end
 function hqgzcFinish(n, l, w)
     DeleteTriggerGroup("hqgzcFinish_Exception")
     EnableTriggerGroup("hqgzcFinish", false)
+    job.last='hqgzc'
     job.time.e = os.time()
     job.time.over = job.time.e - job.time.b
     messageShow("做菜任务：完成！获得【" .. w[2] .. "】点潜能！")

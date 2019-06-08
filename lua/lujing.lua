@@ -1842,8 +1842,8 @@ duHhe = function()
         flag.duhe = 0
     end
     duhe_trigger()
-    locate_finish='duHhe_start'
-    return locate()
+    locate()
+    return check_bei(duHhe_start)
 end
 duHhe_start = function()
     if string.find(locl.room, '¶É') then
@@ -1980,8 +1980,8 @@ duCjiang = function()
         flag.dujiang = 0
     end
     dujiang_trigger()
-    locate_finish='duCjiang_check'
-    return locate()
+    locate()
+    return check_bei(duCjiang_check)
 end
 duCjiang_check = function()
     if string.find(locl.room, '½­ÄÏ¹ÙµÀ') then

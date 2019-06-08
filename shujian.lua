@@ -100,7 +100,7 @@ needvpearl = 0
 doubleexp = 0
 dzxy_level = 0
 need_dzxy = "yes"
-hqgzcjl = 0  -- 洪七公作菜,拿gold (0) 还是拿 pot(1), ps(10次任务后洪七公不再给gold,只会给pot)
+
 cty_cur = 0
 nxw_cur = 0
 hxd_cur = 0
@@ -715,7 +715,7 @@ function hp_trigger()
     create_trigger_t('hp23', "^(> )*你的背囊里有：", '', 'show_beinang')
     create_trigger_t('hp24', '^(> )*你眼中一亮看到\\D*的身边掉落一(件|副|双|袭|顶|个|条|对)(\\D*)(手套|靴|甲胄|腰带|披风|彩衣|头盔)。', '', 'fqyyArmorGet')
     create_trigger_t('hp25', '^(> )*你捡起一(件|副|双|袭|顶|个|条|对)(\\D*)(手套|靴|甲胄|腰带|披风|彩衣|头盔)。', '', 'fqyyArmorCheck')
-    create_trigger_t('hp26', '^(> )*(\\D*)客官已经付了银子，怎(么|麽)不住店就走了呢！旁人还以为小店伺候不周呢！', '', 'kedian_sleep')
+    create_trigger_t('hp26', '^(> )*(\\D*)客官已经付了银子，怎(么|麽)不住店就走了呢(\\D*)$', '', 'kedian_sleep')
     SetTriggerOption("hp1", "group", "hp")
     SetTriggerOption("hp2", "group", "hp")
     SetTriggerOption("hp3", "group", "hp")
@@ -1103,7 +1103,7 @@ function checkPrepareOver()
     if lostletter == 1 and needdolost == 1 then
         return letterLost()
     end
-    if not job.last or job.last == "songxin" or needdolost == 1 or job.last == "tdh" or job.last == "songmoya" or job.last == "huashan" or job.zuhe["hqgzc"]
+    if not job.last or job.last == "songxin" or needdolost == 1 or job.last == "tdh" or job.last == "songmoya" or job.last == "huashan" or job.zuhe["hqgzc"] or job.last == "hqgzc" 
     then
         return check_xuexi()
     else
@@ -1112,7 +1112,7 @@ function checkPrepareOver()
 end
 
 function check_xuexi()
-    if MidHsDay[locl.time] and score.master == "风清扬" then
+    if MidHsDay[locl.time] and score.master == "风清扬" and (skills["dugu-jiujian"] == nil or skills["dugu-jiujian"].lvl < 460) then
         return check_job()
     end
     if needxuexi == 0 then
@@ -1122,10 +1122,12 @@ function check_xuexi()
         return check_pot()
     end
 end
+
 jobtimes = { }
 function checkJobtimes(n, l, w)
     jobtimes[w[1]] = tonumber(w[2])
 end
+
 function checkJoblast(n, l, w)
     local joblast = {
         ["武当锄奸"] = "wudang",
@@ -1939,11 +1941,10 @@ function check_pot(p_cmd)
     --        end
     --    end
 
-    if GetVariable("lingwuskill") or
+    if GetVariable("lingwuskills") or
         (tmp.xskill and skills[tmp.xskill] and skillEnable[tmp.xskill] and skills[skillEnable[tmp.xskill]])
     then
         flag.lingwu = 0
-
         if tmp.xskill and skills[tmp.xskill] and skillEnable[tmp.xskill] and skills[skillEnable[tmp.xskill]] then
             local p = tmp.xskill
             local q = skillEnable[p]
@@ -1951,51 +1952,50 @@ function check_pot(p_cmd)
                 flag.lingwu = 1
             end
         end
-        if GetVariable("lingwuskill") then
-            local q = GetVariable("lingwuskill")
+        if GetVariable("lingwuskills") then
+            local q = GetVariable("lingwuskills")
             for p in pairs(skills) do
-                if
-                    skillEnable[p] == q and skills[q].lvl < hp.pot_max - 100 and skills[q].lvl <= skills[p].lvl and
-                    skills[q].lvl < hp.pot_max - 100
-                then
+                if skillEnable[p] == q and skills[q].lvl < hp.pot_max - 100 and skills[q].lvl <= skills[p].lvl and skills[q].lvl < hp.pot_max - 100 then
                     flag.lingwu = 1
                 end
             end
         end
     end
-    if score.party == "普通百姓" and hp.pot >= l_pot and score.gold and skills["literate"] and score.gold > 3000 and
-        skills["literate"].lvl < hp.pot_max - 100 then
-        return literate()
-    end
-    if
-        score.party == "普通百姓" and hp.pot >= l_pot and skills["parry"].lvl < hp.pot_max - 100 and
-        skills["parry"].lvl >= 101
-    then
-        flag.lingwu = 1
-    end
-    if score.party == "普通百姓" and flag.lingwu == 1 then
-        return checklingwu()
-    end
 
-    if score.party == "普通百姓" and skills["force"].lvl > 50 then
-        if skills["force"].lvl < 101 then
-            return huxi()
-        end
-        if score.party == "普通百姓" and skills["force"].lvl == 101 then
-            exe("fangqi force 1;y;y;y")
-            return huxi()
-        end
-        if score.party == "普通百姓" and skills["shenzhao-jing"] and skills["shenzhao-jing"].lvl < 200 then
-            return learnSzj()
-        end
-    end
-
-    if score.party ~= "普通百姓" and hp.pot >= l_pot and flag.autoxuexi and flag.autoxuexi == 1 then
-        if score.gold and skills["literate"] and score.gold > 3000 and skills["literate"].lvl < hp.pot_max - 100 then
+    -- 普通百姓
+    if score.party == "普通百姓" then
+        if hp.pot >= l_pot and score.gold and skills["literate"] and score.gold > 3000 and skills["literate"].lvl < hp.pot_max - 100 then
             return literate()
         end
+        if hp.pot >= l_pot and skills["parry"].lvl < hp.pot_max - 100 and skills["parry"].lvl >= 101 then
+            flag.lingwu = 1
+        end
+        if flag.lingwu == 1 then
+            return checklingwu()
+        end
+        if skills["force"].lvl > 50 then
+            if skills["force"].lvl < 101 then
+                return huxi()
+            end
+            if skills["force"].lvl == 101 then
+                exe("fangqi force 1;y;y;y")
+                return huxi()
+            end
+            if skills["shenzhao-jing"] and skills["shenzhao-jing"].lvl < 200 then
+                return learnSzj()
+            end
+        end
+    end
 
-        if score.party ~= "普通百姓" then
+    -- 门派弟子
+    if score.party ~= "普通百姓" then
+        -- 判断是否达到学习要求
+        if hp.pot >= l_pot and flag.autoxuexi and flag.autoxuexi == 1 then
+            if score.gold and skills["literate"] and score.gold > 3000 and skills["literate"].lvl < hp.pot_max - 100 then
+                return literate()
+            end
+
+            -- 学习 判断
             for p in pairs(skills) do
                 local q = qrySkillEnable(p)
                 if q and q["force"] and perform.force and p == perform.force and skills[p].lvl < 100 and hp.pot >= l_pot then
@@ -2007,9 +2007,7 @@ function check_pot(p_cmd)
             end
 
             for p in pairs(skills) do
-                if
-                    flagFull[p] and not skillEnable[p] and skills[p].lvl < 450 and skills[p].lvl <= skills["dodge"].lvl and
-                    hp.pot >= l_pot
+                if flagFull[p] and not skillEnable[p] and skills[p].lvl < 450 and skills[p].lvl <= skills["dodge"].lvl and hp.pot >= l_pot
                 then
                     if not skills[p].mstlvl or skills[p].mstlvl > skills[p].lvl then
                         return checkxue()
@@ -2017,29 +2015,27 @@ function check_pot(p_cmd)
                 end
             end
 
-            if
-                score.party ~= "普通百姓" and perform.skill and skills[perform.skill] and skills[perform.skill].lvl < 450 and
-                hp.pot >= l_pot
-            then
+            if perform.skill and skills[perform.skill] and skills[perform.skill].lvl < 450 then
                 return checkxue()
             end
 
-            if flag.type and flag.type ~= "lingwu" and flag.xuexi == 1 and hp.pot >= l_pot then
+            if flag.type and flag.type ~= "lingwu" and flag.xuexi == 1 then
                 return checkxue()
             end
-        end
-        if hp.pot >= l_pot and skills["parry"] and skills["parry"].lvl < hp.pot_max - 100 and skills["parry"].lvl >= 450 then
-            flag.lingwu = 1
-        end
-        if flag.lingwu == 1 then
-            return checklingwu()
-        end
 
-        if flag.xuexi == 1 and score.party ~= "普通百姓" then
-            return checkxue()
-        end
+            if flag.xuexi == 1 then
+                return checkxue()
+            end
 
-        if hp.pot >= l_pot then
+            if skills["parry"] and skills["parry"].lvl < hp.pot_max - 100 and skills["parry"].lvl >= 450 then
+                flag.lingwu = 1
+            end
+
+            if flag.lingwu == 1 then
+                return checklingwu()
+            end
+
+            -- 无相截指 partial
             if skills["wuxiang-zhi"] then
                 if not flag.wxjz then
                     flag.wxjz = 0
@@ -2053,6 +2049,7 @@ function check_pot(p_cmd)
             end
         end
     end
+ 
     return check_job()
 end
 

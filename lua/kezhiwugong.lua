@@ -815,25 +815,21 @@ function kezhiwugongcheck(i, n, l, w)
 			damage_level = damage_level - 1
 			print("damage_level=" .. damage_level)
 		end
-		if damage_level == 5 then
-			if npc_kezhi[i] == "干" then
-				damage_level = 0
-				return kezhiwugongValue("毛", i, "般若掌")
-			end
-			if npc_kezhi[i] == "毛" then
-				damage_level = 0
-				return kezhiwugongValue("干", i, "般若掌")
-			end
+		if damage_level==5 then
+			if npc_kezhi[i]=='干' then
+				   damage_level=0
+		   return kezhiwugongValue("屌",i,"般若掌")
+			end 
+		if npc_kezhi[i]=='屌' then
+			   damage_level=0
+		   return kezhiwugongValue("干",i,"般若掌")
 		end
+ end  
 	end
 	--print(tmpdes)
 	--print("----------正在检测-----------")
-	if string.find(tmpdes, "「摘星换斗」") then
-		if string.find(tmpdes, "的后背斫去") then
-			return kezhiwugongValue("毛", i, "四象掌")
-		else
-			return kezhiwugongValue("干", i, "般若掌")
-		end
+	if string.find(tmpdes,"「摘星换斗」") and string.find(tmpdes,"的后背斫去") then
+		return kezhiwugongValue("快",i,"四象掌")
 	end
 	for v, p in pairs(kezhiDesc) do
 		for j, k in pairs(p) do
