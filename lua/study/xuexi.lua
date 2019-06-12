@@ -109,8 +109,7 @@ end
 function xuexiCheck()
     checkWield()
     if locl.id[score.master] then
-        if
-            score.party and score.party == "少林派" and score.master == "无名老僧" and skills["buddhism"] and
+        if score.party and score.party == "少林派" and score.master == "无名老僧" and skills["buddhism"] and
             skills["buddhism"].lvl == 200
         then
             exe("ask wuming about 佛法")

@@ -122,7 +122,8 @@ kezhiDesc["正"] = {
 		"斜晃反挑，一式「无边落木」，这一下出招急快，抑且如梦如幻"
 	},
 	["雁行刀法"] = {"「让字诀", "「打字诀", "故示其弱，一招「引字诀", "「套字诀", "「藏字诀", "「错字诀"},
-	["天山杖法"] = {"「雪海冰雹", "「天山雪野", "使出一招「满天飞雪」", "「雪峰插云"}
+	["天山杖法"] = {"「雪海冰雹", "「天山雪野", "使出一招「满天飞雪」", "「雪峰插云"},
+	["一指禅"] = {"「佛恩济世", "「佛光普照", "「佛门广渡", "一式「佛法无边」，左手握拳托肘，右手拇指直立"}
 }
 kezhiDesc["奇"] = {
 	["圣火令法"] = {"「以意相求", "「风回路转", "「三虚七实", "「头头是道", "「翻江倒海", "「瞒天过海", "「应左则后", "「须右仍前", "「无中生有", "「天方地园"},
@@ -593,7 +594,7 @@ kezhiDesc["空"] = {
 		"「庸」",
 		"「弓」",
 		"「虫」"
-	},
+	}
 }
 kezhiDesc["无"] = {
 	["武当长拳"] = {"「七星手", "「推手", "「一条鞭", "「直击", "「雁回头", "「井栏"},
@@ -649,7 +650,6 @@ kezhiDesc["屌"] = {
 	["锁喉擒拿手"] = {"左手扬起，右手伸出，", "单臂伸出，手指直取", "左手一掠，将", "身形急跳，早落到", "双臂弯出，柔若无骨，", "右手一抬，势做阴柔，", "连出阴招，不离锁喉，撩阴。"}
 }
 kezhiDesc["毛"] = {
-	["一指禅"] = {"「佛恩济世", "「佛光普照", "「佛门广渡", "一式「佛法无边」，左手握拳托肘，右手拇指直立"},
 	["四象掌"] = {"「五气呈祥", "「逆流捧沙", "「雷洞霹雳", "「梵心降魔", "遥遥一鞠，一式「三阳开泰」，双掌大开大阖", "一式「摘星换斗」，劲气弥漫，双掌如轮"}
 }
 kezhiDesc["干"] = {
@@ -747,15 +747,15 @@ function kezhiwugongkill(p_num)
 		if po_type == "" or po_type == nil then
 			po_type = po_type or "set po 掌"
 		end
-		po_type = po_type..";"
-		print("独孤九剑克制: "..po_type)
+		po_type = po_type .. ";"
+		print("独孤九剑克制: " .. po_type)
 	end
 	if kflag[p_num] == 2 and not tempv then
-		exe("set wimpy 100;"..po_type.."set wimpycmd pppp" .. p_num .. "\\hp")
+		exe("set wimpy 100;" .. po_type .. "set wimpycmd pppp" .. p_num .. "\\hp")
 		haichaoID = npc_id[p_num]
 		kflag[p_num] = 1
 	else
-		exe("set wimpy 100;"..po_type.."set wimpycmd pfmpfm\\hp")
+		exe("set wimpy 100;" .. po_type .. "set wimpycmd pfmpfm\\hp")
 	end
 end
 npc_skill = ""
@@ -815,21 +815,21 @@ function kezhiwugongcheck(i, n, l, w)
 			damage_level = damage_level - 1
 			print("damage_level=" .. damage_level)
 		end
-		if damage_level==5 then
-			if npc_kezhi[i]=='干' then
-				   damage_level=0
-		   return kezhiwugongValue("屌",i,"般若掌")
-			end 
-		if npc_kezhi[i]=='屌' then
-			   damage_level=0
-		   return kezhiwugongValue("干",i,"般若掌")
+		if damage_level >= 5 then
+			if npc_kezhi[i] == "干" then
+				damage_level = 0
+				return kezhiwugongValue("屌", i, "般若掌")
+			end
+			if npc_kezhi[i] == "屌" then
+				damage_level = 0
+				return kezhiwugongValue("干", i, "般若掌")
+			end
 		end
- end  
 	end
 	--print(tmpdes)
 	--print("----------正在检测-----------")
-	if string.find(tmpdes,"「摘星换斗」") and string.find(tmpdes,"的后背斫去") then
-		return kezhiwugongValue("快",i,"四象掌")
+	if string.find(tmpdes, "「摘星换斗」") and string.find(tmpdes, "的后背斫去") then
+		return kezhiwugongValue("快", i, "四象掌")
 	end
 	for v, p in pairs(kezhiDesc) do
 		for j, k in pairs(p) do

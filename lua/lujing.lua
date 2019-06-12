@@ -1463,7 +1463,9 @@ function mloutdo()
     wait.time(1)
     if flag.find==1 then return end         
         if locl.room~='梅林' then
-            return path_consider()
+            --添加这条代码，也就是让机器人走到梅庄西湖边，再交给walk_wait，就算乱走，也不会走进梅林了。等乱走的路径走完，就会重新定位，前往目的地了。
+            exe('n;w;w')
+            return walk_wait()
         else
             return mlOut()
         end

@@ -40,3 +40,5 @@ score.level = 1
 score.dead = 0
 -- 打造次数
 score.buildweapon = 0
+-- 理相
+score.xiangyun = "平"

@@ -54,6 +54,11 @@ function MissionPunishment.PunishmentHandle(busySecond)
                 go(xueshan_fangqi, "大雪山", "入幽口")
             end
         end
+        if score.gold and score.gold > 100 and (nxw_cur < count.nxw_max or cbw_cur < count.cbw_max or hqd_cur < count.hqd_max) then
+            func = function()
+                checkNxw()
+            end
+        end
         return check_busy(func)
     end
 

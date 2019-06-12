@@ -479,6 +479,8 @@ function hp_draw_win()
         ColourNameToRGB("yellow"),
         false
     )
+    -- 理相
+    WindowText(hp_win, FONT_NAME, "理相: "..score.xiangyun, left, top, 0, 0, ColourNameToRGB("lightgreen"), false)
 
     top = top + 20
     -- 精神

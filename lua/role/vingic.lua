@@ -31,11 +31,11 @@ settings = {
 	-- 当打架无内力时(吃药在CD状态),执行的加内动作(无则可不填), 一些门派有恢复内力的内功, 如华山有yun zixia
 	Recover_neili = "",
 	-- 练习的指令
-	PracticeCMD = "lian force 20;lian sword 20;lian dodge 20;unwield kunlun sword;lian cuff 20;wield kunlun sword;",
+	PracticeCMD = "lian force 20;lian sword 20;lian dodge 20;unwield kunlun sword;lian cuff 20;lian hand 20;wield kunlun sword;",
 	-- 强制练习模式, 即不作任何任务, 强制练习某些技能, 用于补技能时使用, 身上最好有回内武器
 	PracticeForce = false,
 	-- 是否作华山2任务
-	HuashanJob_Step2 = false,
+	HuashanJob_Step2 = "smart",
 	-- 是否自动蝶梦楼刷分
 	AutoDML = true,
 	-- 是否自动论坛收矿石

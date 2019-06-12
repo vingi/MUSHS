@@ -763,7 +763,26 @@ function huashan_yls_ask(n, l, w)
     if w[2] == "二" then
         return huashan_yls_back()
     end
-    if w[2] == "一" and (GetRoleConfig("HuashanJob_Step2") ~= true or (lostletter == 1 and needdolost == 1)) then
+    -- 智能判断是否作华山2任务
+    local ContinueStep2 = false
+    if GetRoleConfig("HuashanJob_Step2") == true then
+        ContinueStep2 = true
+    end
+    if GetRoleConfig("HuashanJob_Step2") == "smart" then
+        -- 判断理相
+        if score.xiangyun ~= "衰" and score.xiangyun ~= "死" then
+            if (hp.neili > hp.neili_max * 0.65) or (GetRoleConfig("Recover_neili") ~= "") then
+                ContinueStep2 = true
+            else
+                -- 判断武当任务时间间隔
+                if (os.time() - job.wudang.FinishTime) < 25 then
+                    ContinueStep2 = true
+                end
+            end
+        end
+    end
+
+    if w[2] == "一" and (ContinueStep2 ~= true or (lostletter == 1 and needdolost == 1)) then
         return check_bei(huashan_yls_lbcx)
     else
         return check_bei(huashan_heal)

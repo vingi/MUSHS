@@ -30,6 +30,8 @@ job.killer = {}
 job.list = {}
 job.group = {}
 job.group.times = nil
+job.wudang = {}
+job.wudang.FinishTime = ""
 sxjob = {}
 sxjob.ide =
     "令狐冲|黄令天|凌震天|中年乞丐|青年乞丐|灰衣帮众|五毒教弟子|慧真尊者|知客道长|巨木旗教众|锐金旗教众|洪水旗教众|厚土旗教众|烈火旗教众|出尘子|李捕头|值勤兵|樊一翁|张巡捕|护法使者|夏雪宜|蒙面人|黑衣帮众|土匪|马贼|大衙役"
@@ -417,7 +419,7 @@ function hp_heqi_check(n, l, w)
         -- 内力小于10%，嗑内息丸！
         exe("eat " .. drug.neili1)
     end
-    if hp.neili < 2000 and hp.neili_max > 3000 and GetRoleConfig("Recover_neili") ~= "" then
+    if (hp.neili < hp.neili_max * 0.35) and GetRoleConfig("Recover_neili") ~= "" then
         exe(GetRoleConfig("Recover_neili"))
     end
     if hp.jingli < hp.jingli_max * 0.5 or hp.jingli < 500 then
@@ -3240,9 +3242,10 @@ function job.Switch()
     -- ---------------------------------------------------------------
     if GetRoleConfig("PracticeForce") == true then
         exe("yun jing;yun qi;yun jingli;")
-        return check_food(true)
+        quest.desc = "强制练习模式"
+        quest.update()
+        return check_food()
     end
-
 
     -- ---------------------------------------------------------------
     -- 公共任务, 限次数

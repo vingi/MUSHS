@@ -327,6 +327,9 @@ function checkBagsOver()
 	if Bag["Ä¾½£"] and Bag["Ä¾½£"].cnt > 1 then
 		exe("drop mu jian 2")
 	end
+	if Bag["Ë®ÃÛÌÒ"] then
+		exe("drop mi tao")
+	end
 	-- print(cty_cur,nxw_cur,hxd_cur)
 	if tmp.bags ~= nil then
 		return tmp.bags()
@@ -516,7 +519,7 @@ end
 -- ---------------------------------------------------------------
 function checkNxw()
     tmp.cnt = 0
-    if score.gold and score.gold > 100 and(nxw_cur < count.nxw_max or cbw_cur < count.cbw_max or hqd_cur < count.hqd_max) then
+    if score.gold and score.gold > 100 and (nxw_cur < count.nxw_max or cbw_cur < count.cbw_max or hqd_cur < count.hqd_max) then
         return go(checkNxwBuy, randomElement(drugBuy["ÄÚÏ¢Íè"]))
     else
         return checkNxwOver()
@@ -565,7 +568,7 @@ function checkHxdBuy()
     if tmp.cnt > 30 then
         return checkNxwOver()
 	else
-		if Bag["²õÍÉ½ğ´¯Ò©"] == nil or Bag["²õÍÉ½ğ´¯Ò©"].cnt < 20 then
+		if (Bag["²õÍÉ½ğ´¯Ò©"] == nil or Bag["²õÍÉ½ğ´¯Ò©"].cnt < 20) and GetRoleConfig("PracticeForce") ~= true and GetRoleConfig("GetPotForce") ~= true then
 	        exe("buy " .. drug.heal)
 		end
         checkYaoBags()

@@ -10885,6 +10885,7 @@ Room {
         ["east"] = "fuzhou/zahuopu",
         ["west"] = "fuzhou/minzhai",
     },
+    room_relative="民宅-----西巷-----杂货铺｜西巷西巷",
 }
 Room {
     id = "fuzhou/xixiang2",
@@ -10895,6 +10896,7 @@ Room {
         ["north"] = "fuzhou/xixiang",
         ["west"] = "fuzhou/yaopu",
     },
+    room_relative="西巷｜药铺-----西巷｜西街西巷",
 }
 Room {
     id = "fuzhou/xixiang3",
@@ -10905,6 +10907,7 @@ Room {
         ["north"] = "fuzhou/xijie2",
         ["west"] = "fuzhou/huadian",
     },
+    room_relative="西街｜花店-----西巷｜西巷西巷",
 }
 Room {
     id = "fuzhou/xixiang4",
@@ -10915,6 +10918,7 @@ Room {
         ["north"] = "fuzhou/xixiang3",
         ["west"] = "fuzhou/chalou",
     },
+    room_relative="西巷｜茶楼-----西巷｜吉祥客栈西巷",
 }
 Room {
     id = "fuzhou/xyxiang",
@@ -20696,7 +20700,7 @@ Room {
     ways =
     {
         ["south"] = "mingjiao/hdg/kongdi",
-        ["northdown"] = "mingjiao/hdg/caojing",
+        -- ["northdown"] = "mingjiao/hdg/caojing",
         ["#hdgleavein"] = "mingjiao/hdg/caojing", 
     },
 }

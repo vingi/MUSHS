@@ -519,6 +519,7 @@ function wudangFinishT()
     print("老宋夸我干得好。")
     -- 重置叫杀时间
     wudangJob.killStartTime = nil
+    job.wudang.FinishTime = os.time()
     -- setLocateRoomID='wudang/sanqing'
      -- 执行任务数自增1
     job.statistics_JobTimePlus()

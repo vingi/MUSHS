@@ -1863,7 +1863,7 @@ function check_food(Force2Full)
         return dummyfind()
     end
     -- if job.zuhe["wudang"] then wait_kill='yes' end
-    exe("nick 去武当吃喝;remove all;wear all")
+    exe("nick 去武当吃喝;remove all;wear all;score;")
     quest.name = "全面检查状态"
     quest.status = ""
     quest.target = ""
@@ -2007,7 +2007,7 @@ function check_pot(p_cmd)
             end
 
             for p in pairs(skills) do
-                if flagFull[p] and not skillEnable[p] and skills[p].lvl < 450 and skills[p].lvl <= skills["dodge"].lvl and hp.pot >= l_pot
+                if skillEnable[p] and skills[p].lvl < 450 and skills[p].lvl <= skills["dodge"].lvl and hp.pot >= l_pot
                 then
                     if not skills[p].mstlvl or skills[p].mstlvl > skills[p].lvl then
                         return checkxue()
