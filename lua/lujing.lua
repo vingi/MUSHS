@@ -23,7 +23,7 @@ road.wipe_who = nil
 road.wipe_con = nil
 road.resume = nil
 road.wait = 0.13
-road.steps = 16
+road.steps = 25
 locate_finish = 0
 road.cmd = nil
 road.cmd_save = nil
@@ -98,7 +98,18 @@ function locate_trigger()
     DeleteTriggerGroup("locate")
     DeleteTriggerGroup("locate_unknown")
     create_trigger_t('locate_unknown1', '^(> )*设定环境变量：look\\s*\\=\\s*\\"YES\\"\\n>\\s*(\\D*)\\s*\\ -\\s*', '', 'local_unknown_room')
-    create_trigger_t('locate2', '^(> )*【你现在正处于(\\D*)】\\n(\\D*)\\s*\\-\\s*', '', 'local_area')
+    create_trigger_t('locate2', '^(> )*【你现在正处于(\\D*)】\\n(\\D*)\\s*\\-\\s*', '', 'local_area')create_trigger_t('locate11','^(> )*等兵器。屋角还摆着一个火炉，炉火把四周照得一片通红。柜台后面站着一位','','local_area1')
+    create_trigger_t('locate22','^(> )*角还放着张很大的裁缝桌，不少年轻的裁缝正在桌子边忙碌着。','','local_area2')
+    create_trigger_t('locate33','^(> )*往，熙熙攘攘，非常热闹。东面就是华山，山下一个小村落，炊烟袅袅。西面','','local_area3')
+    create_trigger_t('locate44','^(> )*。这个作坊一般不生产成药，而只是收购采药人采回来的药材原料，加工成','','local_area4')
+    create_trigger_t('locate55','^(> )*绎不绝，应接不暇，还有不少游方郎中就在大厅中问诊、开药，好不热闹。在','','local_area5')
+    create_trigger_t('locate66','^(> )*是热闹。有很多有名的工匠都把他们打造的优质兵器装备放在这里寄卖，所以','','local_area6')
+    create_trigger_t('locate77','^(> )*可以买卖矿石，也可以自己尝试一下打铁的乐趣。','','local_area7')
+    create_trigger_t('locate88','^(> )*不热闹。远处就是杭州城了，你也不禁加快脚步，杭州北门展现在你的面前。','','local_area8')
+    create_trigger_t('locate99','^(> )*\\D*这是一条去黑木崖的必经之路，路上不断有人骑马经过，掀起了阵阵黄沙，','','local_area9')
+    create_trigger_t('locate100','^(> )*\\D*上。一阵风沙吹过，象刀割一样撕裂着你的脸。这里是通往西域的丝绸古路，','','local_area10')
+    create_trigger_t('locate200','^(> )*车的马夫，上京赶考的书生，熙熙攘攘，非常热闹。不时还有两三骑快马从身','','local_area11')
+    create_trigger_t('locate300','^(> )*多产毒虫，各位行路要十分小心。','','local_area12')
     create_trigger_t('locate3', "^( )*这里(看得清的|明显的|唯一的|看得见的唯一)出口是(\\D*)。$", '', 'local_exit')
     create_trigger_t('locate4', "^(\\D*) = (\\D*)$", '', 'local_id')
     create_trigger_t('locate5', '^(> )*你把 "action" 设定为 "正在定位" 成功完成。$', '', 'local_start')
@@ -118,6 +129,18 @@ function locate_trigger()
     SetTriggerOption("locate5", "group", "locate")
     SetTriggerOption("locate6", "group", "locate")
     SetTriggerOption("locate7", "group", "locate")
+SetTriggerOption("locate11","group","locate")
+SetTriggerOption("locate22","group","locate")
+SetTriggerOption("locate33","group","locate")
+SetTriggerOption("locate44","group","locate")
+SetTriggerOption("locate55","group","locate")
+SetTriggerOption("locate66","group","locate")
+SetTriggerOption("locate77","group","locate")
+SetTriggerOption("locate88","group","locate")
+SetTriggerOption("locate99","group","locate")
+SetTriggerOption("locate100","group","locate")
+SetTriggerOption("locate200","group","locate")
+SetTriggerOption("locate300","group","locate")
     EnableTriggerGroup("locate", false)
     EnableTriggerGroup("locate_unknown", false)
 end
@@ -133,10 +156,10 @@ function local_start()
 end
 local_unknown_room = function(n, l, w)
     local s=w[2]
-    if s=='梅林' then 
-        locl.room='梅林'
-        return
-    end
+        if s=='梅林' then 
+           locl.room='梅林'
+           return
+        end
     unknown_room_relation =(string.gsub(s, ' ', ''))
     r_r = string.reverse(unknown_room_relation)
     _, i = string.find(r_r, '[\n]')
@@ -158,13 +181,75 @@ local_area = function(n, l, w)
     locl.area = w[2]
     local s = w[3]
     room_relation =(string.gsub(s, ' ', ''))
+    -- print("room_relation:"..room_relation)
     r_r = string.reverse(room_relation)
     _, i = string.find(r_r, '[\n]')
     locl.room =(string.sub(room_relation, 1 - i))
+    -- print("locl.room:"..locl.room)
     exe('unset look')
     locl.where = locl.area .. locl.room
     locl.room_relation =(string.gsub(room_relation, '[\n]', ''))
-    print(locl.room_relation)
+    -- print(locl.room_relation)
+end
+local_area1 = function(n, l, w)
+    locl.area = "扬州城"
+    locl.room = "兵器铺"
+    print ( locl.area .. locl.room )
+end
+local_area2 = function(n, l, w)
+    locl.area = "长安城"
+    locl.room = "裁缝铺"
+    print ( locl.area .. locl.room )
+end
+local_area3 = function(n, l, w)
+    locl.area = "长安城"
+    locl.room = "土路"
+    print ( locl.area .. locl.room )
+end
+local_area4 = function(n, l, w)
+    locl.area = "成都城"
+    locl.room = "制药作坊"
+    print ( locl.area .. locl.room )
+end
+local_area5 = function(n, l, w)
+    locl.area = "成都城"
+    locl.room = "药店"
+    print ( locl.area .. locl.room )
+end
+local_area6 = function(n, l, w)
+    locl.area = "扬州城"
+    locl.room = "寄卖店"
+    print ( locl.area .. locl.room )
+end
+local_area7 = function(n, l, w)
+    locl.area = "扬州城"
+    locl.room = "打铁铺"
+    print ( locl.area .. locl.room )
+end
+local_area8 = function(n, l, w)
+    locl.area = "杭州城"
+    locl.room = "青石大道"
+    print ( locl.area .. locl.room )
+end
+local_area9 = function(n, l, w)
+    locl.area = "平定洲"
+    locl.room = "土路"
+    print ( locl.area .. locl.room )
+end
+local_area10 = function(n, l, w)
+    locl.area = "兰州城"
+    locl.room = "大道"
+    print ( locl.area .. locl.room )
+end
+local_area11 = function(n, l, w)
+    locl.area = "沧州城"
+    locl.room = "驿道"
+    print ( locl.area .. locl.room )
+end
+local_area12 = function(n, l, w)
+    locl.area = "佛山镇"
+    locl.room = "林间道"
+    print ( locl.area .. locl.room )
 end
 function room_relative(n, l, w)
     local s = w[3]
@@ -307,6 +392,7 @@ function walk_trigger()
     EnableTriggerGroup("walk", false)
 end
 function walk_wait()
+    EnableTimer('chadui',false) ----关闭神龙岛插队
     EnableTriggerGroup("walk", true)
     EnableTrigger("hp12", true)
     if tmp.find then
@@ -479,7 +565,7 @@ function path_consider(skip_stepto)
     if not sour.id and road.id and map.rooms[road.id] and map.rooms[road.id].name == locl.room then
         sour.id = road.id
     end
-    if sour.id == nil then
+    if  sour.id == nil then
         sour.room = locl.room
         sour.area = locl.area
         sour.rooms = getRooms(sour.room, sour.area)
@@ -505,14 +591,32 @@ function path_consider(skip_stepto)
         quick_locate = 0
         return checkWait(goContinue, 0.3)
     end
+        if string.find(locl.room,"字门") then
+	    exe('se;e;e;e')	
+	    quick_locate=0
+        return checkWait(goContinue,0.2)
+	end
+	if locl.room_relation=='大草原｜大草原----大草原----大草原｜大草原大草原'  then
+	    exe('w;w')
+		return checkWait(goContinue,0.2)
+	end
+	if locl.room_relation=='大草原｜小路----大草原----大草原｜大草原大草原'  then
+	    exe('w')
+		return checkWait(goContinue,0.2)
+	end
+	if locl.room=='麻田地' then
+	    exe('nu;n;ne;e;e;e')	
+	    quick_locate=0
+        return checkWait(goContinue,0.2)
+	end
     if locl.room_relation == '九老洞九老洞' or locl.room_relation == "不知道哪里九老洞 不知道哪里 九老洞" then
         exe('drop fire;leave;leave;leave;leave;leave;leave;out;ne;ed;ne;ed')
         quick_locate = 0
         return checkWait(goContinue, 0.3)
     end
     if locl.room == '梅林' then
-        -- quick_locate = 0
-        exe('n')
+        quick_locate = 0
+        exe('n;n;n')
         return mlOutt()
     end
     if locl.room == '渔船' then
@@ -520,6 +624,11 @@ function path_consider(skip_stepto)
         quick_locate = 0
         return checkWait(goContinue, 0.3)
     end
+	if locl.area=='绝情谷' and locl.room=='石壁' then
+	    exe('pa down;pa up')	
+		quick_locate=0
+        return checkWait(goContinue,0.2)
+	end
     if sour.id ~= nil then
         chats_locate('定位系统：从【' .. sour.id .. '】出发!')
     else
@@ -656,47 +765,97 @@ end
 
 function path_create()
     local l_set
-    local l_num = 0
-    local l_cnt = 1
-    road.detail = { }
-
-    l_path = path_cal()
-    -- Note(l_path)
-    if type(l_path) ~= 'string' then
-        if math.random(1, 4) == 1 then
-            l_path = 'stand;out;northeast;northwest;southeast;southwest;south;south;south;south;south'
-        elseif math.random(1, 4) == 2 then
-            l_path = 'stand;out;northeast;northwest;southeast;southwest;east;east;east;east;east;east'
-        elseif math.random(1, 4) == 3 then
-            l_path = 'stand;out;northeast;northwest;southeast;southwest;west;west;west;west;west;west'
-        else
-            l_path = 'stand;out;northeast;northwest;southeast;southwest;north;north;north;north;north'
-        end
+    local l_num=0
+    local l_cnt=1
+        local l_cntt=1
+    road.detail={}
+    l_sett=0
+        l_settt=0
+    l_path=path_cal()
+    --Note(l_path)
+    if type(l_path)~='string' then
+       if math.random(1,4)==1 then
+          l_path='stand;out;northeast;northwest;southeast;southwest;south;south;south;south;south'
+       elseif math.random(1,4)==2 then
+          l_path='stand;out;northeast;northwest;southeast;southwest;east;east;east;east;east;east'
+       elseif math.random(1,4)==3 then
+          l_path='stand;out;northeast;northwest;southeast;southwest;west;west;west;west;west;west'
+       else
+          l_path='stand;out;northeast;northwest;southeast;southwest;north;north;north;north;north'
+       end
     end
-    l_set = utils.split(l_path, ';')
-    for i = 1, table.getn(l_set) do
-        if string.find(l_set[i], '#') then
-            if l_num > 0 then
-                l_cnt = l_cnt + 1
+    l_set=utils.split(l_path,';')  --一个alias里有几个命令
+        l_settt=table.getn(l_set)
+        --print(l_path)
+        if wdgostart==1 then
+          if l_settt<= wd_distance then l_settt=wd_distance end
+      for i=1,table.getn(l_set) do
+                if i<l_settt-wd_distance-2 then
+            if string.find(l_set[i],'#') then
+                    if l_num>0 then
+                      l_cnt=l_cnt+1
+                end
+                    road.detail[l_cnt]=l_set[i]
+                    l_cnt=l_cnt+1
+                    l_num=0
+                else
+                    if l_num==0 then
+                      road.detail[l_cnt]=l_set[i]
+                    else
+                      road.detail[l_cnt]=road.detail[l_cnt]..';'..l_set[i]
+                end
+                    l_num=l_num+1
+                    if l_num>road.steps then
+                       l_cnt=l_cnt+1
+                       l_num=0
+                    end
             end
-            road.detail[l_cnt] = l_set[i]
-            l_cnt = l_cnt + 1
-            l_num = 0
+                else
+           if string.find(l_set[i],'#') then
+                    if l_num>0 then
+                      l_cnt=l_cnt+1
+                end
+                    road.detail[l_cnt]=l_set[i]
+                    l_cnt=l_cnt+1
+                    l_num=0
+                else
+                    if l_num==0 then
+                      road.detail[l_cnt]=l_set[i]
+                    else
+                      road.detail[l_cnt]=road.detail[l_cnt]..';'..l_set[i]
+                end
+                    l_num=l_num+1
+                    if l_num>0 then
+                       l_cnt=l_cnt+1
+                       l_num=0
+                    end
+            end
+                end
+      end
         else
-            if l_num == 0 then
-                road.detail[l_cnt] = l_set[i]
-            else
-                road.detail[l_cnt] = road.detail[l_cnt] .. ';' .. l_set[i]
+            for i=1,table.getn(l_set) do
+          if string.find(l_set[i],'#') then
+                if l_num>0 then
+                  l_cnt=l_cnt+1
             end
-            l_num = l_num + 1
-            if l_num > road.steps then
-                l_cnt = l_cnt + 1
-                l_num = 0
+                road.detail[l_cnt]=l_set[i]
+                l_cnt=l_cnt+1
+                l_num=0
+              else
+                if l_num==0 then
+                  road.detail[l_cnt]=l_set[i]
+                else
+                  road.detail[l_cnt]=road.detail[l_cnt]..';'..l_set[i]
             end
+                l_num=l_num+1
+                if l_num>road.steps then
+                   l_cnt=l_cnt+1
+                   l_num=0
+                end
+          end
         end
-    end
+        end
 end
-
 function path_start()
     EnableTrigger("hp12", false)
     EnableTimer("roadWait", false)
@@ -778,7 +937,7 @@ find_nobody = function()
     end
 
     flag.times = flag.times + 1
-    if flag.times > 3 then
+    if flag.times > 3 or string.find(job.where,"后山小院") or (string.find(job.where,"武当") and string.find(job.where,"院门")) then
         jobFindFail = jobFindFail or { }
         if job.name and jobFindFail[job.name] then
             local p = jobFindFail[job.name]
@@ -814,9 +973,9 @@ function searchPre()
     local p_room = map.rooms[road.id].name
     local p_dest = getLookCity(road.id)
     local l_distance = 6
-    -- if job.name and(job.name == "clb" or job.name == 'tdh' or job.name == 'tmonk') and flag.times == 1 then
-    --     l_distance = 2
-    -- end
+    if job.name and(job.name == "clb" or job.name == 'tdh' or job.name == 'tmonk') and flag.times == 1 then
+        l_distance = 2
+    end
     if flag.times == 1 then
         if job.name == 'wudang' and wd_distance > 2 then
             l_distance = wd_distance
@@ -832,10 +991,15 @@ function searchPre()
         end
     end
     if job.name and job.name == 'xueshan' and flag.times == 1 then
-        l_distance = 3
+        l_distance = 4
     end
-    if flag.times == 3 or job.name == 'zhuacaishen' then
-        l_distance = 6
+    if job.name and job.name=='wudang' then		
+       l_distance = wd_distance
+	   --messageShow('武当任务：        没找到人，继续搜索，范围【'.. l_distance ..'】！')
+    end
+	if job.name and job.name=='huashan' then		
+       l_distance = wd_distance
+	   --messageShow('华山任务：        没找到人，继续搜索，范围【'.. l_distance ..'】！')
     end
     if p_dest == nil then
         p_dest = map.rooms[road.id].outdoor
@@ -899,6 +1063,8 @@ function searchPre()
             end
         end
     end
+    wd_distance = wd_distance or 0
+    wd_distance=wd_distance+2
     -- messageShow("【"..job.name.."】深度优先计算结束，遍历【"..roomsnum.."】个房间，用时【"..os.clock()-starttime.."】秒","SandyBrown")
 end
 function FastDFS(myrt, i)
@@ -1151,57 +1317,214 @@ function walkBusy()
     return check_halt(walk_wait)
 end
 
-hsssl = function()
-    road.temp = 0
-    if flag.find == 1 then return end
-    if flag.wait == 1 then return end
-    DeleteTriggerGroup("sslcheck")
-    create_trigger_t('sslcheck1', "^\\D*石屋", '', 'hsssl_out')
-    SetTriggerOption("sslcheck1", "group", "sslcheck")
-    EnableTriggerGroup("sslcheck", true)
-    exe('n;e;e')
-    if flag.find == 1 then return end
-    create_timer_s('walkWait9', 0.05, 'sslgo')
-    create_timer_s('walkWait10', 1, 'ssllook')
+---------------------------------------华山松树林------------------------
+hssslgo=function()
+    road.temp=0
+	locate_finish=0
+	DeleteTriggerGroup("sslcheck")
+	create_trigger_t('sslcheck1','^(> )*石屋 -','','hsssl_out') 
+	SetTriggerOption("sslcheck1","group","sslcheck") 
+	EnableTriggerGroup("sslcheck",true)
+	if flag.find==1 then return end
+	return sslgogo()
 end
-ssllook = function()
+ssllook=function()
     exe('look')
 end
-sslgo = function()
-    road.temp = road.temp + 1
-    if road.temp > 200 then
-        return hsssl_out()
-    end
-    exe('n;e;e;e;e;e;')
+sslgogo=function()
+   road.temp = road.temp + 1
+   if road.temp > 50 then
+      return hsssl_out()
+   end
+   if flag.find==1 then return end
+    exe('n;e;e;n;e;e')
+	wait.make(function() 
+	    wait.time(0.2)
+		return sslgogo()
+	end)
 end
-hsssl_out = function()
-    locl.room = "石屋"
-    EnableTriggerGroup("sslcheck", false)
-    EnableTimer('walkWait10', false)
-    EnableTimer('walkWait9', false)
-    DeleteTimer("walkWait10")
-    DeleteTimer("walkWait9")
-    if flag.find == 1 then return end
-    if flag.wait == 1 then return end
+function hsssl()	
+	if flag.find==1 then return end
+	exe('n')
+	if tmp.find and job.name=='wudang' then
+	    exe('ask '..job.id..' about zzz')
+	end
+	exe('e')
+	if tmp.find and job.name=='wudang' then
+	    exe('ask '..job.id..' about zzz')
+	end
+	exe('e')
+	if tmp.find and job.name=='wudang' then
+	    exe('ask '..job.id..' about zzz')
+	end
+	exe('n')
+	if tmp.find and job.name=='wudang' then
+	    exe('ask '..job.id..' about zzz')
+	end
+	exe('e')
+	if tmp.find and job.name=='wudang' then
+	    exe('ask '..job.id..' about zzz')
+	end
+	exe('e')
+	if tmp.find and job.name=='wudang' then
+	    exe('ask '..job.id..' about zzz')
+	end
+	exe('n')
+	if tmp.find and job.name=='wudang' then
+	    exe('ask '..job.id..' about zzz')
+	end
+	exe('e')
+	if tmp.find and job.name=='wudang' then
+	    exe('ask '..job.id..' about zzz')
+	end
+	exe('e')
+	if tmp.find and job.name=='wudang' then
+	    exe('ask '..job.id..' about zzz')
+	end
+	locate_finish='hsssl_goon'
+    return fastLocate()
+end
+hsssl_goon=function()
+	locate_finish=0
+	quick_locate=1
+	wait.make(function() 
+	    wait.time(0.15)
+	if flag.find==1 then return end
+	if locl.room=='石屋' then
+		return hsssl_out()
+	elseif locl.room_relation=='空地｜松树林----松树林----石屋｜山脚下松树林' then
+		exe('e')
+		return hsssl_out()
+	elseif locl.room=='空地' or locl.room=='松树林' then
+        return hsssl()
+	else
+        return go_locate()	
+	end
+	end)
+	--[[   if locl.room_relation=='松树林｜松树林-----树林-----松树林树林' or locl.room_relation=='空地｜松树林----松树林----石屋｜山脚下松树林' or locl.room_relation=='松树林-----石屋石屋' or locl.room_relation=='松树林｜松树林----松树林----松树林｜松树林松树林'
+       if locl.room=='树林' or locl.room=='松树林' or locl.room=='空地' then	  	
+           exe('n;e;e;n;e;e')
+		   quick_locate=0
+           return hsssl_check()
+       else
+		  quick_locate=0
+          return go_locate()		
+       end]]
+end
+hsssl_out=function()
+	EnableTriggerGroup("sslcheck",false)
+	DeleteTriggerGroup("sslcheck")
+    if flag.find==1 then return end
     return walk_wait()
 end
-function hsssl_check()
-    locate()
-    return checkWait(hsssl_goon, 0.2)
+-------------------------------慕容--------------------------------------------
+--燕子坞厢房到书房，之前的room函数等待<<EOF
+yzwxiangfang2shufang=function()
+    exe('n')
+    return walk_wait()
+end--EOF
+--燕子坞大厅到书房，之前的room函数等待<<EOF
+yzwdating2shufang=function()
+    exe('e')
+    return walk_wait()
+end--EOF
+--燕子坞长廊到书房，之前的room函数等待<<EOF
+yzwchanglang2shufang=function()
+    exe('w')
+    return walk_wait()
+end--EOF
+--燕子坞私塾到书房，之前的room函数等待<<EOF
+yzwsishu2shufang=function()
+    exe('s')
+    return walk_wait()
+end--EOF
+--燕子坞书房到夹壁，之前的room函数等待<<EOF
+yzwshufang2jiabi=function()
+    exe('sit chair;zhuan')
+    return walk_wait()
+end--EOF
+------------------------------洗象池------------------------------------------
+function emxxc()
+    wait.make(function()
+        wait.time(3)
+        exe("ed")
+        return walk_wait()
+        end)
 end
-hsssl_goon = function()
-    road.temp = road.temp + 1
-    if road.temp > 100 then
-        dis_all()
-        return check_heal()
-    end
-    if locl.room == '树林' or locl.room == '松树林' or locl.room == '空地' then
-        exe('n;e;e;e;e;e')
-        return check_halt(hsssl_check, 1)
-    else
-        return hsssl_out()
-    end
+------------------------------福州吊桥----------------------------------------
+function fznm()
+   if flag.find==1 then return end
+   return check_halt(fznmcheck)
 end
+function fznmcheck()
+           wait.make(function()
+               wait.time(3)
+               exe('n;n;w;w;w;w;nw;sw;sw;w;sw;sw;sw;sw;w;s;sd;sd;s;s;s;s;e;e;e;e;e;e')
+               return fznmcheckdo1()
+           end)
+end
+function fznmcheckdo1()
+        if flag.find==1 then return end
+    exe('e')
+        return checkWait(fznmcheckdo2,0.1)
+end
+function fznmcheckdo2()
+        if flag.find==1 then return end
+    exe('ne')
+        return checkWait(fznmcheckdo3,0.1)
+end
+function fznmcheckdo3()
+        if flag.find==1 then return end
+    exe('ne')
+        return checkWait(fznmcheckdo4,0.1)
+end
+function fznmcheckdo4()
+        if flag.find==1 then return end
+    exe('ne')
+        return checkWait(fznmcheckdo5,0.1)
+end
+function fznmcheckdo5()
+        if flag.find==1 then return end
+    exe('n')
+        return walk_wait()
+end
+function fznmdq()
+        return fznmdqcheck()
+end
+function fznmdqcheck()
+           wait.make(function()
+               wait.time(3)
+                   if flag.find==1 then return end
+               exe('s;sw;sw;sw;w;w;w;w;w;w;w;n;n;n;n;nu;nu;n;e;ne;ne;ne;ne;e;ne;ne;se;e')
+               return fznmdqcheckdo1()
+           end)
+end
+function fznmdqcheckdo1()
+        if flag.find==1 then return end
+    exe('e')
+        return checkWait(fznmdqcheckdo2,0.1)
+end
+function fznmdqcheckdo2()
+        if flag.find==1 then return end
+    exe('e')
+        return checkWait(fznmdqcheckdo3,0.1)
+end
+function fznmdqcheckdo3()
+        if flag.find==1 then return end
+    exe('e')
+        return checkWait(fznmdqcheckdo4,0.1)
+end
+function fznmdqcheckdo4()
+        if flag.find==1 then return end
+    exe('s')
+        return checkWait(fznmdqcheckdo5,0.1)
+end
+function fznmdqcheckdo5()
+        if flag.find==1 then return end
+    exe('s')
+        return walk_wait()
+end
+
 ------------------------------兰州客栈----------------------------------------
 lanzhoukedian = function()
     exe('give xiao 5 silver;up')
@@ -1448,292 +1771,331 @@ function inmzcheck()
 end
 -----------------------------------------------出梅林-------------------------------------
 function mlOutt()
-    tmp.cnt=0
     exe('look')
-    wait.make(function() 
-    wait.time(2.5)
-    if flag.find==1 then return end         
+    wait.make( function()
+        wait.time(2.5)
+        if flag.find == 1 then return end
         exe('n')
-    return mloutdo()
-end) 
+        return mloutdo()
+    end )
 end
 function mloutdo()
     fastLocate()
-    wait.make(function() 
-    wait.time(1)
-    if flag.find==1 then return end         
-        if locl.room~='梅林' then
-            --添加这条代码，也就是让机器人走到梅庄西湖边，再交给walk_wait，就算乱走，也不会走进梅林了。等乱走的路径走完，就会重新定位，前往目的地了。
+    wait.make( function()
+        wait.time(1)
+        if flag.find == 1 then return end
+        if locl.room ~= '梅林' then
             exe('n;w;w')
             return walk_wait()
         else
             return mlOut()
         end
-    end)
+    end )
 end
 function mlOut()
-tmp.way = "north"
+    tmp.way = "north"
     tmp.ml = "out"
     exe('w;e;n')
     fastLocate()
-    return checkWait(wayMl,0.5)
-end
-function wait_seconds()
-    wait.make(function()
-     wait.time(5)
-    return wayMl()
-end)
+    return checkWait(wayMl, 0.1)
 end
 function wayMl()
-    tmp.cnt=tmp.cnt+1
-    if tmp.cnt>50 then
-       tmp.cnt=0
-       return wait_seconds()
-    end
-local ways = {
-            ["north"] = "east",
-            ["east"]  = "south",
-            ["south"] = "west",
-            ["west"]  = "north",
+    local ways = {
+        ["north"] = "east",
+        ["east"] = "south",
+        ["south"] = "west",
+        ["west"] = "north",
     }
     local wayt = {
-            ["north"] = "west",
-            ["east"]  = "north",
-            ["south"] = "east",
-            ["west"]  = "south",
+        ["north"] = "west",
+        ["east"] = "north",
+        ["south"] = "east",
+        ["west"] = "south",
     }
     if not tmp.way or not ways[tmp.way] then
-       tmp.way = 'south'
+        tmp.way = 'south'
     end
-    if locl.room=="青石板大路" then
-       if tmp.ml and tmp.ml=="in" then
-          return wayMlOver()
-       else
-          tmp.way = "north"
-          exe(tmp.way)
-              fastLocate()
-              return checkWait(wayMl,0.5)
-       end 
-end
-if locl.room=="小路" then
-       if tmp.ml and tmp.ml=="out" then
-              print('出来了')
-              exe('n')
-          return wayMlOver()
-       else
-          tmp.way = "south"
-          exe('south;south')
-              locate()
-              return checkWait(wayMl,0.5)
-       end 
-end
-if locl.room~="小路" and locl.room~="青石板大路" and locl.room~="梅林" then
-   return wayMlOver()
-end        
+    if locl.room == "青石板大路" then
+        if tmp.ml and tmp.ml == "in" then
+            return wayMlOver()
+        else
+            tmp.way = "north"
+            exe(tmp.way)
+            fastLocate()
+            return checkWait(wayMl, 0.07)
+        end
+    end
+    if locl.room == "小路" then
+        if tmp.ml and tmp.ml == "out" then
+            return wayMlOver()
+        else
+            tmp.way = "south"
+            exe('south;south')
+            locate()
+            return checkWait(wayMl, 0.1)
+        end
+    end
+    if locl.room ~= "小路" and locl.room ~= "青石板大路" and locl.room ~= "梅林" then
+        return wayMlOver()
+    end
     tmp.way = ways[tmp.way]
-    --[[while not locl.exit[tmp.way] do
+    while not locl.exit[tmp.way] do
         Note(tmp.way)
         tmp.way = wayt[tmp.way]
-    end]]
-    repeat 
-   if not locl.exit[tmp.way] then
-          Note(tmp.way)
-          tmp.way = wayt[tmp.way]
-   end
-    until(locl.exit[tmp.way])
-    --[[if not locl.exit[tmp.way] then
-       Note(tmp.way)
-       tmp.way = wayt[tmp.way]
     end
-    if not locl.exit[tmp.way] then
-       Note(tmp.way)
-       tmp.way = wayt[tmp.way]
-    end
-    if not locl.exit[tmp.way] then
-       Note(tmp.way)
-       tmp.way = wayt[tmp.way]
-    end
-    if not locl.exit[tmp.way] then
-       Note(tmp.way)
-       tmp.way = wayt[tmp.way]
-    end]]
     exe(tmp.way)
     fastLocate()
-    return checkWait(wayMl,0.5)
+    return checkWait(wayMl, 0.1)
 end
 function wayMlOver()
-    return path_consider()
---return walk_wait()
+    return walk_wait()
+end
+-------------------王夫人up-----------------------------
+function wfrup()
+	locate_finish='wfrcheck'
+    return locate()
+end
+function wfrcheck()
+    locate_finish='wfrcheck'
+	    if flag.find==1 then return end
+	    if locl.room=='云锦楼' then
+			return check_halt(wfrcheckdo)
+	    else
+            return go_locate()	
+		end
+end
+function wfrcheckdo()
+	DeleteTriggerGroup("ckwfr")
+    create_trigger_t('ckwfr1','^(> )*你手一扬，将白银对准王夫人掷了过去！','','wfrhit')
+	create_trigger_t('ckwfr2','^(> )*这里没有你的目标。','','wfrfinish')
+	create_trigger_t('ckwfr3','^(> )*王夫人神志迷糊，脚下一个不稳，倒在地上昏了过去。','','wfrget')
+	create_trigger_t('ckwfr4','^(> )*王夫人「啪」的一声倒在地上，挣扎着抽动了几下就死了。','','wfrfinish')
+	SetTriggerOption("ckwfr1","group","ckwfr")
+	SetTriggerOption("ckwfr2","group","ckwfr")
+	SetTriggerOption("ckwfr3","group","ckwfr")
+	SetTriggerOption("ckwfr4","group","ckwfr")
+	exe('throw silver at wang furen')
+end
+function wfrhit()
+    exe('unset wimpy;jiali max;hit wang furen')
+end
+function wfrget()
+	if flag.find==1 then return end
+    exe('get wang furen;e')
+	return check_halt(wfrdrop)
+end
+function wfrdrop()
+	if flag.find==1 then return end
+    exe('drop wang furen;w')
+	return wfrfinish()
+end
+function wfrfinish()
+	EnableTriggerGroup("ckwfr",false)
+    DeleteTriggerGroup("ckwfr")
+	exe('up')
+	return walk_wait()
+end
+------------------------------------猩猩滩-----------------
+function xxtdt()
+   if flag.find==1 then return end
+   exe('dutan')
+   return walk_wait()
+end
+-----------------------------塘沽擂台----------------------------------
+function tangguleitai()
+	if job.id==nil then job.id='none' end
+	EnableTriggerGroup("wudangFind",false)
+    exe('se')
+	exe('kick '..job.id)
+	return tangguout()
+end
+function tangguout()
+	EnableTriggerGroup("wudangFind",true)
+	locate()
+	wait.make(function() 
+	    wait.time(2)
+		if locl.room~='广场空地' then
+            return walk_wait()
+		else
+		    exe('nw')
+            return tangguout()
+		end
+	end)
 end
 ------------------------------蝴蝶谷-----------------------------------------
-bohuacong = function()
-    exe('tell zhou 开门;whisper startd 开门')
-    -- check_step_num1=check_step_num1+1
-    wait.make( function()
+bohuacong=function()
+        exe('tell zhou 开门;whisper startd 开门')
+            --check_step_num1=check_step_num1+1
+            wait.make(function() 
+            wait.time(0.5)
+            exe('right')
+            end)
+        wait.make(function() 
         wait.time(0.5)
-        exe('right')
-    end )
-    wait.make( function()
-        wait.time(0.5)
-        locate_finish = 'bohuaconggo'
-        return fastLocate()
-    end )
+        locate_finish='bohuaconggo'
+            return fastLocate()
+        end)
 end
-bohuaconggo = function()
-    locate_finish = 0
-    if locl.room == "花丛中" then
-        EnableTriggerGroup("hdghuacong", false)
-        return walk_wait()
-    else
-        return go_locate()
-    end
+bohuaconggo=function()
+        locate_finish=0
+        if locl.room=="花丛中" then
+                        EnableTriggerGroup("hdghuacong",false)
+            return walk_wait()
+        else
+                    return go_locate()
+            end
 end
-hdgleavein = function()
-    DeleteTriggerGroup("miaopucheck")
-    create_trigger_t('miaopucheck1', '^>*\\s*你乱走一气，忽然眼前一亮，来到一处草径', '', 'hdgupp')
-    create_trigger_t('miaopucheck2', '^>*\\s*你把 "action" 设定为 "离开花圃了吗" 成功完成。', '', 'hdgingoon')
-    SetTriggerOption("miaopucheck1", "group", "miaopucheck")
-    SetTriggerOption("miaopucheck2", "group", "miaopucheck")
-    EnableTriggerGroup("miaopucheck", true)
-    hdgup = 0
-    if flag.find == 1 then return end
-    exe('nd')
-    return hdgdown()
+hdgleavein=function()
+DeleteTriggerGroup("miaopucheck")
+create_trigger_t('miaopucheck1','^>*\\s*你乱走一气，忽然眼前一亮，来到一处草径','','hdgupp')   
+create_trigger_t('miaopucheck2','^>*\\s*你把 "action" 设定为 "离开花圃了吗" 成功完成。','','hdgingoon')   
+SetTriggerOption("miaopucheck1","group","miaopucheck")
+SetTriggerOption("miaopucheck2","group","miaopucheck")
+EnableTriggerGroup("miaopucheck",true)
+      hdgup=0
+      if flag.find==1 then return end        
+      exe('nd')
+          return hdgdown()
 end
-hdgupp = function()
-    EnableTimer('walkWait4', false)
-    if flag.find == 1 then return end
-    hdgup = 1
-    wait.make( function()
-        wait.time(1)
-        return hdgingoon()
-    end )
+hdgupp=function()
+        EnableTimer('walkWait4',false)
+        if flag.find==1 then return end
+        hdgup=1
+        wait.make(function() 
+            wait.time(1)
+            return hdgingoon()
+        end)
 end
-hdgdown = function()
-    if flag.find == 1 then return end
-    hdgup = 0
-    create_timer_s('walkWait4', 0.5, 'hdgrun')
+hdgdown=function()
+        if flag.find==1 then return end
+        hdgup=0
+        create_timer_s('walkWait4',0.5,'hdgrun')
 end
-hdgrun = function()
-    exe('nd;n;n;nd;n;n;nd;n;n;nd;n;n;yun jing;yun jingli')
+hdgrun=function()
+   exe('nd;n;n;nd;n;n;nd;n;n;nd;n;n;yun jing;yun jingli')
 end
-hdgingoon = function()
-    if flag.find == 1 then return end
-    EnableTriggerGroup("miaopucheck", true)
-    if hdgup == 0 then
-        return hdgdown()
-    else
-        hdgup = 0
-        EnableTriggerGroup("miaopucheck", false)
-        exe('n;n')
-        -- check_step_num1=check_step_num1+4
-        return walk_wait()
-    end
+hdgingoon=function()
+        if flag.find==1 then return end
+        EnableTriggerGroup("miaopucheck",true)        
+        if hdgup==0 then
+                return hdgdown()
+        else
+                hdgup=0
+            EnableTriggerGroup("miaopucheck",false)        
+            exe('n;n')
+                --check_step_num1=check_step_num1+4
+                return walk_wait()
+        end
 end
----------------------------------华山菜地------------------------------------------
-hscaidi = function()
+--------------------菜地-----------------------------------------------------------------------
+hscaidi=function()
     DeleteTriggerGroup("hscaidi")
-    create_trigger_t('hscaidi1', '^>*\\s*你把 "action" 设定为 "离开菜地了吗" 成功完成。$', '', 'hscaidi_goon')
-    create_trigger_t('hscaidi2', '^>*\\s*山脚下\\s*\\-', '', 'hscaidi_out')
-    -- create_trigger_t('hscaidi2','^>*\\s*村中心\\s*\\-','','hscaidi_out1')
-    SetTriggerOption("hscaidi1", "group", "hscaidi")
-    SetTriggerOption("hscaidi2", "group", "hscaidi")
-    flag.find = 0
-    road.temp = 0
+    create_trigger_t('hscaidi1','^>*\\s*你把 "action" 设定为 "离开菜地了吗" 成功完成。$','','hscaidi_goon')    
+    create_trigger_t('hscaidi2','^>*\\s*山脚下\\s*\\-','','hscaidi_out')
+    --create_trigger_t('hscaidi2','^>*\\s*村中心\\s*\\-','','hscaidi_out1')
+    SetTriggerOption("hscaidi1","group","hscaidi")
+    SetTriggerOption("hscaidi2","group","hscaidi")
+    flag.find=0
+    road.temp=0
     exe('e;e;e;e')
-    create_timer_s('caidiwalk', 0.25, 'huashan_caidi_check')
+        create_timer_s('caidiwalk',0.25,'huashan_caidi_test')
 end
-huashan_caidi_check = function()
+huashan_caidi_test=function()
     road.temp = road.temp + 1
     if road.temp > 500 then
-        road.temp = 0
+                road.temp=0
         dis_all()
-        return check_heal()
+            return check_heal()
     end
     exe('e;e;e;e')
 end
-hscaidi_out1 = function()
-    caidiout = 1
+hscaidi_out1=function()
+   caidiout=1
 end
-hscaidi_goon = function()
-    if caidiout == 1 then
-        EnableTriggerGroup("hscaidi", false)
-        return hscaidi_out()
-    else
-        return hscaidi()
+hscaidi_goon=function()
+    if caidiout==1 then
+           EnableTriggerGroup("hscaidi",false)
+       return hscaidi_out()
+        else
+                return hscaidi()
     end
 end
-hscaidi_out = function()
-    EnableTimer('caidiwalk', false)
-    EnableTriggerGroup("hscaidi", false)
+hscaidi_out=function()
+
+        EnableTimer('caidiwalk',false)
+    EnableTriggerGroup("hscaidi",false)
     return walk_wait()
 end
 -----------------------吐谷浑伏俟城------------------
-eaea = function()
-    locate_finish = 0
+eaea=function()
+    locate_finish=0   
     fastLocate()
-    return check_bei(eaea_start, 0.5)
+    return checkWait(eaea_start,2)--改成checkwait
 end
-eaea_start = function()
-    if string.find(locl.room, '吐谷浑伏俟城') then
-        exe('east')
-        return eaea_over()
-    else
-        return go(road.act)
-    end
+eaea_start=function()
+    if string.find(locl.room,'吐谷浑伏俟城') then
+          exe('east')
+                  --check_step_num1=check_step_num1+1
+          return eaea_over()
+       else
+          return go(road.act)
+       end
 end
-eaea_over = function()
+eaea_over=function()
     return walk_wait()
 end
 
-eaeab = function()
-    locate_finish = 0
+eaeab=function()
+    locate_finish=0   
     fastLocate()
-    return check_bei(eaea_startb, 0.5)
+    return checkWait(eaea_startb,2)--改成checkwait
 end
-eaea_startb = function()
-    if string.find(locl.room, '吐谷浑伏俟城') then
-        exe('west')
-        return eaea_overb()
-    else
-        return go(road.act)
-    end
+eaea_startb=function()
+    if string.find(locl.room,'吐谷浑伏俟城') then
+          exe('west')
+                  --check_step_num1=check_step_num1+1
+          return eaea_overb()
+       else
+          return go(road.act)
+       end
 end
-eaea_overb = function()
+eaea_overb=function()
     return walk_wait()
 end
 
-eaeac = function()
-    locate_finish = 0
+eaeac=function()
+    locate_finish=0   
     fastLocate()
-    return check_bei(eaea_startc, 0.5)
+    return checkWait(eaea_startc,2)--这里也是改成checkwait
 end
-eaea_startc = function()
-    if string.find(locl.room, '吐谷浑伏俟城') then
-        exe('northwest')
-        return eaea_overc()
-    else
-        return go(road.act)
-    end
+eaea_startc=function()
+    if string.find(locl.room,'吐谷浑伏俟城') then
+          exe('northwest')
+                  --check_step_num1=check_step_num1+1
+          return eaea_overc()
+       else
+          return go(road.act)
+       end
 end
-eaea_overc = function()
+eaea_overc=function()
     return walk_wait()
 end
 
-eaead = function()
-    locate_finish = 0
+eaead=function()
+        locate_finish=0   
     fastLocate()
-    return check_bei(eaea_startd, 0.5)
+    return checkWait(eaea_startd,2)--原来的checkbei改成checkWait，并且在这里强制等2秒，就能把flood躲过去了，缺点就是每次走到这里都停2秒
 end
-eaea_startd = function()
-    if string.find(locl.room, '吐谷浑伏俟城') then
-        exe('north')
-        return eaea_overd()
-    else
-        return go(road.act)
-    end
+eaea_startd=function()
+    if string.find(locl.room,'吐谷浑伏俟城') then
+          exe('north')
+                  --check_step_num1=check_step_num1+1
+          return eaea_overd()
+       else
+          return go(road.act)
+       end
 end
-eaea_overd = function()
+eaea_overd=function()
     return walk_wait()
 end
 ----------------------------------伊犁城门------------------------------------
@@ -1844,10 +2206,13 @@ duHhe = function()
         flag.duhe = 0
     end
     duhe_trigger()
-    locate()
-    return check_bei(duHhe_start)
+        locate_finish='duHhe_start'
+        return locate()
+   --[[ locate()
+    return check_bei(duHhe_start)]]
 end
 duHhe_start = function()
+        locate_finish=0
     if string.find(locl.room, '渡') then
         EnableTriggerGroup("duhe", true)
         if flag.duhe == 1 then
@@ -1981,11 +2346,16 @@ duCjiang = function()
     else
         flag.dujiang = 0
     end
-    dujiang_trigger()
+    --[[dujiang_trigger()
     locate()
-    return check_bei(duCjiang_check)
+    return check_bei(duCjiang_check)]]
+    dujiang_trigger()
+        locate_finish='duCjiang_check'
+        return locate()
 end
 duCjiang_check = function()
+        locate_finish=0
+        djdj=1
     if string.find(locl.room, '江南官道') then
         exe('halt;n')
         return duCjiang_start()
@@ -2052,19 +2422,27 @@ dujiang_out = function()
 end
 dujiang_over = function()
     EnableTriggerGroup("dujiang", false)
-    EnableTriggerGroup("dujiangchuanfu", true)
     DeleteTriggerGroup("dujiang")
     djdh_open()
-    check_step_time = os.clock()
-    check_step_num = 0
-    need_waittime = 0
-    common_walk = 0.01
     weapon_unwield()
     weapon_wield()
     return walk_wait()
 end
+function djdh_open()                                                                             --重新打开被封闭的渡江渡河路径
+	map.rooms["dali/dalisouth/jiangnan"].ways["#duCjiang"]='dali/dalisouth/jiangbei'
+	map.rooms["dali/dalisouth/jiangbei"].ways["#duCjiang"]='dali/dalisouth/jiangnan'
+	map.rooms["city/jiangbei"].ways["#duCjiang"]='city/jiangnan'		
+	map.rooms["city/jiangnan"].ways["#duCjiang"]='city/jiangbei'
+	map.rooms["lanzhou/road3"].ways["#duHhe"]='lanzhou/road2'
+	map.rooms["lanzhou/road2"].ways["#duHhe"]='lanzhou/road3'
+	map.rooms["lanzhou/dukou3"].ways["#duHhe"]='lanzhou/dukou2'		
+	map.rooms["lanzhou/dukou2"].ways["#duHhe"]='lanzhou/dukou3'
+	map.rooms["changan/road3"].ways["#duHhe"]='changan/road2'
+	map.rooms["changan/road2"].ways["#duHhe"]='changan/road3'
+	map.rooms["huanghe/road3"].ways["#duHhe"]='huanghe/road2'		
+	map.rooms["huanghe/road2"].ways["#duHhe"]='huanghe/road3'
+end
 dujiang_wait = function()
-    -- exe('set 积蓄')
     RemoveObserver("dujianWaitOb")
     if hp.exp > 2000000 then
         exe('yun jing;yun qi;yun jingli;')
@@ -2097,24 +2475,6 @@ end
 dujiang_move = function()
     exe('e;e;w')
     return dujiang_dujiang()
-end
--- ---------------------------------------------------------------
--- 有船夫的渡河和渡河路径
--- ---------------------------------------------------------------
-function djdh_open()                                                                             
-    --重新打开被封闭的渡江渡河路径
-	map.rooms["dali/dalisouth/jiangnan"].ways["#duCjiang"]='dali/dalisouth/jiangbei'
-	map.rooms["dali/dalisouth/jiangbei"].ways["#duCjiang"]='dali/dalisouth/jiangnan'
-	map.rooms["city/jiangbei"].ways["#duCjiang"]='city/jiangnan'		
-	map.rooms["city/jiangnan"].ways["#duCjiang"]='city/jiangbei'
-	map.rooms["lanzhou/road3"].ways["#duHhe"]='lanzhou/road2'
-	map.rooms["lanzhou/road2"].ways["#duHhe"]='lanzhou/road3'
-	map.rooms["lanzhou/dukou3"].ways["#duHhe"]='lanzhou/dukou2'		
-	map.rooms["lanzhou/dukou2"].ways["#duHhe"]='lanzhou/dukou3'
-	map.rooms["changan/road3"].ways["#duHhe"]='changan/road2'
-	map.rooms["changan/road2"].ways["#duHhe"]='changan/road3'
-	map.rooms["huanghe/road3"].ways["#duHhe"]='huanghe/road2'		
-	map.rooms["huanghe/road2"].ways["#duHhe"]='huanghe/road3'
 end
 
 jqgin = function()
@@ -2643,6 +3003,7 @@ function outemgmc_over()
     walk_wait()
 end
 function Toghz()
+    weapon_unwield()--加入unwield，卸掉手上武器。
     exe("get axe;wield axe;wield jian;wield dao;kan guanmu;drop axe")
     if score.party and score.party == '峨嵋派' and score.master == '孤鸿子' then
         exe("ed;yue qiaobi")
@@ -3031,7 +3392,7 @@ function Checkloboat()
 end
 function Checkboat()
     if string.find(locl.room, '船') or string.find(locl.room, '舟') then
-        return boatCheck()
+       return boatCheck()
     elseif string.find(locl.room, '岸边') then
         exe('qu xiaozhu')
         return create_timer_s('boat', 3, 'Checkloboat')
@@ -3290,6 +3651,8 @@ function ShangguanOk()
 end
 function ptoSld()
     exe('yell 洪教主洪福齐天')
+    create_trigger_t("tosldpack1", "^(> )*大船慢慢靠向陸地，你整理了下衣冠便缓缓走了下去。", "", "sldpack")
+    SetTriggerOption("tosldpack1", "group", "tosldpack")
     checkWait(ptoSldCheck, 2)
 end
 function ptoSldCheck()
@@ -3297,10 +3660,17 @@ function ptoSldCheck()
     lianxi()
     check_halt(ptosldDukou, 2)
 end
-function ptosldDukou()
+function sldpack()
+    EnableTriggerGroup("tosldpack", false)
+    locate()
     if locl.room == "渡口" then
         return toSldOver()
-    elseif locl.room ~= "海船" then
+    end
+end
+function ptosldDukou()
+    --[[if locl.room == "渡口" then
+        return toSldOver()
+    else]]if locl.room ~= "海船" then
         return walk_wait()
     else
         return checkWait(ptoSldCheck, 2)
@@ -3357,7 +3727,7 @@ function toSldTrigger()
     create_trigger_t('mufabusy2', '^(> )*只见(\\D*)轻轻一跃，已坐在木筏上。', '', 'mufaok')
     create_trigger_t('mufabusy3', '^(> )*你好象没有武器，拿手砍？', '', 'sld_need_weapon')
     create_trigger_t('mufabusy4', '^(> )*你要绑什么？', '', 'wait_mufa')
-    create_trigger_t('mufabusy5', '^(> )*什么','','wait_mufa') 
+    create_trigger_t('mufabusy5', '^*什么？', '', 'wait_mufa')
     create_trigger_t('mufabusy6', '^(> )*你拿起木筏上的一根木头，将木筏向前划去。', '', 'toSldHua')
     SetTriggerOption("mufabusy1", "group", "mufabusy")
     SetTriggerOption("mufabusy2", "group", "mufabusy")
@@ -3451,28 +3821,35 @@ function outSld()
     check_busy(outSldGive)
 end
 function outSldGive()
-    wait.make( function()
-        wait.time(2)
-        exe('out;#3s;give ling pai to chuan fu')
-        check_busy(outSldWait, 3)
-    end )
+    wait.make(function() 
+       wait.time(2)
+    exe('out;#3s;give ling pai to chuan fu')
+    create_timer_s('chadui',0.4,'chaduiSLD') ----------神龙插队
+    check_busy(outSldWait,3)
+    end)
 end
 function outSldWait()
-    wait.make( function()
-        wait.time(6)
-        locate()
-        check_busy(outSldCheck)
-    end )
+    wait.make(function() 
+       wait.time(6)
+    locate()
+    check_busy(outSldCheck)
+    end)
 end
+-------------插队
+function chaduiSLD() 
+     exe('give ling pai to chuan fu')
+end
+
 function outSldCheck()
-    if locl.room == "渡口" then
-        exe('#3n;enter')
-        return outSld()
+    if locl.room=="渡口" then
+       exe('say 插队插队插队！')
+       return outSld()
     else
-        -- cntr1 = countR(20)
-        return walk_wait()
+	   --cntr1 = countR(20)
+       return walk_wait()
     end
 end
+---------------插队
 function outSldBoat()
     if cntr1() < 1 then
         return go(road.act)
@@ -3553,6 +3930,238 @@ function goXtjGo()
     locate()
     check_halt(goXtjCheck)
 end]]
+
+------------------------------------------------绝情谷石窟------------------------------------------------------
+--[[shikuyin=function()
+	if corpsehave==1 then
+		return shikuyin1()
+	else
+	    DeleteTriggerGroup("kdizi")
+        create_trigger_t('kdizi1','^>*\\s*绿衣弟子「啪」的一声倒在地上，挣扎着抽动了几下就死了。','','shikuyin00')  
+        create_trigger_t('kdizi2','^(> )*这里没有这个人。','','shikuyin00')   
+        SetTriggerOption("kdizi1","group","kdizi")
+		SetTriggerOption("kdizi2","group","kdizi")
+	    EnableTriggerGroup("kdizi",false)
+	    wait.make(function() 
+	        wait.time(0.5)
+	        exe('s;w;n')
+	        locate_finish='shikuyin0'
+	        return locate()
+	    end)
+	end
+end
+shikuyin0=function()
+	locate_finish=0
+	if locl.room=='花园' then
+		EnableTriggerGroup("kdizi",true)
+		exe('yield no')
+		exe('kill dizi')
+	else
+		checkWait(go_locate,5)
+	end
+end
+shikuyin00=function()
+    EnableTriggerGroup("kdizi",false)
+	wait.make(function() 
+	    wait.time(0.5)
+	    exe('get corpse;s;e;n')
+	    return shikuyin1()
+	end)
+end]]
+
+shikuyin=function()
+	if corpsehave==1 then
+		return shikuyin1()
+	else
+	    DeleteTriggerGroup("kdizi")
+        create_trigger_t('kdizi1','^>*\\s*绿衣僮儿「啪」的一声倒在地上，挣扎着抽动了几下就死了。','','shikuyin00')  
+        create_trigger_t('kdizi2','^(> )*这里没有这个人。','','shikuyin00')   
+        SetTriggerOption("kdizi1","group","kdizi")
+		SetTriggerOption("kdizi2","group","kdizi")
+	    EnableTriggerGroup("kdizi",false)
+	    wait.make(function() 
+	        wait.time(0.5)
+	        exe('s;w;s;s;out')
+	        locate_finish='shikuyin0'
+	        return locate()
+	    end)
+	end
+end
+shikuyin0=function()
+	locate_finish=0
+	if locl.room=='大石屋' then
+		EnableTriggerGroup("kdizi",true)
+		exe('yield no')
+		exe('kill tonger')
+	else
+		checkWait(go_locate,5)
+	end
+end
+shikuyin00=function()
+    EnableTriggerGroup("kdizi",false)
+	wait.make(function() 
+	    wait.time(0.5)
+	    exe('get corpse;enter;xian hua;zuan dao;n;e;n')
+	    return shikuyin1()
+	end)
+       
+       
+end
+
+shikuyin1=function()
+	DeleteTriggerGroup("keyu")
+    create_trigger_t('keyu1','^>*\\s*你右足踏在死鳄肚上，借劲跃起，接著左足在鳄鱼的背上一点。你已跃到对岸','','shikuyin3')    
+    SetTriggerOption("keyu1","group","keyu")
+	exe('tui zhonglu;tui eastlu zhong;tui westlu east;tui zhonglu west')
+	flag.times=5
+	return shikuyin2_do()
+end
+
+shikuyin2=function()
+	--EnableTriggerGroup("keyu",true)
+	exe('unset wimpy;jiali max')
+	create_timer_s('walkWait4',3,'shikuyin2_check_do')
+end
+
+shikuyin2_check_do=function()
+	EnableTriggerGroup("keyu",true)
+	exe('drop corpse;halt;ta corpse;kill e yu')
+end
+
+shikuyin2_do=function()
+	EnableTriggerGroup("keyu",true)
+	exe('unset wimpy;jiali max;kill e yu;kill e yu 2')
+	create_timer_s('walkWait4',4,'shikuyin2_check_do')
+end
+shikuyin3=function()
+	DeleteTriggerGroup("eyudong")
+	EnableTimer('walkWait4',false)
+	corpsehave=1
+	if flag.find==1 then return end
+    create_trigger_t('eyudong1','^>*\\s*你眼前霍然一亮，山洞越来越大，地下越来越平整。','','shikuyin5_check')    
+    SetTriggerOption("eyudong1","group","eyudong")
+    exe('zuan dong')
+	wait.make(function()
+	    wait.time(2)
+	    exe('zuan dong')
+	end)
+	    return shikuyin4()
+end
+
+shikuyin4=function()
+	EnableTriggerGroup("eyudong",true)
+	if flag.find==1 then return end
+	create_timer_s('walkWait5',1.2,'shikuyin4_check_do')
+end
+
+shikuyin4_check_do=function()
+	EnableTriggerGroup("eyudong",true)
+	if flag.find==1 then return end
+	exe('pa down')
+end
+
+shikuyin5_check=function()
+	EnableTriggerGroup("eyudong",false)
+	EnableTimer('walkWait5',false)
+	if flag.find==1 then return end
+	return check_halt(walk_wait)
+end
+
+shikuout=function()
+	DeleteTriggerGroup("outjqgshiku")
+    create_trigger_t('outjqgshiku1','^>*\\s*你把树皮搓绞成索，费尽了力气，才把树皮搓成一条极长的索子','','shikuout1') 
+	create_trigger_t('outjqgshiku2','^>*\\s*你已经有树皮索了，不需要再剥树皮了','','shikuout1') 
+    create_trigger_t('outjqgshiku3','^>*\\s*你已经将绳索一端缚在树干中间，不再需要树皮了','','shikuout1')    
+    SetTriggerOption("outjqgshiku1","group","outjqgshiku")
+	SetTriggerOption("outjqgshiku2","group","outjqgshiku")
+	SetTriggerOption("outjqgshiku3","group","outjqgshiku")
+	--EnableTriggerGroup("outjqgshiku",false)
+	create_timer_s('walkWait6',0.3,'shikuout_check_do')
+end
+shikuout_check_do=function()
+	EnableTriggerGroup("outjqgshiku",true)
+	exe('zhe shugan;bo shupi;cuo shupi')
+end
+
+shikuout1=function()
+	EnableTriggerGroup("outjqgshiku",false)
+	EnableTimer('walkWait6',false)
+	wait.make(function()
+	    wait.time(1)
+	    return check_halt(shikuout11)
+	end)
+end
+shikuout11=function()
+	EnableTimer('walkWait6',false)
+    wait.make(function()
+	    wait.time(1)
+        weapon_wield()
+		exe('qie corpse')
+        return check_halt(shikuout2)
+	end)
+end
+shikuout2=function()
+	EnableTimer('walkWait6',false)
+	exe('pa shibi')
+	return check_bei(shikuout3)
+end
+shikuout3=function()
+	exe('fu shugan;shuai shugan')
+	return check_bei(shikuout4)
+end
+shikuout4=function()
+	exe('pa up')
+	return check_bei(shikuyin4_out_do)
+end
+
+
+shikuyin4_out_do=function()
+	EnableTriggerGroup("outjqgshiku",false)
+	return check_bei(walk_wait)
+end
+-----------------------------苏州闺房---------------------------------------
+--闺房｜后院｜翰林府院后院
+szgf=function()
+	locate_finish='szgf1'
+	return locate()
+end
+szgf1=function()
+	if flag.find==1 then return end
+	if locl.room=='后院' then
+        return szgf2()
+	else
+		return go_locate()
+	end
+end
+szgf2=function()
+	    exe('yield no')
+        exe('kill ling')
+	    wait.make(function()
+	      wait.time(3)
+          return check_halt(szgf3)
+        end)
+end
+szgf3=function()
+	exe('kai men;n;ask ling shuanghua about 丁典')
+   wait.make(function()
+	   wait.time(0.2)
+	   if flag.find==1 then return end
+       return check_halt(szgf33)
+	end)
+end
+szgf33=function()
+   if flag.find==1 then return end
+   exe('w')
+   return checkWait(szgf4,0.2)
+end
+szgf4=function()
+   if flag.find==1 then return end
+   wait.make(function()
+	   wait.time(0.2)
+   exe('e')
+   return walk_wait()
+   end)
+end
 ------------------------------------------------进古墓玄铁剑树林------------------------------------------------
 function goXtj()
     exe('n')
@@ -3616,113 +4225,6 @@ end
 function outXtjOver()
     walk_wait()
 end
--------------------------------慕容--------------------------------------------
---燕子坞厢房到书房，之前的room函数等待<<EOF
-yzwxiangfang2shufang=function()
-    exe('n')
-    return walk_wait()
-end--EOF
---燕子坞大厅到书房，之前的room函数等待<<EOF
-yzwdating2shufang=function()
-    exe('e')
-    return walk_wait()
-end--EOF
---燕子坞长廊到书房，之前的room函数等待<<EOF
-yzwchanglang2shufang=function()
-    exe('w')
-    return walk_wait()
-end--EOF
---燕子坞私塾到书房，之前的room函数等待<<EOF
-yzwsishu2shufang=function()
-    exe('s')
-    return walk_wait()
-end--EOF
---燕子坞书房到夹壁，之前的room函数等待<<EOF
-yzwshufang2jiabi=function()
-    exe('sit chair;zhuan')
-    return walk_wait()
-end--EOF
------------------------------- 峨嵋洗象池  ----------------------------------
-function emxxc()
-    wait.make(function()
-        wait.time(3)
-        exe("ed")
-        return walk_wait()
-    end)
-end
-------------------------------福州吊桥----------------------------------------
-function fznm()
-   if flag.find==1 then return end
-   return check_halt(fznmcheck)
-end
-function fznmcheck()
-           wait.make(function()
-               wait.time(3)
-               exe('n;n;w;w;w;w;nw;sw;sw;w;sw;sw;sw;sw;w;s;sd;sd;s;s;s;s;e;e;e;e;e;e')
-               return fznmcheckdo1()
-           end)
-end
-function fznmcheckdo1()
-        if flag.find==1 then return end
-    exe('e')
-        return checkWait(fznmcheckdo2,0.1)
-end
-function fznmcheckdo2()
-        if flag.find==1 then return end
-    exe('ne')
-        return checkWait(fznmcheckdo3,0.1)
-end
-function fznmcheckdo3()
-        if flag.find==1 then return end
-    exe('ne')
-        return checkWait(fznmcheckdo4,0.1)
-end
-function fznmcheckdo4()
-        if flag.find==1 then return end
-    exe('ne')
-        return checkWait(fznmcheckdo5,0.1)
-end
-function fznmcheckdo5()
-        if flag.find==1 then return end
-    exe('n')
-        return walk_wait()
-end
-function fznmdq()
-        return fznmdqcheck()
-end
-function fznmdqcheck()
-           wait.make(function()
-               wait.time(3)
-                   if flag.find==1 then return end
-               exe('s;sw;sw;sw;w;w;w;w;w;w;w;n;n;n;n;nu;nu;n;e;ne;ne;ne;ne;e;ne;ne;se;e')
-               return fznmdqcheckdo1()
-           end)
-end
-function fznmdqcheckdo1()
-        if flag.find==1 then return end
-    exe('e')
-        return checkWait(fznmdqcheckdo2,0.1)
-end
-function fznmdqcheckdo2()
-        if flag.find==1 then return end
-    exe('e')
-        return checkWait(fznmdqcheckdo3,0.1)
-end
-function fznmdqcheckdo3()
-        if flag.find==1 then return end
-    exe('e')
-        return checkWait(fznmdqcheckdo4,0.1)
-end
-function fznmdqcheckdo4()
-        if flag.find==1 then return end
-    exe('s')
-        return checkWait(fznmdqcheckdo5,0.1)
-end
-function fznmdqcheckdo5()
-        if flag.find==1 then return end
-    exe('s')
-        return walk_wait()
-end
 -----------by fqyy 2017-05-24 星宿海山洞
 function xingxiushandong()
     DeleteTriggerGroup("xxsdAsk")
@@ -3784,7 +4286,9 @@ function inxiaofu()
         wait.time(1)
         return xiaofu_check()
     end )
+
 end
+
 function xiaofu_check()
     if locl.room == "萧府大厅" then
         check_busy(walk_wait)
@@ -3793,6 +4297,8 @@ function xiaofu_check()
             wait.time(1)
             return xiaofu_check()
         end )
+else
+         go(road.act)
     end
 end
 function xiaofuask()
@@ -3994,6 +4500,70 @@ function xsMianbiChk()
     end
 end
 function xsMianbiOver()
+    return walk_wait()
+end
+
+function mlIn()
+    tmp.way = "south"
+    tmp.ml = "in"
+    locate()
+    return checkWait(wayMl, 0.1)
+end
+--[[function mlOut()
+    tmp.way = "north"
+    tmp.ml = "out"
+    locate()
+    return checkWait(wayMl, 0.1)
+end]]
+--[[function wayMl()
+    local ways = {
+        ["north"] = "east",
+        ["east"] = "south",
+        ["south"] = "west",
+        ["west"] = "north",
+    }
+    local wayt = {
+        ["north"] = "west",
+        ["east"] = "north",
+        ["south"] = "east",
+        ["west"] = "south",
+    }
+    if not tmp.way or not ways[tmp.way] then
+        tmp.way = 'south'
+    end
+    if locl.room == "青石板大路" then
+        if tmp.ml and tmp.ml == "in" then
+            return wayMlOver()
+        else
+            tmp.way = "north"
+            exe(tmp.way)
+            locate()
+            return checkWait(wayMl, 0.1)
+        end
+    end
+    if locl.room == "小路" then
+        if tmp.ml and tmp.ml == "out" then
+            return wayMlOver()
+        else
+            tmp.way = "south"
+            exe('south;south')
+            locate()
+            return checkWait(wayMl, 0.1)
+        end
+    end
+    if locl.room ~= "小路" and locl.room ~= "青石板大路" and locl.room ~= "梅林" then
+        return wayMlOver()
+    end
+    tmp.way = ways[tmp.way]
+    while not locl.exit[tmp.way] do
+        Note(tmp.way)
+        tmp.way = wayt[tmp.way]
+    end
+    exe(tmp.way)
+    locate()
+    return checkWait(wayMl, 0.2)
+end]]
+function wayMlOver()
     return walk_wait()
 end
 
@@ -4407,7 +4977,7 @@ end
 
 
  
-room = { }
+--[[room = { }
 roomMaze = {
     ['大草原草海'] = function() return locl.dir end,
     ['峨嵋山八十四盘'] = 'ne;nd',
@@ -4438,12 +5008,14 @@ roomMaze = {
     ['佛山镇林间道'] = '#2e;nw;ne;se;n',
     ['杭州城柳林'] = '#3n',
     ['回疆针叶林'] = function() if math.random(1, 4) == 1 then return 'ne;#15e' elseif math.random(1, 4) == 2 then return 'ne;#15w' elseif math.random(1, 4) == 3 then return 'ne;#15s' else return 'ne;#15n' end end,
-    ['华山松树林'] = function() return hsssl() end,
+    ['华山松树林'] = function() if locl.room_relation=='空地｜松树林----松树林----石屋｜山脚下松树林' then return 's;se' else return hsssl() end end,
     ['黄河流域黄河岸边'] = 'nu;#2(sw);#2w',
     ['黄河流域树林'] = 'e;ne;#2n',
     ['黄河流域草地'] = 'e;s',
     ['黄河流域田地'] = '#2e;ne;n',
     ['丐帮杏子林'] = 'e;n;w;n',
+    ['佛山镇小路']='sd;s;sd;s;sd;s',
+    ['梅庄梅林']=function() return mlOut() end,
     ['归云庄树林深处'] = 's;se;w;#2s;w;s',
     ['归云庄树林'] = '#2e;w;#2s',
     ['归云庄草地'] = '#2e;w;s',
@@ -4453,7 +5025,8 @@ roomMaze = {
     ['明教小沙丘'] = '#4e',
     ['明教栈道'] = '#2(sw);#2(se);s',
     ['明教山路'] = 'ed;wd;sd;nd',
-    ['明教树林深处'] = function() if locl.id["老虎"] then return 'halt;n;w;nu' elseif locl.id["小树枝"] then return 'halt;w;nw;n;w;nu' elseif locl.id["无名尸体"] then return 'halt;nw;n;w;nu' elseif locl.id["大树干"] then return 'halt;w;n;w;nu' else return locl.dir end end,
+    --['明教树林深处'] = function() if locl.id["老虎"] then return 'halt;n;w;nu' elseif locl.id["小树枝"] then return 'halt;w;nw;n;w;nu' elseif locl.id["无名尸体"] then return 'halt;nw;n;w;nu' elseif locl.id["大树干"] then return 'halt;w;n;w;nu' else return locl.dir end end,
+    ['明教树林深处']=function() if locl.room_relation=='树林深处树林↖｜树林深处树林深处' then return 'halt;n;w;nu' elseif locl.room_relation=='树林↖树林深处---树林深处树林深处' then return 'halt;w;nw;n;w;nu' elseif locl.room_relation=='树林深处↖树林深处---树林深处↙｜树林深处树林深处树林深处' then return 'halt;nw;n;w;nu' elseif locl.room_relation=='树林深处树林深处｜↗树林深处---树林深处↘树林深处树林深处' then return 'halt;w;n;w;nu' else return locl.dir end end,
     ['明教树林'] = function() if locl.id["大石头"] then return 'halt;e;nu' elseif locl.id["大树干"] then return 'halt;w;nu' else return locl.dir end end,
     ['神龙岛小木筏'] = function() return toSldHua() end,
     ['神龙岛沙滩'] = 'sw;se',
@@ -4595,6 +5168,211 @@ roomNodir = {
     ['星宿海小路'] = { 'south', 'west' },
     ['星宿海海边荒路'] = { 'south', 'north', 'east' },
 
+}]]-----旧版
+
+room={}
+roomMaze={
+['大草原草海']='s;n;w;e;n;n;w;e;e;n;n;w;e',
+--['峨嵋山八十四盘']='ne;nd',
+--['峨嵋山九老洞']=function() if locl.exit["enter"] then return 'enter' else return 'drop fire;leave;leave;leave;leave' end end,
+['峨嵋山冷杉林']='sw;se',
+--['峨嵋山十二盘']='ne;ed;ne;ed',
+['峨嵋山钻天坡']='ed;ed',
+['昆仑山葱岭谷']='out;w;e;w;e;w;e;w;e',
+['昆仑山云杉林']=function()
+ wait.make(function()
+       wait.time(1)
+                  local r=math.random(6)
+                    if r==1 then
+                    exe("e;n;w;nw;ne")
+                    elseif r==2 then
+                    exe("n;w;nw;ne")
+                    elseif r==3 then
+                    exe("w;nw;ne")
+                    elseif r==4 then
+                    exe("nw;ne")
+                    elseif r==5 then
+                    exe("e;ne")
+                    elseif r==6 then
+                    exe("ne")
+                    end
+    end)
+end,
+['伊犁城客栈']='se',
+['杭州城柳林']='#3n',
+['苏州城胡同']='w;sw;s',
+--['大雪山吐蕃织造作坊']='e;n;e',
+--['大雪山佛照门']='w;n;w',
+--['大雪山猛虎营']='e;n;e',
+--['大雪山明霞门']='n;n;e',
+--['大雪山巨水门']='s;s;s;e',
+['恒山树林']='e;e;e',
+['回疆针叶林']=function() return outZyl() end,
+--['华山山涧']='nw;ne;ne;eu;se',
+['华山松树林']=function() if locl.room_relation=='空地｜松树林----松树林----石屋｜山脚下松树林' then return 's;se' else return hsssl() end end,
+['华山空地']=function() return hsssl() end,
+['襄阳郊外树林']=function() return outXtj() end,
+--['黄河流域黄河岸边']='nu;#2(sw);#2w',
+--['黄河流域树林']='e;ne;#2n',
+--['黄河流域草地']='e;s',
+--['黄河流域田地']='#2e;ne;n',
+['丐帮杏子林']='e;n;w;n',
+['佛山镇小路']='sd;s;sd;s;sd;s',
+['梅庄梅林']=function() return mlOut() end,
+['归云庄树林深处']='s;se;w;#2s;w;s',
+['归云庄树林']='#2e;w;#2s',
+['归云庄草地']='#2e;w;s',
+['姑苏慕容柳树林']='e;n;w;n;yue tree',
+['燕子坞小门']='s;e;e;e;e;e;e;e;e',
+['燕子坞长廊']='s;s;e;e;e;e;e;e;e;e;e;e;n;e;s',
+--['明教小沙丘']='#4e',
+['明教紫杉林']='#4e',
+['平定州土路']='ne;eu;e;se;e;s',
+--['明教栈道']='#2(sw);#2(se);s',
+--['明教山路']='ed;wd;sd;nd',
+['大雪山遮雨廊']='eu;wu;s;s;s;s;e;e;e;w;w;sd',
+['莆田少林山路']='nd;wd;sw;w;nw;ne;ne;ne;se;e;n;nw',
+['莆田少林麻田地']='nu;n;ne;e;e;e',
+['福州城山路']='sw;w;nw;sw;w;sw;w;nw;sw;su;sd;s',
+--['明教树林深处']=function() if locl.id["老虎"] then return 'halt;n;w;nu' elseif locl.id["小树枝"] then return 'halt;w;nw;n;w;nu' elseif locl.id["无名尸体"] then return 'halt;nw;n;w;nu' elseif locl.id["大树干"] then return 'halt;w;n;w;nu' else return locl.dir end end,
+['明教树林深处']=function() if locl.room_relation=='树林深处树林↖｜树林深处树林深处' then return 'halt;n;w;nu' elseif locl.room_relation=='树林↖树林深处---树林深处树林深处' then return 'halt;w;nw;n;w;nu' elseif locl.room_relation=='树林深处↖树林深处---树林深处↙｜树林深处树林深处树林深处' then return 'halt;nw;n;w;nu' elseif locl.room_relation=='树林深处树林深处｜↗树林深处---树林深处↘树林深处树林深处' then return 'halt;w;n;w;nu' else return locl.dir end end,
+--['明教树林']=function() if locl.id["大石头"] then return 'halt;e;nu' elseif locl.id["大树干"] then return 'halt;w;nu' else return locl.dir end end,
+['神龙岛小木筏'] = function() return toSldHua() end,
+['神龙岛沙滩']='sw;se',
+['神龙岛树林']='sw;se;s',
+['嵩山少林竹林']=function()
+ wait.make(function()
+       wait.time(1)
+                  local r=math.random(14)
+                    if r==1 then
+                    exe("sd;s")
+                    elseif r==2 then
+                    exe("sw;n;s;w;e;w;e;e;s;w;n;nw;n")
+                    elseif r==3 then
+                    exe("n;s;w;e;w;e;e;s;w;n;nw;n")
+                    elseif r==4 then
+                    exe("s;w;e;w;e;e;s;w;n;nw;n")
+                    elseif r==5 then
+                    exe("w;e;w;e;e;s;w;n;nw;n")
+                    elseif r==6 then
+                    exe("e;w;e;e;s;w;n;nw;n")
+                    elseif r==7 then
+                    exe("w;e;e;s;w;n;nw;n")
+                    elseif r==8 then
+                    exe("e;e;s;w;n;nw;n")
+                    elseif r==9 then
+                    exe("e;s;w;n;nw;n")
+                    elseif r==10 then
+                    exe("s;w;n;nw;n")
+                    elseif r==11 then
+                    exe("w;n;nw;n")
+                    elseif r==12 then
+                    exe("n;nw;n")
+                    elseif r==13 then
+                    exe("nw;n")
+                    elseif r==14 then
+                    exe("n")
+                    end
+    end)
+end,
+['嵩山少林禅房']='n;n;s;e',
+['嵩山少林菜园子']='s;w;n;n;n;nw;n;n;w;w;w',
+['嵩山少林回廊']=function() if dest.area=='嵩山少林' or dest.room=='达摩院后殿' then return 'n;w;n;n;w;n' else return 'e;s;e;s;e;s;e' end end,
+['嵩山少林练武场']='s;s;n;e',
+['嵩山少林武僧堂']='n;n;n;e',
+--['嵩山少林石阶']='sd;sd;sd;ed;sd;e',
+-- ain
+['嵩山少林塔林']=function()
+ wait.make(function()
+       wait.time(1)
+                  local r=math.random(11)
+                    if r==1 then
+                    exe("ne;se;n;e;sw;e;ne;se;s;se;open door;e")
+                    elseif r==2 then
+                    exe("se;n;e;sw;e;ne;se;s;se;open door;e")
+                    elseif r==3 then
+                    exe("n;e;sw;e;ne;se;s;se;open door;e")
+                    elseif r==4 then
+                    exe("e;sw;e;ne;se;s;se;open door;e")
+                    elseif r==5 then
+                    exe("sw;e;ne;se;s;se;open door;e")
+                    elseif r==6 then
+                    exe("e;ne;se;s;se;open door;e")
+                    elseif r==7 then
+                    exe("ne;se;s;se;open door;e")
+                    elseif r==8 then
+                    exe("se;s;se;open door;e")
+                    elseif r==9 then
+                    exe("s;se;open door;e")
+                    elseif r==10 then
+                    exe("se;open door;e")
+                    elseif r==11 then
+                    exe("open door;e")
+                    end
+    end)
+end,
+['嵩山少林松树林']='w;n;nw',
+['嵩山少林僧舍']=function() if locl.id["慧合尊者"] then return 'w;s;e' elseif locl.id["慧虚尊者"] then return 'e;s;w' else return locl.dir end end,
+['天龙寺松树林']='s;w;s;w;#8s',
+--['武当山黄土路']='e;e',
+['武当山小径']='#5n',
+['铁掌山松树林']='n;e;n;w;n',
+--['襄阳城山间小路']='ne;nd;se;se;#2s;n;e',
+['桃源县石梁']='jump front',
+--['星宿海星宿海']='se;#7n',
+['星宿海大沙漠']='#8w',
+--['星宿海山洞']='out;use fire;zuan out;ed',
+--['扬州城长江北岸']='w;w;e;n',
+--['扬州城长江南岸']='w;w;e;s;se;s',
+['曼佗罗山庄花丛中']='south;#3w;#2e;#3s',
+}
+
+roomNodir={
+['大理皇宫正厅']={'north'},
+['兰州城青城']={'northeast'},
+['长安城土路']={'east','west'},
+['杭州城山路']={'east','west'},
+['杭州城小筑']={'southwest'},
+--['峨嵋山九老洞']={'leave'},
+['黄河流域树林']={'southwest'},
+['华山村村中心']={'northwest','northeast'},
+['华山空地']={'southdown'},
+['华山山脚下']={'south'},
+['绝情谷山顶平地']={'northdown'},
+['兰州城苗家庄门口']={'west'},
+['昆仑山铁琴居']={'west'},
+['昆仑山九曲廊']={'southwest'},
+['昆仑山后院门']={'east'},
+['昆仑山后院']={'south'},
+['梅庄小路']={'south'},
+['明教黄土坪']={'south','east'},
+['明教巨木旗']={'west','east'},
+['明教烈火旗']={'west'},
+['明教洪水旗']={'east'},
+['明教锐金旗']={'east'},
+['明教厚土旗']={'east','west'},
+['明教聚议厅']={'west'},
+['苗疆山脚']={'northup','northwest'},
+['莆田少林戒持院']={'south'},
+
+['嵩山少林演武堂']={'west'},
+['嵩山少林舍利院']={'west'},
+['嵩山少林山路']={'east','northwest'},
+
+['嵩山寝殿']={'north'},
+['苏州城后院']={'north'},
+['武当山小径']={'south','west','east'},
+['无量山荆棘林']={'north','west'},
+['无量山后院']={'north'},
+
+['星宿海吐谷浑伏俟城']={'south'},
+['星宿海天山脚下']={'southwest'},
+['星宿海星宿海']={'south','north','east'},
+['星宿海日月洞口']={'west','east'},
+['星宿海日月洞']={'north'},
+['星宿海小路']={'south','west'},
+['星宿海海边荒路']={'south','north','east'},
+
 }
 
 MidNight = {
@@ -4611,35 +5389,66 @@ MidNight = {
     ['未'] = false,
     ['申'] = true,
 }
-
-MidDay = {
-    ['酉'] = false,
-    ['戌'] = true,
-    ['亥'] = true,
-    ['子'] = true,
-    ['丑'] = true,
-    ['寅'] = true,
-    ['卯'] = false,
-    ['辰'] = false,
-    ['巳'] = false,
-    ['午'] = false,
-    ['未'] = false,
-    ['申'] = false,
+YiliNight={
+['酉']=true,
+['戌']=true,
+['亥']=true,
+['子']=true,
+['丑']=true,
+['寅']=true,
+['卯']=false,
+['辰']=false,
+['巳']=false,
+['午']=false,
+['未']=false,
+['申']=false,
+}
+YiliNightHs={
+['酉']=false,
+['戌']=false,
+['亥']=false,
+['子']=true,
+['丑']=true,
+['寅']=true,
+['卯']=false,
+['辰']=false,
+['巳']=false,
+['午']=false,
+['未']=false,
+['申']=false,
+}
+MidDay={
+['酉']=false,
+['戌']=true,
+['亥']=true,
+['子']=true,
+['丑']=true,
+['寅']=true,
+['卯']=false,
+['辰']=false,
+['巳']=false,
+['午']=false,
+['未']=false,
+['申']=false,
 }
 
-MidHsDay = {
-    ['申'] = false,
-    ['酉'] = false,
-    ['戌'] = false,
-    ['亥'] = true,
-    ['子'] = true,
-    ['丑'] = true,
-    ['寅'] = true,
-    ['卯'] = true,
-    ['辰'] = false,
-    ['巳'] = false,
-    ['午'] = false,
-    ['未'] = false,
+MidHsDay={
+['申']=false,
+['酉']=false,
+['戌']=false,
+['亥']=true,
+['子']=true,
+['丑']=true,
+['寅']=true,
+['卯']=true,
+['辰']=false,
+['巳']=false,
+['午']=false,
+['未']=false,
+}
+MidYiliDay={
+['申']=true,
+['寅']=true,
 }
 
 function del_element(set, element)

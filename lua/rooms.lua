@@ -9288,34 +9288,35 @@ Room {
     },
     room_relative = "钻天坡←钻天坡←莲花石钻天坡",
 }
+
 Room {
-    id = "emei/zuantianpo2",
-    name = "钻天坡",
-    ways = {
-        ["eastdown"] = "emei/zuantianpo",
-        ["westup"] = "emei/xixiangchi",
-    },
-    room_relative="洗象池边←钻天坡←钻天坡钻天坡",
+        id = "emei/zuantianpo2",
+        name = "钻天坡",
+        ways = {
+                ["eastdown"] = "emei/zuantianpo",
+                ["westup"] = "emei/xixiangchi",
+        },
+        room_relative="洗象池边←钻天坡←钻天坡钻天坡",
 }
 Room {
-    id = "emei/xixiangchi",
-    name = "洗象池边",
-    ways = {
-        ["#emxxc"] = "emei/zuantianpo2",
-        ["southup"] = "emei/lingyunti",
-        ["north"] = "emei/xixiangchi1",
-    },
-    postcmds = {
-        ["eastdown"] = "#walkBusy", 
-    room_relative="钻天坡｜洗象池边-----凌云梯↗",
-    },
+        id = "emei/xixiangchi",
+        name = "洗象池边",
+        ways = {
+                ["#emxxc"] = "emei/zuantianpo2",
+                ["southup"] = "emei/lingyunti",
+                ["north"] = "emei/xixiangchi1",
+        },
+         postcmds = {
+                ["eastdown"] = "#walkBusy", 
+        room_relative="钻天坡｜洗象池边-----凌云梯↗",
+        },
 }
 Room {
-    id = "emei/xixiangchi1",
-    name = "洗象池边",
-    ways = {
-        ["south"] = "emei/xixiangchi",
-    },
+        id = "emei/xixiangchi1",
+        name = "洗象池边",
+        ways = {
+                ["south"] = "emei/xixiangchi",
+        },
 }
 Room {
     id = "fairyland/conglin2",
@@ -10330,19 +10331,19 @@ Room {
         ["许镖头"] = "xu biaotou",
     },
 }
+
 Room {
-    id = "fuzhou/bridge",
-    name = "南门吊桥",
-    ways =
-    {
-        ["south"] = "foshan/road14",
-        ["north"] = "fuzhou/nanmen",
-        ["#fznmdq"] = "fuzhou/nanmen",
-    },
-    lengths = {
-            ["north"] = "if MidNight[locl.time] or MidHsDay[locl.time] then return false else return 1 end",
-            ["#fznmdq"] = "if tmp.find then return 3 else return false end",
-    },
+        id = "fuzhou/bridge",
+        name = "南门吊桥",
+        ways = {
+                ["south"] = "foshan/road14",
+                ["north"] = "fuzhou/nanmen",
+                ["#fznmdq"] = "fuzhou/nanmen",
+        },
+        lengths = {
+                ["north"] = "if MidNight[locl.time] or MidHsDay[locl.time] then return false else return 1 end",
+                ["#fznmdq"] = "if tmp.find then return 3 else return false end",
+        },
 }
 Room {
     id = "fuzhou/chalou",
@@ -10623,22 +10624,22 @@ Room {
         ["north"] = "fuzhou/zhongxin",
     },
 }
+
 Room {
-    id = "fuzhou/nanmen",
-    name = "南门",
-    ways =
-    {
-        ["north"] = "fuzhou/nanjie",
-        ["south"] = "fuzhou/bridge",
-    },
-    nolooks =
-    {
-        ["south"] = true,
-    },
-    lengths =
-    {
-        ["south"] = "if MidNight[locl.time] then return false else return 1 end",
-    },
+        id = "fuzhou/nanmen",
+        name = "南门",
+        ways = {
+                ["north"] = "fuzhou/nanjie",
+                ["south"] = "fuzhou/bridge",
+                ["#fznm"] = "fuzhou/bridge",
+        },
+        --nolooks = {
+                --["south"] = true,
+        --},
+        lengths = {
+                ["south"] = "if MidNight[locl.time] or MidHsDay[locl.time] then return false else return 1 end",
+                ["#fznm"] = "if tmp.find then return 3 else return false end",
+        },
 }
 Room {
     id = "fuzhou/road1",
@@ -10836,89 +10837,82 @@ Room {
     },
 }
 Room {
-    id = "fuzhou/xijie",
-    name = "西街",
-    ways =
-    {
-        ["south"] = "fuzhou/biaoju",
-        ["east"] = "fuzhou/zhongxin",
-        ["north"] = "fuzhou/dangpu",
-        ["west"] = "fuzhou/xijie2",
-    },
-    objs =
-    {
-        ["郑镖头"] = "zheng biaotou",
-        ["蒋旭"] = "jiang xu",
-        ["史镖头"] = "shi biaotou",
-    },
+	id = "fuzhou/xijie",
+	name = "西街",
+	ways = {
+		["south"] = "fuzhou/biaoju",
+		["east"] = "fuzhou/zhongxin",
+		["north"] = "fuzhou/dangpu",
+		["west"] = "fuzhou/xijie2",
+	},
+	objs = {
+          ["郑镖头"] = "zheng biaotou",
+          ["蒋旭"] = "jiang xu",
+          ["史镖头"] = "shi biaotou",
+           },
+	room_relative="当铺｜西街-----西街-----城中心｜福威镖局西街",
 }
 Room {
-    id = "fuzhou/xijie2",
-    name = "西街",
-    ways =
-    {
-        ["south"] = "fuzhou/xixiang3",
-        ["north"] = "fuzhou/xixiang2",
-        ["east"] = "fuzhou/xijie",
-        ["west"] = "fuzhou/ximen",
-    },
+	id = "fuzhou/xijie2",
+	name = "西街",
+	ways = {
+		["south"] = "fuzhou/xixiang3",
+		["north"] = "fuzhou/xixiang2",
+		["east"] = "fuzhou/xijie",
+		["west"] = "fuzhou/ximen",
+	},
+	room_relative="西巷｜西门-----西街-----西街｜西巷西街",
 }
 Room {
-    id = "fuzhou/ximen",
-    name = "西门",
-    ways =
-    {
-        ["east"] = "fuzhou/xijie2",
-        ["west"] = "fuzhou/wroad",
-    },
-    nolooks =
-    {
-        ["west"] = true,
-    },
+	id = "fuzhou/ximen",
+	name = "西门",
+	ways = {
+		["east"] = "fuzhou/xijie2",
+		["west"] = "fuzhou/wroad",
+	},
+	nolooks = {
+		["west"] = true,
+	},
 }
 Room {
-    id = "fuzhou/xixiang",
-    name = "西巷",
-    ways =
-    {
-        ["south"] = "fuzhou/xixiang2",
-        ["east"] = "fuzhou/zahuopu",
-        ["west"] = "fuzhou/minzhai",
-    },
-    room_relative="民宅-----西巷-----杂货铺｜西巷西巷",
+	id = "fuzhou/xixiang",
+	name = "西巷",
+	ways = {
+		["south"] = "fuzhou/xixiang2",
+		["east"] = "fuzhou/zahuopu",
+		["west"] = "fuzhou/minzhai",
+	},
+	room_relative="民宅-----西巷-----杂货铺｜西巷西巷",
 }
 Room {
-    id = "fuzhou/xixiang2",
-    name = "西巷",
-    ways =
-    {
-        ["south"] = "fuzhou/xijie2",
-        ["north"] = "fuzhou/xixiang",
-        ["west"] = "fuzhou/yaopu",
-    },
-    room_relative="西巷｜药铺-----西巷｜西街西巷",
+	id = "fuzhou/xixiang2",
+	name = "西巷",
+	ways = {
+		["south"] = "fuzhou/xijie2",
+		["north"] = "fuzhou/xixiang",
+		["west"] = "fuzhou/yaopu",
+	},
+	room_relative="西巷｜药铺-----西巷｜西街西巷",
 }
 Room {
-    id = "fuzhou/xixiang3",
-    name = "西巷",
-    ways =
-    {
-        ["south"] = "fuzhou/xixiang4",
-        ["north"] = "fuzhou/xijie2",
-        ["west"] = "fuzhou/huadian",
-    },
-    room_relative="西街｜花店-----西巷｜西巷西巷",
+	id = "fuzhou/xixiang3",
+	name = "西巷",
+	ways = {
+		["south"] = "fuzhou/xixiang4",
+		["north"] = "fuzhou/xijie2",
+		["west"] = "fuzhou/huadian",
+	},
+	room_relative="西街｜花店-----西巷｜西巷西巷",
 }
 Room {
-    id = "fuzhou/xixiang4",
-    name = "西巷",
-    ways =
-    {
-        ["south"] = "fuzhou/kezhan",
-        ["north"] = "fuzhou/xixiang3",
-        ["west"] = "fuzhou/chalou",
-    },
-    room_relative="西巷｜茶楼-----西巷｜吉祥客栈西巷",
+	id = "fuzhou/xixiang4",
+	name = "西巷",
+	ways = {
+		["south"] = "fuzhou/kezhan",
+		["north"] = "fuzhou/xixiang3",
+		["west"] = "fuzhou/chalou",
+	},
+	room_relative="西巷｜茶楼-----西巷｜吉祥客栈西巷",
 }
 Room {
     id = "fuzhou/xyxiang",
@@ -11424,9 +11418,9 @@ Room {
     ways =
     {
         ["southeast"] = "village/shilu5",
-        ["west"] = "changan/eastroad2",
+	["west"] = "changan/eastroad2",
     },
-    room_relative = "官道-----土路↘碎石路土路",
+  --  room_relative = "官道-----土路↘碎石路土路",
 }
 Room {
     id = "group/entry/canroad6",
@@ -12125,13 +12119,43 @@ Room {
     },
 }
 Room {
-    id = "gumu/jqg/danfang",
-    name = "丹房",
-    ways =
-    {
-        ["south"] = "gumu/jqg/lang2",
-    },
+	id = "gumu/jqg/danfang",
+	name = "丹房",
+	ways = {
+		["south"] = "gumu/jqg/lang2",
+		["#shikuyin"] = "gumu/jqg/cave3",
+	},
+	nolooks = {
+		["#shikuyin"] = true,
+	},
+	lengths = {
+		["#shikuyin"] = 1000,
+	},
 }
+Room {
+	id = "gumu/jqg/eyutan",
+	name = "鳄鱼潭",
+	ways = {
+		["#shikuyin2"] = "gumu/jqg/eyutan2",
+	},
+}
+
+Room {
+	id = "gumu/jqg/eyutan2",
+	name = "洞口",
+	ways = {
+		["zuan dong"] = "gumu/jqg/eyutan3",
+	},
+}
+
+Room {
+	id = "gumu/jqg/eyutan3",
+	name = "山洞",
+	ways = {
+		["#shikuyin4"] = "gumu/jqg/cave3",
+	},
+}
+
 Room {
     id = "gumu/jqg/dashi",
     name = "大室",
@@ -12270,9 +12294,6 @@ Room {
         ["south"] = "gumu/jqg/zhifang",
         ["east"] = "gumu/jqg/lang4",
         ["north"] = "gumu/jqg/jianshi",
-    },
-    postcmds = {
-        ["north"] = "#walkBusy",
     },
     lengths =
     {
@@ -12531,12 +12552,20 @@ Room {
     },
 }
 Room {
-    id = "gumu/jqg/shiyao",
-    name = "石窟",
-    ways =
-    {
-        ["east"] = "gumu/jqg/cave3",
-    },
+	id = "gumu/jqg/shiyao",
+	name = "石窟",
+	ways = {
+		["east"] = "gumu/jqg/cave3",
+		["#shikuout"] = "gumu/jqg/shanlu6",
+	},
+}
+
+Room {
+	id = "gumu/jqg/shiyao1",
+	name = "石壁",
+	ways = {
+		["pa down"] = "gumu/jqg/shiyao",
+	},
 }
 Room {
     id = "gumu/jqg/shufang",
@@ -15869,20 +15898,18 @@ Room {
     room_relative = "前厅-----侧廊-----练武场侧廊",
 }
 Room {
-    id = "huashan/celang3",
-    name = "侧廊",
-    ways =
-    {
-        ["south"] = "huashan/xiuxi1",
-        ["east"] = "huashan/houtang",
-        ["west"] = "huashan/fanting",
-    },
-    room_relative = "饭厅-----侧廊-----后堂｜女休息室侧廊",
-    lengths =
-    {
-        ["south"] = "if score.gender and score.gender=='女' then return 1 else return false end",
-        ["west"] = "if job.room=='饭厅' or job.room=='药房' then return 1 elseif flag.times and flag.times<3 then return 6 else return 1 end",
-    },
+        id = "huashan/celang3",
+        name = "侧廊",
+        ways = {
+                ["south"] = "huashan/xiuxi1",
+                ["east"] = "huashan/houtang",
+                ["west"] = "huashan/fanting",
+        },
+        room_relative="饭厅-----侧廊-----后堂｜女休息室侧廊",
+        lengths = {
+                ["south"] = "if score.gender and score.gender=='女' then return 1 else return false end",
+                ["west"] = "if job.room=='饭厅' or job.room=='药房' then return 1 elseif flag.times and flag.times<3 then return 6 else return 1 end",
+        },
 }
 Room {
     id = "huashan/celang4",
@@ -16470,10 +16497,9 @@ Room {
     {
         ["梁发"] = "liang fa",
     },
-    lengths =
-    {
-        ["southup"] = "if score.party=='华山派' and hp.shen<0 then return false else return 10 end",
-    },
+    --lengths ={
+        --["southup"] = "if score.party=='华山派' and hp.shen<0 then return false else return 10 end",
+    --},
 }
 Room {
     id = "huashan/shentan",
@@ -16521,22 +16547,19 @@ Room {
     room_relative = "山涧→山涧↘松树林山涧",
 }
 Room {
-    id = "huashan/v-road-5",
-    name = "山涧",
-    ways =
-    {
-        ["northwest"] = "huashan/v-road-1",
-        ["bang shengzi;pa up"] = "huashan/song",
-    },
-    nolooks =
-    {
-        ["bang shengzi;pa up"] = true,
-    },
-    lengths =
-    {
-        ["bang shengzi;pa up"] = "if Bag['绳子'] then return 6 else return false end",
-    },
-    room_relative = "山涧↖山涧山涧",
+        id = "huashan/v-road-5",
+        name = "山涧",
+        ways = {
+                ["northwest"] = "huashan/v-road-1",
+                ["bang shengzi;pa up"] = "huashan/song",
+        },
+        nolooks = {
+                ["bang shengzi;pa up"] = true,
+        },
+        lengths = {
+                ["bang shengzi;pa up"] =5,
+        },
+        room_relative="山涧↖山涧山涧",
 }
 Room {
     id = "huashan/song",
@@ -16603,16 +16626,15 @@ Room {
     },
 }
 Room {
-    id = "huashan/yaofang",
-    name = "药房",
-    ways =
-    {
-        ["south"] = "huashan/fanting",
-        ["north"] = "huashan/lianwu1",
-    },
-    lengths = {
-        ["south"] = "if job.room=='饭厅' or job.room=='药房' then return 1 elseif flag.times and flag.times<3 then return 6 else return 1 end",
-    },
+        id = "huashan/yaofang",
+        name = "药房",
+        ways = {
+                ["south"] = "huashan/fanting",
+                ["north"] = "huashan/lianwu1",
+        },
+        lengths = {
+                ["south"] = "if job.room=='饭厅' or job.room=='药房' then return 1 elseif flag.times and flag.times<3 then return 6 else return 1 end",
+        },
 }
 Room {
     id = "huashan/yunu",
@@ -19242,9 +19264,9 @@ Room {
 Room {
     id = "meizhuang/plum_maze",
     name = "梅林",
-    ways = {
+    ways =
+    {
         ["#mlOutt"] = "meizhuang/road2",
-        --["#inmz"] = "meizhuang/road3",
     },
 }
 Room {
@@ -20537,31 +20559,34 @@ Room {
 Room {
     id = "mingjiao/gmd",
     name = "光明顶",
-    ways =
-    {
-        ["northup"] = "mingjiao/wu3",
-        ["southdown"] = "mingjiao/muqi",
+    ways = {
+            ["northup"] = "mingjiao/wu3",
+            ["southdown"] = "mingjiao/muqi",
     },
-    objs =
-    {
-        ["光明圣火碑"] = "board",
-        ["殷无禄"] = "yin wulu",
-    },
+    objs = {
+      ["光明圣火碑"] = "board",
+      ["殷无禄"] = "yin wulu",
+              ["刘国彦"] = "nan jiaozhong",
+              ["吴安"] = "nan jiaozhong",
+              ["殷天正"] = "yin tianzheng",
+    room_relative="练武场-----巨木旗",
+       },
 }
 Room {
     id = "mingjiao/guangc",
     name = "广场",
-    ways =
-    {
-        ["south"] = "mingjiao/wu3",
-        ["east"] = "mingjiao/zl2",
-        ["north"] = "mingjiao/wu1",
-        ["west"] = "mingjiao/zl1",
+    ways = {
+            ["south"] = "mingjiao/wu3",
+            ["east"] = "mingjiao/zl2",
+            ["north"] = "mingjiao/wu1",
+            ["west"] = "mingjiao/zl1",
     },
-    objs =
-    {
-        ["韦一笑"] = "wei yixiao",
-    },
+    objs = {
+      ["韦一笑"] = "wei yixiao",
+              ["周金"] = "nan jiaozhong",
+              ["刘云"] = "nv jiaozhong",
+    room_relative="练武场｜长廊-----长廊｜练武场",
+       },
 }
 Room {
     id = "mingjiao/hdg/caojing",
@@ -20700,7 +20725,7 @@ Room {
     ways =
     {
         ["south"] = "mingjiao/hdg/kongdi",
-        -- ["northdown"] = "mingjiao/hdg/caojing",
+        --["northdown"] = "mingjiao/hdg/caojing",
         ["#hdgleavein"] = "mingjiao/hdg/caojing", 
     },
 }
@@ -21377,17 +21402,19 @@ Room {
 Room {
     id = "mingjiao/wu1",
     name = "练武场",
-    ways =
-    {
-        ["south"] = "mingjiao/guangc",
-        ["east"] = "mingjiao/yaofang",
-        ["north"] = "mingjiao/xting",
-        ["west"] = "mingjiao/shuyuan",
+    ways = {
+            ["south"] = "mingjiao/guangc",
+            ["east"] = "mingjiao/yaofang",
+            ["north"] = "mingjiao/xting",
+            ["west"] = "mingjiao/shuyuan",
     },
-    objs =
-    {
-        ["张中"] = "zhang zhong",
-    },
+    objs = {
+      ["张中"] = "zhang zhong",
+              ["吴花"] = "nv jiaozhong",
+              ["张福"] = "nan jiaozhong",
+    room_relative="药房｜小厅-----书院｜广场",
+              
+       },
 }
 Room {
     id = "mingjiao/wu2",
@@ -21402,23 +21429,28 @@ Room {
 Room {
     id = "mingjiao/wu3",
     name = "练武场",
-    ways =
-    {
-        ["north"] = "mingjiao/guangc",
-        ["east"] = "mingjiao/cl2",
-        ["southdown"] = "mingjiao/gmd",
-        ["west"] = "mingjiao/cl1",
+    ways = {
+            ["north"] = "mingjiao/guangc",
+            ["east"] = "mingjiao/cl2",
+            ["southdown"] = "mingjiao/gmd",
+            ["west"] = "mingjiao/cl1",
+},
+    objs = {
+      ["殷无寿"] = "yin wushou",
+              ["郑孝胜"] = "nan jiaozhong",
+              ["郑若馨"] = "nv jiaozhong",
+    room_relative="长廊｜广场-----光明顶｜长廊",
     },
 }
 Room {
     id = "mingjiao/wu4",
     name = "练武场",
-    ways =
-    {
-        ["south"] = "mingjiao/shuiqi",
-        ["north"] = "mingjiao/zl7",
-        ["west"] = "mingjiao/zl2",
+    ways = {
+            ["south"] = "mingjiao/shuiqi",
+            ["north"] = "mingjiao/zl7",
+            ["west"] = "mingjiao/zl2",
     },
+room_relative="长廊｜洪水旗-----长廊",
 }
 Room {
     id = "mingjiao/wxiang",
@@ -22326,19 +22358,22 @@ Room {
     },
 }
 Room {
-    id = "mtl/yunjinlou",
-    name = "云锦楼",
-    ways =
-    {
-        ["south"] = "mtl/hhyuan",
-        ["east"] = "mtl/keting",
-        ["north"] = "mtl/houyuan",
-        ["west"] = "mtl/xiangfang1",
-    },
-    objs =
-    {
-        ["王夫人"] = "Wang furen",
-    },
+	id = "mtl/yunjinlou",
+	name = "云锦楼",
+	ways = {
+		["south"] = "mtl/hhyuan",
+		["east"] = "mtl/keting",
+		["north"] = "mtl/houyuan",
+		["west"] = "mtl/xiangfang1",
+		["#wfrup"] = "mtl/cangshuge",
+		
+	},
+	objs = {
+          ["王夫人"] = "Wang furen",
+           },
+	lengths = {
+		["#wfrup"] = 5,
+	},
 }
 Room {
     id = "mtl/zahuoshi",
@@ -22606,27 +22641,27 @@ Room {
     },
 }
 Room {
-    id = "yanziwu/cl5-0",
-    name = "长廊",
-    ways = {
-            ["south"] = "yanziwu/cl5-1",
-            ["east"] = "yanziwu/fanting1",
-            ["west"] = "yanziwu/shufang",
-            ["#yzwchanglang2shufang"] = "yanziwu/shufang",
-    },
-    nolooks = {
-            ["#yzwchanglang2shufang"] = true,
-    },
-    lengths = {
-            ["west"] = "if job.name=='huashan' or job.name=='wudang' then return false else return 1 end",
-            ["#yzwchanglang2shufang"] = "if job.name=='huashan' or job.name=='wudang' then return 1 else return false end",
-    },
-    room_relative="书房-----长廊-----厨房｜长廊长廊",
-    blocks = {
-            ["east"] = {
-                    {id = "guan jia", exp = 50000},
-            },
-    },
+        id = "yanziwu/cl5-0",
+        name = "长廊",
+        ways = {
+                ["south"] = "yanziwu/cl5-1",
+                ["east"] = "yanziwu/fanting1",
+                ["west"] = "yanziwu/shufang",
+                ["#yzwchanglang2shufang"] = "yanziwu/shufang",
+        },
+        nolooks = {
+                ["#yzwchanglang2shufang"] = true,
+        },
+        lengths = {
+                ["west"] = "if job.name=='huashan' or job.name=='wudang' then return false else return 1 end",
+                ["#yzwchanglang2shufang"] = "if job.name=='huashan' or job.name=='wudang' then return 1 else return false end",
+        },
+        room_relative="书房-----长廊-----厨房｜长廊长廊",
+        blocks = {
+                ["east"] = {
+                        {id = "guan jia", exp = 50000},
+                },
+        },
 }
 Room {
     id = "yanziwu/cl5-1",
@@ -22756,26 +22791,26 @@ Room {
     room_relative = "静音阁｜长廊-----长廊-----长廊长廊",
 }
 Room {
-    id = "yanziwu/dating",
-    name = "大厅",
-    ways = {
-            ["south"] = "yanziwu/houting",
-            ["north"] = "yanziwu/xiaojing2",
-            ["east"] = "yanziwu/shufang",
-            ["west"] = "yanziwu/jushi",
-            ["#yzwdating2shufang"] = "yanziwu/shufang",
-    },
-    nolooks = {
-            ["#yzwdating2shufang"] = true,
-    },
-    lengths = {
-            ["east"] = "if job.name=='huashan' or job.name=='wudang' then return false else return 1 end",
-            ["#yzwdating2shufang"] = "if job.name=='huashan' or job.name=='wudang' then return 1 else return false end",
-    },        
-    objs = {
-            ["香茶"] = "xiang cha",
-            ["公冶乾"] = "gongye gan",
-    },
+        id = "yanziwu/dating",
+        name = "大厅",
+        ways = {
+                ["south"] = "yanziwu/houting",
+                ["north"] = "yanziwu/xiaojing2",
+                ["east"] = "yanziwu/shufang",
+                ["west"] = "yanziwu/jushi",
+                ["#yzwdating2shufang"] = "yanziwu/shufang",
+        },
+        nolooks = {
+                ["#yzwdating2shufang"] = true,
+        },
+        lengths = {
+                ["east"] = "if job.name=='huashan' or job.name=='wudang' then return false else return 1 end",
+                ["#yzwdating2shufang"] = "if job.name=='huashan' or job.name=='wudang' then return 1 else return false end",
+        },        
+        objs = {
+                ["香茶"] = "xiang cha",
+                ["公冶乾"] = "gongye gan",
+        },
 }
 Room {
     id = "yanziwu/fanting1",
@@ -22910,27 +22945,27 @@ Room {
     },
 }
 Room {
-    id = "yanziwu/shufang",
-    name = "书房",
-    ways = {
-            ["south"] = "yanziwu/xiangfang2",
-            ["north"] = "yanziwu/sishu",
-            ["east"] = "yanziwu/cl5-0",
-            ["west"] = "yanziwu/dating",
-            ["sit chair;zhuan"] = "yanziwu/jiabi",
-            ["#yzwshufang2jiabi"] = "yanziwu/jiabi",
-    },
-    nolooks = {
-            ["sit chair;zhuan"] = true,
-            ["#yzwshufang2jiabi"] = true,
-    },
-    lengths = {
-            ["sit chair;zhuan"] = "if job.name=='huashan' or job.name=='wudang' then return false else return 1 end",
-            ["#yzwshufang2jiabi"] = "if job.name=='huashan' or job.name=='wudang' then return 1 else return false end",
-    },
-    objs = {
-            ["风波恶"] = "feng boe",
-    },
+        id = "yanziwu/shufang",
+        name = "书房",
+        ways = {
+                ["south"] = "yanziwu/xiangfang2",
+                ["north"] = "yanziwu/sishu",
+                ["east"] = "yanziwu/cl5-0",
+                ["west"] = "yanziwu/dating",
+                ["sit chair;zhuan"] = "yanziwu/jiabi",
+                ["#yzwshufang2jiabi"] = "yanziwu/jiabi",
+        },
+        nolooks = {
+                ["sit chair;zhuan"] = true,
+                ["#yzwshufang2jiabi"] = true,
+        },
+        lengths = {
+                ["sit chair;zhuan"] = "if job.name=='huashan' or job.name=='wudang' then return false else return 1 end",
+                ["#yzwshufang2jiabi"] = "if job.name=='huashan' or job.name=='wudang' then return 1 else return false end",
+        },
+        objs = {
+                ["风波恶"] = "feng boe",
+        },
 }
 Room {
     id = "yanziwu/hssg",
@@ -22985,22 +23020,22 @@ Room {
     },
 }
 Room {
-    id = "yanziwu/xiangfang2",
-    name = "厢房",
-    no_fight = true,
-    ways = {
-            ["north"] = "yanziwu/shufang",
-            ["east"] = "yanziwu/cl5-1",
-            ["west"] = "yanziwu/houting",
-            ["#yzwxiangfang2shufang"] = "yanziwu/shufang",
-    },
-    nolooks = {
-            ["#yzwxiangfang2shufang"] = true,
-    },
-    lengths = {
-            ["north"] = "if job.name=='huashan' or job.name=='wudang' then return false else return 1 end",
-            ["#yzwxiangfang2shufang"] = "if job.name=='huashan' or job.name=='wudang' then return 1 else return false end",
-    },
+        id = "yanziwu/xiangfang2",
+        name = "厢房",
+        no_fight = true,
+        ways = {
+                ["north"] = "yanziwu/shufang",
+                ["east"] = "yanziwu/cl5-1",
+                ["west"] = "yanziwu/houting",
+                ["#yzwxiangfang2shufang"] = "yanziwu/shufang",
+        },
+        nolooks = {
+                ["#yzwxiangfang2shufang"] = true,
+        },
+        lengths = {
+                ["north"] = "if job.name=='huashan' or job.name=='wudang' then return false else return 1 end",
+                ["#yzwxiangfang2shufang"] = "if job.name=='huashan' or job.name=='wudang' then return 1 else return false end",
+        },
 }
 Room {
     id = "yanziwu/xiangfang3",
@@ -23079,19 +23114,19 @@ Room {
     },
 }
 Room {
-    id = "yanziwu/sishu",
-    name = "私塾",
-    ways = {
-            ["south"] = "yanziwu/shufang",
-            ["#yzwsishu2shufang"] = "yanziwu/shufang",
-    },
-    nolooks = {
-            ["#yzwsishu2shufang"] = true,
-    },
-    lengths = {
-            ["north"] = "if job.name=='huashan' or job.name=='wudang' then return false else return 1 end",
-            ["#yzwsishu2shufang"] = "if job.name=='huashan' or job.name=='wudang' then return 1 else return false end",
-    },
+        id = "yanziwu/sishu",
+        name = "私塾",
+        ways = {
+                ["south"] = "yanziwu/shufang",
+                ["#yzwsishu2shufang"] = "yanziwu/shufang",
+        },
+        nolooks = {
+                ["#yzwsishu2shufang"] = true,
+        },
+        lengths = {
+                ["north"] = "if job.name=='huashan' or job.name=='wudang' then return false else return 1 end",
+                ["#yzwsishu2shufang"] = "if job.name=='huashan' or job.name=='wudang' then return 1 else return false end",
+        },
 }
 Room {
     id = "mr/zhou3",
@@ -25912,7 +25947,6 @@ Room {
     {
         ["north"] = "shaolin/sengshe1",
     },
-    room_relative="僧舍｜僧舍僧舍",
 }
 Room {
     id = "shaolin/sengshe4",
@@ -25927,7 +25961,6 @@ Room {
     {
         ["慧虚尊者"] = "huixu zunzhe",
     },
-    room_relative="僧舍｜僧舍-----侧廊｜僧舍僧舍",
 }
 Room {
     id = "shaolin/sengshe5",
@@ -25937,7 +25970,6 @@ Room {
     {
         ["south"] = "shaolin/sengshe4",
     },
-    room_relative="僧舍｜僧舍僧舍",
 }
 Room {
     id = "shaolin/sengshe6",
@@ -25947,7 +25979,6 @@ Room {
     {
         ["north"] = "shaolin/sengshe4",
     },
-    room_relative="僧舍｜僧舍僧舍",
 }
 Room {
     id = "shaolin/shanlu1",
@@ -27063,7 +27094,6 @@ Room {
     {
         ["east"] = "sld/blm",
     },
-    room_relative = "练功房----白龙门议事厅练功房",
 }
 Room {
     id = "sld/blmws",
@@ -27073,7 +27103,6 @@ Room {
     {
         ["west"] = "sld/blm",
     },
-    room_relative = "白龙门议事厅-----卧室卧室",
 }
 Room {
     id = "sld/cf",
@@ -27105,7 +27134,6 @@ Room {
     {
         ["east"] = "sld/clm",
     },
-    room_relative = "练功房----赤龙门议事厅练功房",
 }
 Room {
     id = "sld/clmws",
@@ -27115,7 +27143,6 @@ Room {
     {
         ["west"] = "sld/clm",
     },
-    room_relative = "赤龙门议事厅-----卧室卧室",
 }
 Room {
     id = "sld/dt",
@@ -27187,7 +27214,6 @@ Room {
     {
         ["east"] = "sld/hlm",
     },
-    room_relative = "练功房----黑龙门议事厅练功房",
 }
 Room {
     id = "sld/hlmws",
@@ -27197,7 +27223,6 @@ Room {
     {
         ["west"] = "sld/hlm",
     },
-    room_relative = "黑龙门议事厅-----卧室卧室",
 }
 Room {
     id = "sld/ht",
@@ -27229,7 +27254,6 @@ Room {
     {
         ["east"] = "sld/hulm",
     },
-    room_relative = "练功房----黄龙门议事厅练功房",
 }
 Room {
     id = "sld/hulmws",
@@ -27239,7 +27263,6 @@ Room {
     {
         ["west"] = "sld/hulm",
     },
-    room_relative = "黄龙门议事厅-----卧室卧室",
 }
 Room {
     id = "sld/jitan",
@@ -27275,7 +27298,6 @@ Room {
     {
         ["双钩"] = "shuang gou",
     },
-    room_relative = "练功房｜走廊练功房",
 }
 Room {
     id = "sld/lgxroom",
@@ -27303,7 +27325,6 @@ Room {
     {
         ["south"] = "sld/lgxroom",
     },
-    room_relative = "卧室｜陆府正厅卧室",
 }
 Room {
     id = "sld/lgxys",
@@ -27348,7 +27369,6 @@ Room {
     {
         ["east"] = "sld/qlm",
     },
-    room_relative = "练功房----青龙门议事厅练功房",
 }
 Room {
     id = "sld/qlmws",
@@ -27358,7 +27378,6 @@ Room {
     {
         ["west"] = "sld/qlm",
     },
-    room_relative = "青龙门议事厅-----卧室卧室",
 }
 Room {
     id = "sld/road1",
@@ -27369,7 +27388,6 @@ Room {
         ["east"] = "sld/slj",
         ["west"] = "sld/road2",
     },
-    room_relative = "走廊-----走廊-----走廊｜卧室走廊",
 }
 Room {
     id = "sld/road2",
@@ -27380,7 +27398,6 @@ Room {
         ["north"] = "sld/lgf",
         ["west"] = "sld/tz",
     },
-    room_relative = "练功房｜走廊-----走廊-----走廊走廊",
 }
 Room {
     id = "sld/sande",
@@ -27391,7 +27408,6 @@ Room {
         ["northwest"] = "sld/sandn",
         ["west"] = "sld/treee1",
     },
-    room_relative = "沙滩↖树林-----沙滩↙渡口沙滩",
 }
 Room {
     id = "sld/sandn",
@@ -27402,7 +27418,6 @@ Room {
         ["southwest"] = "sld/sandw",
         ["south"] = "sld/treen1",
     },
-    room_relative = "沙滩↙｜↘沙滩树林沙滩沙滩",
 }
 Room {
     id = "sld/sandw",
@@ -27413,7 +27428,6 @@ Room {
         ["east"] = "sld/treew1",
         ["northeast"] = "sld/sandn",
     },
-    room_relative = "沙滩↗沙滩-----树林↘渡口沙滩",
 }
 Room {
     id = "sld/sanpo1",
@@ -27424,7 +27438,6 @@ Room {
         ["north"] = "sld/sanroad6",
         ["down"] = "sld/sanroad2",
     },
-    room_relative = "山路｜山坡→山路〓山路山坡",
 }
 Room {
     id = "sld/sanpo2",
@@ -27475,7 +27488,7 @@ Room {
         ["enter"] = "sld/blm",
         ["north"] = "sld/sanroada",
     },
-    room_relative = "山路｜山路→山坡山坡",
+    -- room_relative="白龙门议事厅∧山坡→山路山坡",
 }
 Room {
     id = "sld/sanroad1",
@@ -27485,7 +27498,6 @@ Room {
         ["southdown"] = "sld/kongdi",
         ["up"] = "sld/sanroad2",
     },
-    room_relative = "山路〓山路↑林间空地山路",
 }
 Room {
     id = "sld/sanroad2",
@@ -27496,7 +27508,6 @@ Room {
         ["down"] = "sld/sanroad1",
         ["up"] = "sld/sanpo1",
     },
-    room_relative = "山路↑山路〓山路山路",
 }
 Room {
     id = "sld/sanroad3",
@@ -27506,7 +27517,6 @@ Room {
         ["eastup"] = "sld/sanroad4",
         ["southdown"] = "sld/sanroad2",
     },
-    room_relative = "山路→山路↑山路山路",
 }
 Room {
     id = "sld/sanroad4",
@@ -27516,7 +27526,6 @@ Room {
         ["westdown"] = "sld/sanroad3",
         ["eastup"] = "sld/sanpo2",
     },
-    room_relative = "山路→山路→山坡山路",
 }
 Room {
     id = "sld/sanroad5",
@@ -27527,7 +27536,6 @@ Room {
         ["eastup"] = "sld/sanroad8",
         ["westdown"] = "sld/sanpo1",
     },
-    room_relative = "山路↑山坡→山路→山路山路",
 }
 Room {
     id = "sld/sanroad6",
@@ -27537,7 +27545,6 @@ Room {
         ["south"] = "sld/sanpo1",
         ["northdown"] = "sld/sanroad7",
     },
-    room_relative = "山路↓山路｜山坡山路",
 }
 Room {
     id = "sld/sanroad7",
@@ -27547,7 +27554,6 @@ Room {
         ["southup"] = "sld/sanroad6",
         ["northdown"] = "sld/sanpo3",
     },
-    room_relative = "山坡↓山路↓山路山路",
 }
 Room {
     id = "sld/sanroad8",
@@ -27558,7 +27564,6 @@ Room {
         ["eastup"] = "sld/sanpo6",
         ["northdown"] = "sld/sanpo5",
     },
-    room_relative = "山坡↓山路→山路→山坡山路",
 }
 Room {
     id = "sld/sanroad9",
@@ -27569,7 +27574,6 @@ Room {
         ["eastup"] = "sld/sanpo7",
         ["southdown"] = "sld/sanroad5",
     },
-    room_relative = "山坡↑山路→山崖↑山路山路",
 }
 Room {
     id = "sld/sanroada",
@@ -27579,7 +27583,6 @@ Room {
         ["south"] = "sld/sanpo6",
         ["up"] = "sld/sanroadb",
     },
-    room_relative = "山路〓山路｜山坡山路",
 }
 Room {
     id = "sld/sanroadb",
@@ -27589,7 +27592,6 @@ Room {
         ["down"] = "sld/sanroada",
         ["up"] = "sld/sfd",
     },
-    room_relative = "山峰顶〓山路〓山路山路",
 }
 Room {
     id = "sld/sfd",
@@ -27643,7 +27645,6 @@ Room {
         ["west"] = "sld/road1",
         ["out"] = "sld/sfd",
     },
-    room_relative = " 大厅｜走廊-----走廊∨山峰顶走廊",
 }
 Room {
     id = "sld/th",
@@ -27664,7 +27665,6 @@ Room {
         ["northwest"] = "sld/treen2",
         ["east"] = "sld/sande",
     },
-    room_relative = "树林↖树林-----沙滩↙树林树林",
 }
 Room {
     id = "sld/treen1",
@@ -27676,7 +27676,6 @@ Room {
         ["south"] = "sld/treen2",
         ["north"] = "sld/sandn",
     },
-    room_relative = "沙滩｜树林↙｜↘树林树林树林树林",
 }
 Room {
     id = "sld/treen2",
@@ -27688,7 +27687,6 @@ Room {
         ["south"] = "sld/kongdi",
         ["north"] = "sld/treen1",
     },
-    room_relative = "树林｜树林↙｜↘树林林间空地树林树林",
 }
 Room {
     id = "sld/trees1",
@@ -27700,7 +27698,6 @@ Room {
         ["north"] = "sld/trees2",
         ["northeast"] = "sld/treee1",
     },
-    room_relative = "树林树林树林↖｜↗树林｜渡口树林",
 }
 Room {
     id = "sld/trees2",
@@ -27712,7 +27709,6 @@ Room {
         ["north"] = "sld/kongdi",
         ["northeast"] = "sld/treee1",
     },
-    room_relative = "树林林间空地树林↖｜↗树林｜树林树林",
 }
 Room {
     id = "sld/treew1",
@@ -27723,7 +27719,6 @@ Room {
         ["northeast"] = "sld/treen2",
         ["west"] = "sld/sandw",
     },
-    room_relative = "树林↗沙滩-----树林↘树林树林",
 }
 Room {
     id = "sld/tz",
@@ -27733,7 +27728,6 @@ Room {
         ["east"] = "sld/road2",
         ["out"] = "sld/zl1",
     },
-    room_relative = "走廊-----走廊∨竹林走廊",
 }
 Room {
     id = "sld/ws",
@@ -27743,7 +27737,6 @@ Room {
     {
         ["north"] = "sld/road1",
     },
-    room_relative = "走廊｜卧室卧室",
 }
 Room {
     id = "sld/xiaolu",
@@ -27850,7 +27843,6 @@ Room {
         ["enter"] = "sld/tz",
         ["west"] = "sld/zl2",
     },
-    room_relative = "走廊∧竹林-----竹林竹林",
 }
 Room {
     id = "sld/zl2",
@@ -27860,7 +27852,6 @@ Room {
         ["east"] = "sld/zl1",
         ["west"] = "sld/pt",
     },
-    room_relative = "平台-----竹林-----竹林竹林",
 }
 Room {
     id = "songshan/cangshu-ge",
@@ -28653,17 +28644,22 @@ Room {
     },
 }
 Room {
-    id = "suzhou/houyuan",
-    name = "后院",
-    ways =
-    {
-        ["south"] = "suzhou/dayuan1",
-        -- ["north"] = "suzhou/dongxiang",
-    },
-    objs =
-    {
-        ["凌退思"] = "ling tuisi",
-    },
+	id = "suzhou/houyuan",
+	name = "后院",
+	ways = {
+		["south"] = "suzhou/dayuan1",
+		["#szgf"] = "suzhou/dongxiang",
+	},
+	objs = {
+          ["凌退思"] = "ling tuisi",
+           },
+	--precmds = {
+		  --["#szgf"] = "#wipe ling tuisi",
+		
+	--},
+	lengths = {
+		["#szgf"] = "if Bag['铜钥匙'] then return 9 else return false end",
+	},
 }
 Room {
     id = "suzhou/huayuan",
@@ -34105,19 +34101,20 @@ Room {
     },
 }
 Room {
-    id = "village/caidi",
-    name = "菜地",
-    ways = {
-            ["#hscaidi"] = "huashan/path1",
-    },
-    nolooks = {
-            ["#hscaidi"] = true,
-            ["south"] = true,
-            ["north"] = true,
-            ["east"] = true,
-            ["west"] = true,
-    },
+        id = "village/caidi",
+        name = "菜地",
+        ways = {
+                ["#hscaidi"] = "huashan/path1",
+        },
+        nolooks = {
+                ["#hscaidi"] = true,
+                ["south"] = true,
+                ["north"] = true,
+                ["east"] = true,
+                ["west"] = true,
+        },
 }
+
 Room {
     id = "village/eexit",
     name = "东村口",
@@ -39017,22 +39014,22 @@ Room {
     },
 }
 Room {
-    id = "xingxiu/silk8",
-    name = "吐谷浑伏俟城",
-    ways =
-    {
-        ["#eaeac"] = "xingxiu/silk9",
-        ["#eaead"] = "xingxiu/silk10",
-        ["#eaeab"] = "xingxiu/bank",
-        ["#eaea"] = "xingxiu/silk7",
-        -- ["east"] = "xingxiu/silk7",
-    },
-    -- lengths = {
-    -- ["#eaea"] = 10,
-    -- },
-    -- nolooks = {
-    -- ["#eaea"] = true,
-    -- },
+	id = "xingxiu/silk8",
+	name = "吐谷浑伏俟城",
+	ways = {
+		["northwest"] = "xingxiu/silk9",
+		["north"] = "xingxiu/silk10",
+		["west"] = "xingxiu/bank",
+		--["#eaea"] = "xingxiu/silk7",
+		["east"] = "xingxiu/silk7",
+	},
+	lengths = {
+		--["#eaea"] = "if wdgostart==1 then return 1 else return false end",
+		["east"] = "if wdgostart==1 then return false else return 1 end",
+	},
+	--nolooks = {
+		--["#eaea"] = true,
+	--},
 }
 Room {
     id = "xingxiu/silk9",
@@ -39346,7 +39343,7 @@ Room {
     {
         -- ["north"] = "if MidNight[locl.time] or job.name=='wudang' then return false else return 1 end",
         -- ["#yilicheckwd"] = "if job.name=='wudang' then return 5 else return false end",
-        ["#yilicheckwd"] = "if MidNight[locl.time] then return false else return 2 end",
+        ["#yilicheckwd"] = 2,
     },
 }
 Room {
@@ -41053,3 +41050,16 @@ Room {
         ["west"] = "changan/northjie2",
     },
 }	
+
+function cat1()
+exe("northwest")
+fastLocate()
+walk_wait()
+end
+
+function cat2()
+exe("w")
+fastLocate()
+walk_wait()
+end
+	

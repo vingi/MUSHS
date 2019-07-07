@@ -68,7 +68,11 @@ function lingwu_unwield()
  --准备内力，不直接领悟，如需直接领悟，修改为lingwuzbok。
 end
 function lingwuzb()
-	zhunbeineili(lingwuzbok)
+	if hp.neili > (hp.neili_max * 0.8) and hp.neili > 30000 then
+		lingwuzbok()
+	else
+		zhunbeineili(lingwuzbok)
+	end
 end
 function lingwuzbok()
 	go(lingwu_goon, "嵩山少林", "达摩院后殿")

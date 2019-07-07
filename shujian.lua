@@ -1168,7 +1168,11 @@ function check_jobx()
     if hp.neili_max > 15000 and (hp.neili > (hp.neili_max * 0.8)) then
         lianxi()
     end
-    job.Switch()
+    if hp.pot > (hp.pot_max - 100) then
+        check_pot()
+    else
+        job.Switch()
+    end
 end
 
 function check_busy(func, p_cmd)
@@ -1941,9 +1945,7 @@ function check_pot(p_cmd)
     --        end
     --    end
 
-    if GetVariable("lingwuskills") or
-        (tmp.xskill and skills[tmp.xskill] and skillEnable[tmp.xskill] and skills[skillEnable[tmp.xskill]])
-    then
+    if (GetVariable("lingwuskills") or (tmp.xskill and skills[tmp.xskill] and skillEnable[tmp.xskill] and skills[skillEnable[tmp.xskill]])) and hp.pot >= l_pot then
         flag.lingwu = 0
         if tmp.xskill and skills[tmp.xskill] and skillEnable[tmp.xskill] and skills[skillEnable[tmp.xskill]] then
             local p = tmp.xskill
@@ -1953,14 +1955,23 @@ function check_pot(p_cmd)
             end
         end
         if GetVariable("lingwuskills") then
-            local q = GetVariable("lingwuskills")
+            local l_skillsLingwu = {}
+	        l_skillsLingwu = utils.split(GetVariable("lingwuskills"), "|")
             for p in pairs(skills) do
-                if skillEnable[p] == q and skills[q].lvl < hp.pot_max - 100 and skills[q].lvl <= skills[p].lvl and skills[q].lvl < hp.pot_max - 100 then
-                    flag.lingwu = 1
+                for k,q in ipairs(l_skillsLingwu) do
+                    if skillEnable[p] == q and skills[q].lvl < hp.pot_max - 10 and skills[q].lvl <= skills[p].lvl and skills[q].lvl > 440 then
+                        flag.lingwu = 1
+                    end
                 end
+
             end
         end
+
+        if flag.lingwu == 1 then
+            return checklingwu()
+        end
     end
+
 
     -- 普通百姓
     if score.party == "普通百姓" then

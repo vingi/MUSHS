@@ -274,6 +274,8 @@ function huashan_npc()
         return check_bei(huashan_npc_go)
     else
         huashanJob.Progress = 2
+        -- 重置 获取令牌失败的计数
+        huashanJob.GetLingPaiAgain = 0
         messageShow("华山任务②：开始任务。")
         quest.name = "华山任务㈡"
         quest.desc = ""
@@ -422,7 +424,7 @@ end
 function huashan_fight(n, l, w)
     EnableTrigger("huashan_find2", false)
     job.id = string.lower(w[2])
-    exe("unset no_kill_ap;unset double_attack")
+    exe("unset no_kill_ap")
     exe("follow " .. job.id)
     job.killer[job.target] = job.id
 
@@ -689,7 +691,7 @@ function huashan_yls_fail(n, l, w)
     RemoveObserver("huashanGiveCorpseOb")
     EnableTriggerGroup("huashan_yls", false)
     messageShow("华山任务：岳灵珊交尸体失败, 原因: " .. tostring(l), "deepskyblue")
-    if string.find(l, "你的令牌呢") and Bag["一具" .. job.target .. "的尸体"] ~= nil and huashanJob.GetLingPaiAgain == 0 then
+    if string.find(l, "你的令牌呢") and huashanJob.GetLingPaiAgain == 0 then
         huashanJob.GetLingPaiAgain = 1
         wait.make(
             function()

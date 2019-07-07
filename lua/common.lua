@@ -172,16 +172,16 @@ end
 -- 自定义实现 lua string.isempty
 -- ----------------------------------------------------------
 function string.isempty(str)
-    local isem = true
-    if str ~= nil and string.len(str) > 0 then
-        str = trim(str)
-        if string.len(x) >= 1 then
-            isem = false
-        else
-            isem = true
-        end
+  local isem = true
+  if str ~= nil and string.len(str) > 0 then
+    str = string.trim(str)
+    if string.len(str) >= 1 then
+      isem = false
+    else
+      isem = true
     end
-    return isem
+  end
+  return isem
 end
 -- ----------------------------------------------------------
 -- 自定义实现 lua string.trim

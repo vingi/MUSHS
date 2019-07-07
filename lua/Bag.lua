@@ -9,6 +9,29 @@
 
 
 --]]
+cty_cur = 0
+nxw_cur = 0
+cbw_cur = 0
+hqd_cur = 0
+hxd_cur = 0
+dhd_cur = 0
+
+-- ---------------------------------------------------------------
+-- 重置身上包裹的物件
+-- ---------------------------------------------------------------
+function ResetBags()
+	bags = {}
+	Bag = {}
+	Bag["黄金"] = {}
+	Bag["黄金"].id = {}
+	Bag["黄金"].cnt = 0
+	Bag["白银"] = {}
+	Bag["白银"].id = {}
+	Bag["白银"].cnt = 0
+	Bag["ENCB"] = {}
+	Bag["ENCB"].value = 0
+end
+
 -- ---------------------------------------------------------------
 -- 检查身上的绳子是否足够, 用于进华山山洞
 -- ---------------------------------------------------------------
@@ -39,15 +62,8 @@ function checkYaoBags(func)
 	SetTriggerOption("Yaobags2", "group", "Yaobags")
 	SetTriggerOption("Yaobags3", "group", "Yaobags")
 	EnableTriggerGroup("Yaobags", true)
-	cty_cur = 0
-	nxw_cur = 0
-	cbw_cur = 0
-	hqd_cur = 0
-	hxd_cur = 0
-	dhd_cur = 0
-	-- print(cty_cur,nxw_cur,hxd_cur)
-	Bag["黄金"].cnt = 0
-	Bag["白银"].cnt = 0
+
+	ResetBags()
 	tmp.yaobags = func
 	exe("i;look bei nang")
 	exe("alias action 检查药品")
@@ -132,21 +148,8 @@ function checkBags(func)
 	SetTriggerOption("bags8", "group", "bags")
 	EnableTriggerGroup("bags", false)
 	EnableTrigger("bags1", true)
-	cty_cur = 0
-	nxw_cur = 0
-	cbw_cur = 0
-	hqd_cur = 0
-	hxd_cur = 0
-	dhd_cur = 0
-	-- print(cty_cur,nxw_cur,hxd_cur)
-	bags = {}
-	Bag = {}
-	Bag["黄金"] = {}
-	Bag["黄金"].id = {}
-	Bag["黄金"].cnt = 0
-	Bag["白银"] = {}
-	Bag["白银"].id = {}
-	Bag["白银"].cnt = 0
+
+	ResetBags()
 	tmp.bags = func
 	weaponUsave = {}
 	exe("id")
@@ -270,9 +273,9 @@ function checkBagsMoney(n, l, w)
 end
 function checkBagsW(n, l, w)
 	local t = tonumber(w[3])
-	Bag = Bag or {}
-	Bag["ENCB"] = {}
-	Bag["ENCB"].value = t
+	if t ~= nil and Bag["ENCB"] ~= nil then
+		Bag["ENCB"].value = t
+	end
 end
 function checkBagsDart(n, l, w)
 	local l_name = "枚飞镖"
@@ -368,22 +371,22 @@ function checkHmGive()
 	return checkPrepare()
 end
 function check_gold()
-    tmp.cnt = 0
-    return go(check_gold_dali, "大理城", "大理钱庄")
+	tmp.cnt = 0
+	return go(check_gold_dali, "大理城", "大理钱庄")
 end
 function check_gold_dali()
-    if not locl.id["严掌柜"] then
-        return go(check_gold_xy, "襄阳城", "宝龙斋")
-    else
-        return check_gold_count()
-    end
+	if not locl.id["严掌柜"] then
+		return go(check_gold_xy, "襄阳城", "宝龙斋")
+	else
+		return check_gold_count()
+	end
 end
 function check_gold_xy()
-    if not locl.id["钱善人"] then
-        return go(check_gold_cd, "成都城", "墨玉斋")
-    else
-        return check_gold_count()
-    end
+	if not locl.id["钱善人"] then
+		return go(check_gold_cd, "成都城", "墨玉斋")
+	else
+		return check_gold_count()
+	end
 end
 -- function check_gold_cd()
 --    if not locl.id["王掌柜"] then
@@ -394,291 +397,294 @@ end
 -- end
 -- ain
 function check_gold_cd()
-    if not locl.id["钱缝"] then
-        return go(check_gold_dali, "大理城", "大理钱庄")
-    else
-        return check_gold_count()
-    end
+	if not locl.id["钱缝"] then
+		return go(check_gold_dali, "大理城", "大理钱庄")
+	else
+		return check_gold_count()
+	end
 end
 function check_gold_count()
-    if Bag["壹仟两银票"] and Bag["壹仟两银票"].cnt > 10 then
-        exe("score;chazhang")
-        if score.goldlmt and score.gold and(score.goldlmt - score.gold) > 50 then
-            return check_cash_cun()
-        end
-    end
-    if Bag and Bag["白银"] and Bag["白银"].cnt and Bag["白银"].cnt > 500 then
-        return check_silver_qu()
-    end
-    if
-        (Bag and Bag["黄金"] and Bag["黄金"].cnt and Bag["黄金"].cnt < count.gold_max and score.gold > count.gold_max) or
-        (Bag and Bag["黄金"] and Bag["黄金"].cnt and Bag["黄金"].cnt > count.gold_max * 4)
-    then
-        return check_gold_qu()
-    end
+	if Bag["壹仟两银票"] and Bag["壹仟两银票"].cnt > 10 then
+		exe("score;chazhang")
+		if score.goldlmt and score.gold and (score.goldlmt - score.gold) > 50 then
+			return check_cash_cun()
+		end
+	end
+	if Bag and Bag["白银"] and Bag["白银"].cnt and Bag["白银"].cnt > 500 then
+		return check_silver_qu()
+	end
+	if
+		(Bag and Bag["黄金"] and Bag["黄金"].cnt and Bag["黄金"].cnt < count.gold_max and score.gold > count.gold_max) or
+			(Bag and Bag["黄金"] and Bag["黄金"].cnt and Bag["黄金"].cnt > count.gold_max * 4)
+	 then
+		return check_gold_qu()
+	end
 
-    return check_gold_over()
+	return check_gold_over()
 end
 function check_cash_cun()
-    if Bag["壹仟两银票"] then
-        local l_cnt
-        if score.goldlmt and score.gold and(score.goldlmt - score.gold) < Bag["壹仟两银票"].cnt * 10 then
-            l_cnt = math.modf((score.goldlmt - score.gold) / 10) -1
-        else
-            l_cnt = Bag["壹仟两银票"].cnt
-        end
-        if l_cnt > 0 then
-            exe("cun " .. l_cnt .. " cash")
-        end
-    end
-    checkBags()
-    return checkWait(check_gold_check, 3)
+	if Bag["壹仟两银票"] then
+		local l_cnt
+		if score.goldlmt and score.gold and (score.goldlmt - score.gold) < Bag["壹仟两银票"].cnt * 10 then
+			l_cnt = math.modf((score.goldlmt - score.gold) / 10) - 1
+		else
+			l_cnt = Bag["壹仟两银票"].cnt
+		end
+		if l_cnt > 0 then
+			exe("cun " .. l_cnt .. " cash")
+		end
+	end
+	checkBags()
+	return checkWait(check_gold_check, 3)
 end
 function check_silver_qu()
-    local l_cnt = Bag["白银"].cnt - 100
-    exe("cun " .. l_cnt .. " silver")
-    exe("qu 50 silver")
-    checkBags()
-    return checkWait(check_gold_check, 3)
+	local l_cnt = Bag["白银"].cnt - 100
+	exe("cun " .. l_cnt .. " silver")
+	exe("qu 50 silver")
+	checkBags()
+	return checkWait(check_gold_check, 3)
 end
 function check_gold_qu()
-    local l_cnt = Bag["黄金"].cnt - count.gold_max * 2
-    if l_cnt > 0 then
-        exe('cun ' .. l_cnt .. ' gold')
-    end
-    if Bag["黄金"].cnt < count.gold_max then
-        exe("qu " .. count.gold_max .. " gold")
-    end
-    checkBags()
-    return checkWait(check_gold_check, 3)
+	local l_cnt = Bag["黄金"].cnt - count.gold_max * 2
+	if l_cnt > 0 then
+		exe("cun " .. l_cnt .. " gold")
+	end
+	if Bag["黄金"].cnt < count.gold_max then
+		exe("qu " .. count.gold_max .. " gold")
+	end
+	checkBags()
+	return checkWait(check_gold_check, 3)
 end
 function check_gold_check()
-    tmp.cnt = tmp.cnt + 1
-    if tmp.cnt > 30 then
-        return check_heal()
-    end
-    return check_gold_count()
+	tmp.cnt = tmp.cnt + 1
+	if tmp.cnt > 30 then
+		return check_heal()
+	end
+	return check_gold_count()
 end
 function check_gold_over()
-    return checkPrepare()
+	return checkPrepare()
 end
 
 function checkZqd()
-    tmp.cnt = 0
-    return go(checkZqdBuy, randomElement(drugBuy["正气丹"]))
+	tmp.cnt = 0
+	return go(checkZqdBuy, randomElement(drugBuy["正气丹"]))
 end
 function checkZqdBuy()
-    tmp.cnt = tmp.cnt + 1
-    if tmp.cnt > 30 then
-        return checkZqdOver()
-    else
-        exe("buy zhengqi dan")
-        checkBags()
-        return check_bei(checkZqdi)
-    end
+	tmp.cnt = tmp.cnt + 1
+	if tmp.cnt > 30 then
+		return checkZqdOver()
+	else
+		exe("buy zhengqi dan")
+		checkBags()
+		return check_bei(checkZqdi)
+	end
 end
 function checkZqdi()
-    if Bag["黄金"] and Bag["黄金"].cnt > 4 and(not Bag["正气丹"] or Bag["正气丹"].cnt < 4) then
-        return checkWait(checkZqdBuy, 1)
-    else
-        return checkZqdOver()
-    end
+	if Bag["黄金"] and Bag["黄金"].cnt > 4 and (not Bag["正气丹"] or Bag["正气丹"].cnt < 4) then
+		return checkWait(checkZqdBuy, 1)
+	else
+		return checkZqdOver()
+	end
 end
 function checkZqdOver()
-    checkBags()
-    return check_bei(checkPrepare, 1)
+	checkBags()
+	return check_bei(checkPrepare, 1)
 end
 
 function checkXqw()
-    tmp.cnt = 0
-    return go(checkXqwBuy, randomElement(drugBuy["邪气丸"]))
+	tmp.cnt = 0
+	return go(checkXqwBuy, randomElement(drugBuy["邪气丸"]))
 end
 function checkXqwBuy()
-    tmp.cnt = tmp.cnt + 1
-    if tmp.cnt > 30 then
-        return checkXqwOver()
-    else
-        exe("buy xieqi wan")
-        checkBags()
-        return check_bei(checkXqwi)
-    end
+	tmp.cnt = tmp.cnt + 1
+	if tmp.cnt > 30 then
+		return checkXqwOver()
+	else
+		exe("buy xieqi wan")
+		checkBags()
+		return check_bei(checkXqwi)
+	end
 end
 function checkXqwi()
-    if Bag["黄金"] and Bag["黄金"].cnt > 4 and(not Bag["邪气丸"] or Bag["邪气丸"].cnt < 4) then
-        return checkWait(checkXqwBuy, 1)
-    else
-        return checkXqwOver()
-    end
+	if Bag["黄金"] and Bag["黄金"].cnt > 4 and (not Bag["邪气丸"] or Bag["邪气丸"].cnt < 4) then
+		return checkWait(checkXqwBuy, 1)
+	else
+		return checkXqwOver()
+	end
 end
 function checkXqwOver()
-    checkBags()
-    return check_bei(checkPrepare, 1)
+	checkBags()
+	return check_bei(checkPrepare, 1)
 end
 -- ---------------------------------------------------------------
 -- 检查内力药是否足够
 -- ---------------------------------------------------------------
 function checkNxw()
-    tmp.cnt = 0
-    if score.gold and score.gold > 100 and (nxw_cur < count.nxw_max or cbw_cur < count.cbw_max or hqd_cur < count.hqd_max) then
-        return go(checkNxwBuy, randomElement(drugBuy["内息丸"]))
-    else
-        return checkNxwOver()
-    end
+	tmp.cnt = 0
+	if score.gold and score.gold > 100 and (nxw_cur < count.nxw_max or cbw_cur < count.cbw_max or hqd_cur < count.hqd_max) then
+		return go(checkNxwBuy, randomElement(drugBuy["内息丸"]))
+	else
+		return checkNxwOver()
+	end
 end
 function checkNxwBuy()
-    tmp.cnt = tmp.cnt + 1
-    if tmp.cnt > 30 then
-        return checkNxwOver()
-    else
-        if hqd_cur < count.hqd_max then
-            -- 这里是买3种内力药了，购买的次序分别是黄芪丹，川贝丸和内息丸，注意：黄芪丹+70%，川贝丸+50%，内息丸是固定+3000内力。
-            exe('buy ' .. drug.neili3)
-        end
-        if cbw_cur < count.cbw_max then
-            exe('buy ' .. drug.neili2)
-        end
-        if nxw_cur < count.nxw_max then
-            exe('buy ' .. drug.neili1)
-        end
-        checkYaoBags()
-        return check_bei(checkNxwi)
-    end
+	tmp.cnt = tmp.cnt + 1
+	if tmp.cnt > 30 then
+		return checkNxwOver()
+	else
+		if hqd_cur < count.hqd_max then
+			-- 这里是买3种内力药了，购买的次序分别是黄芪丹，川贝丸和内息丸，注意：黄芪丹+70%，川贝丸+50%，内息丸是固定+3000内力。
+			exe("buy " .. drug.neili3)
+		end
+		if cbw_cur < count.cbw_max then
+			exe("buy " .. drug.neili2)
+		end
+		if nxw_cur < count.nxw_max then
+			exe("buy " .. drug.neili1)
+		end
+		checkYaoBags()
+		return check_bei(checkNxwi)
+	end
 end
 function checkNxwi()
-    if (nxw_cur < count.nxw_max or cbw_cur < count.cbw_max or hqd_cur < count.hqd_max) and Bag["黄金"] and Bag["黄金"].cnt > 4 then
-        return checkWait(checkNxwBuy, 1)
-    else
-        return checkNxwOver()
-    end
+	if (nxw_cur < count.nxw_max or cbw_cur < count.cbw_max or hqd_cur < count.hqd_max) and Bag["黄金"] and Bag["黄金"].cnt > 4 then
+		return checkWait(checkNxwBuy, 1)
+	else
+		return checkNxwOver()
+	end
 end
 function checkNxwOver()
-    return check_bei(checkPrepare, 1)
+	return check_bei(checkPrepare, 1)
 end
 
 function checkHxd()
-    tmp.cnt = 0
-    if score.gold and score.gold > 100 and cty_cur < count.cty_max then
-        return go(checkHxdBuy, randomElement(drugBuy["蝉蜕金疮药"]))
-    else
-        return checkNxwOver()
-    end
+	tmp.cnt = 0
+	if score.gold and score.gold > 100 and cty_cur < count.cty_max then
+		return go(checkHxdBuy, randomElement(drugBuy["蝉蜕金疮药"]))
+	else
+		return checkNxwOver()
+	end
 end
 function checkHxdBuy()
-    tmp.cnt = tmp.cnt + 1
-    if tmp.cnt > 30 then
-        return checkNxwOver()
+	tmp.cnt = tmp.cnt + 1
+	if tmp.cnt > 30 then
+		return checkNxwOver()
 	else
-		if (Bag["蝉蜕金疮药"] == nil or Bag["蝉蜕金疮药"].cnt < 20) and GetRoleConfig("PracticeForce") ~= true and GetRoleConfig("GetPotForce") ~= true then
-	        exe("buy " .. drug.heal)
+		if
+			(Bag["蝉蜕金疮药"] == nil or Bag["蝉蜕金疮药"].cnt < 20) and GetRoleConfig("PracticeForce") ~= true and
+				GetRoleConfig("GetPotForce") ~= true
+		 then
+			exe("buy " .. drug.heal)
 		end
-        checkYaoBags()
-        return check_bei(checkHxdBag)
-    end
+		checkYaoBags()
+		return check_bei(checkHxdBag)
+	end
 end
 function checkHxdBag()
-    if cty_cur < count.cty_max and Bag["黄金"] and Bag["黄金"].cnt > 4 then
-        return checkWait(checkHxdBuy, 1)
-    else
-        return checkNxwOver()
-    end
+	if cty_cur < count.cty_max and Bag["黄金"] and Bag["黄金"].cnt > 4 then
+		return checkWait(checkHxdBuy, 1)
+	else
+		return checkNxwOver()
+	end
 end
 
 function checkLjd()
-    tmp.cnt = 0
-    if score.gold and score.gold > 100 and hxd_cur < count.hxd_max then
-        return go(checkLjdBuy, randomElement(drugBuy["活血疗精丹"]))
-    else
-        return checkNxwOver()
-    end
+	tmp.cnt = 0
+	if score.gold and score.gold > 100 and hxd_cur < count.hxd_max then
+		return go(checkLjdBuy, randomElement(drugBuy["活血疗精丹"]))
+	else
+		return checkNxwOver()
+	end
 end
 function checkLjdBuy()
-    tmp.cnt = tmp.cnt + 1
-    if tmp.cnt > 30 then
-        return checkNxwOver()
-    else
-        exe("buy " .. drug.jingxue)
-        checkYaoBags()
-        return check_bei(checkLjdBag)
-    end
+	tmp.cnt = tmp.cnt + 1
+	if tmp.cnt > 30 then
+		return checkNxwOver()
+	else
+		exe("buy " .. drug.jingxue)
+		checkYaoBags()
+		return check_bei(checkLjdBag)
+	end
 end
 function checkLjdBag()
-    if hxd_cur < count.hxd_max and Bag["黄金"] and Bag["黄金"].cnt > 4 then
-        return checkWait(checkLjdBuy, 1)
-    else
-        return checkNxwOver()
-    end
+	if hxd_cur < count.hxd_max and Bag["黄金"] and Bag["黄金"].cnt > 4 then
+		return checkWait(checkLjdBuy, 1)
+	else
+		return checkNxwOver()
+	end
 end
 function checkdhd()
-    tmp.cnt = 0
-    if score.tb and score.tb > 100 and dhd_cur < count.dhd_max then
-        return go(checkdhdBuy, randomElement(drugBuy["大还丹"]))
-    else
-        return checkNxwOver()
-    end
+	tmp.cnt = 0
+	if score.tb and score.tb > 100 and dhd_cur < count.dhd_max then
+		return go(checkdhdBuy, randomElement(drugBuy["大还丹"]))
+	else
+		return checkNxwOver()
+	end
 end
 function checkdhdBuy()
-    tmp.cnt = tmp.cnt + 1
-    if tmp.cnt > 30 then
-        return checkNxwOver()
-    else
-        exe("duihuan dahuan dan;score")
-        checkYaoBags()
-        return check_halt(checkdhdBag)
-    end
+	tmp.cnt = tmp.cnt + 1
+	if tmp.cnt > 30 then
+		return checkNxwOver()
+	else
+		exe("duihuan dahuan dan;score")
+		checkYaoBags()
+		return check_halt(checkdhdBag)
+	end
 end
 function checkdhdBag()
-    if dhd_cur < count.dhd_max and score.tb and score.tb > 100 then
-        return checkWait(checkdhdBuy, 1)
-    else
-        return checkNxwOver()
-    end
+	if dhd_cur < count.dhd_max and score.tb and score.tb > 100 then
+		return checkWait(checkdhdBuy, 1)
+	else
+		return checkNxwOver()
+	end
 end
 function checkFire()
-    if not Bag["火折"] then
-        return go(checkFireBuy, randomElement(drugBuy["火折"]))
-    else
-        return checkFireOver()
-    end
+	if not Bag["火折"] then
+		return go(checkFireBuy, randomElement(drugBuy["火折"]))
+	else
+		return checkFireOver()
+	end
 end
 function checkFireBuy()
-    exe("buy fire")
-    checkBags()
-    return checkFireOver()
+	exe("buy fire")
+	checkBags()
+	return checkFireOver()
 end
 function checkFireOver()
-    exe("drop fire 2")
-    return check_busy(checkPrepare, 1)
+	exe("drop fire 2")
+	return check_busy(checkPrepare, 1)
 end
 
 function checkYu(p_yu)
-    tmp.yu = p_yu
-    return go(checkYuCun, "扬州城", "杂货铺")
+	tmp.yu = p_yu
+	return go(checkYuCun, "扬州城", "杂货铺")
 end
 function checkYuCun()
-    exe("cun " .. Bag[tmp.yu].fullid)
-    return check_bei(checkYuOver)
+	exe("cun " .. Bag[tmp.yu].fullid)
+	return check_bei(checkYuOver)
 end
 function checkYuOver()
-    exe("cun yu;drop yu")
-    checkBags()
-    return check_busy(checkPrepare, 1)
+	exe("cun yu;drop yu")
+	checkBags()
+	return check_busy(checkPrepare, 1)
 end
 
 function checkSell(p_sell)
-    tmp.sell = p_sell
-    return go(checkSellDo, "扬州城", "当铺")
+	tmp.sell = p_sell
+	return go(checkSellDo, "扬州城", "当铺")
 end
 function checkSellDo()
-    if Bag[tmp.sell] then
-        exe("sell " .. Bag[tmp.sell].fullid)
-    end
-    return check_bei(checkSellOver)
+	if Bag[tmp.sell] then
+		exe("sell " .. Bag[tmp.sell].fullid)
+	end
+	return check_bei(checkSellOver)
 end
 function checkSellOver()
-    if Bag[tmp.sell] then
-        exe("sell " .. Bag[tmp.sell].fullid)
-        exe("drop " .. Bag[tmp.sell].fullid)
-    end
-    checkBags()
-    return check_busy(checkPrepare, 1)
+	if Bag[tmp.sell] then
+		exe("sell " .. Bag[tmp.sell].fullid)
+		exe("drop " .. Bag[tmp.sell].fullid)
+	end
+	checkBags()
+	return check_busy(checkPrepare, 1)
 end

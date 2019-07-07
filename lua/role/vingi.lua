@@ -35,7 +35,7 @@ settings = {
 	PracticeCMD = {
 		"unwield taiji;wield taibai blade;lian blade 20;lian blade 20;lian blade 20;lian blade 20;unwield taibai blade;wield taiji;yun jingli;",
 
-		"wield taiji;lian sword 20;lian dodge 20;unwield taiji;lian strike 20;lian cuff 20;lian force 20;wield taiji;yun jingli;",
+		"wield taiji;lian sword 20;lian dodge 20;unwield taiji;lian strike 20;lian cuff 20;lian force 20;wield taibai blade;lian blade 20;unwield taibai blade;wield taiji;yun jingli;",
 
 		-- "drop mi tao;unwield taiji;jifa cuff taizu-quan;lian cuff 20;lian cuff 20;lian cuff 20;lian cuff 20;lian cuff 20;lian cuff 20;lian cuff 20;lian cuff 20;lian cuff 20;yun jingli;wield taiji;"
 	},
