@@ -1219,6 +1219,9 @@ function beiok()
     return beihook()
 end
 function check_halt(func)
+    -- if func ~= nil then
+    --     print("check_halt: "..tostring(func))
+    -- end
     disWait()
     DeleteTriggerGroup("check_halt")
     create_trigger_t("check_halt1", "^>*\\s*(你现在不忙。|你身形向后一跃，跳出战圈不打了。)", "", "haltok")
@@ -1261,6 +1264,7 @@ function haltok()
     EnableTrigger("hp12", false)
     -- DeleteTimer('halt')
     EnableTimer("halt", false)
+    DeleteTimer('halt')
     -- DeleteTriggerGroup("check_halt")
     if halthook == nil then
         halthook = test
@@ -1803,7 +1807,7 @@ function Brefine()
     create_timer_s("refine", 2, "refine")
 end
 function refine()
-    exe("refine " .. kuangshi)
+    exe("refine 1000 " .. kuangshi)
     exe("l bei nang")
 end
 function refineGold()
@@ -2017,14 +2021,14 @@ function check_pot(p_cmd)
                 end
             end
 
-            for p in pairs(skills) do
-                if skillEnable[p] and skills[p].lvl < 450 and skills[p].lvl <= skills["dodge"].lvl and hp.pot >= l_pot
-                then
-                    if not skills[p].mstlvl or skills[p].mstlvl > skills[p].lvl then
-                        return checkxue()
-                    end
-                end
-            end
+            -- for p in pairs(skills) do
+            --     if skillEnable[p] and skills[p].lvl < 450 and skills[p].lvl <= skills["dodge"].lvl and hp.pot >= l_pot
+            --     then
+            --         if not skills[p].mstlvl or skills[p].mstlvl > skills[p].lvl then
+            --             return checkxue()
+            --         end
+            --     end
+            -- end
 
             if perform.skill and skills[perform.skill] and skills[perform.skill].lvl < 450 then
                 return checkxue()
@@ -2060,8 +2064,8 @@ function check_pot(p_cmd)
             end
         end
     end
- 
-    return check_job()
+    
+    return job.Switch()
 end
 
 function checkHammer()

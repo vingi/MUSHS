@@ -269,6 +269,7 @@ function checkBagsMoney(n, l, w)
 	local l_name = Trim(w[4])
 	if Bag[l_name] then
 		Bag[l_name].cnt = l_cnt
+		print(l_name.." : "..tostring(l_cnt))
 	end
 end
 function checkBagsW(n, l, w)
@@ -417,12 +418,14 @@ function check_gold_count()
 		(Bag and Bag["黄金"] and Bag["黄金"].cnt and Bag["黄金"].cnt < count.gold_max and score.gold > count.gold_max) or
 			(Bag and Bag["黄金"] and Bag["黄金"].cnt and Bag["黄金"].cnt > count.gold_max * 4)
 	 then
+        print('Bag["黄金"].cnt : '..tostring(Bag["黄金"].cnt))
 		return check_gold_qu()
 	end
 
 	return check_gold_over()
 end
 function check_cash_cun()
+	bank_trigger()
 	if Bag["壹仟两银票"] then
 		local l_cnt
 		if score.goldlmt and score.gold and (score.goldlmt - score.gold) < Bag["壹仟两银票"].cnt * 10 then
@@ -438,13 +441,35 @@ function check_cash_cun()
 	return checkWait(check_gold_check, 3)
 end
 function check_silver_qu()
+	bank_trigger()
 	local l_cnt = Bag["白银"].cnt - 100
 	exe("cun " .. l_cnt .. " silver")
 	exe("qu 50 silver")
+end
+function bank_trigger()
+	-- 你从银号里取出
+	-- 你拿出十锭黄金，存进了银号。
+	-- 严掌柜说道：哟，抱歉啊，我这儿正忙着呢……您请稍候。
+	DeleteTriggerGroup("bankmovement")
+	create_trigger_t("moneyqu1", "^(> )*你从银号里取出", "", "bankafter")
+	create_trigger_t("moneycun1", "^(> )*你拿出(.*?)，存进了银号", "", "bankafter")
+	create_trigger_t("moneybusy", "^(> )*(.*?)说道：哟，抱歉啊，我这儿正忙着呢", "", "bankafter")
+	SetTriggerOption("moneyqu1", "group", "bankmovement")
+	SetTriggerOption("moneycun1", "group", "bankmovement")
+	SetTriggerOption("moneybusy", "group", "bankmovement")
+	EnableTriggerGroup("bankmovement", true)
+end
+function bankafter()
 	checkBags()
-	return checkWait(check_gold_check, 3)
+	wait.make(
+		function()
+			wait.time(0.5)
+			checkWait(check_gold_check, 1)
+		end
+	)
 end
 function check_gold_qu()
+	bank_trigger()
 	local l_cnt = Bag["黄金"].cnt - count.gold_max * 2
 	if l_cnt > 0 then
 		exe("cun " .. l_cnt .. " gold")
@@ -452,18 +477,18 @@ function check_gold_qu()
 	if Bag["黄金"].cnt < count.gold_max then
 		exe("qu " .. count.gold_max .. " gold")
 	end
-	checkBags()
-	return checkWait(check_gold_check, 3)
 end
 function check_gold_check()
 	tmp.cnt = tmp.cnt + 1
-	if tmp.cnt > 30 then
+	if tmp.cnt > 5 then
 		return check_heal()
 	end
 	return check_gold_count()
 end
 function check_gold_over()
-	return checkPrepare()
+	EnableTriggerGroup("bankmovement", false)
+	DeleteTriggerGroup("bankmovement")
+	return check_busy(checkPrepare, 1)
 end
 
 function checkZqd()

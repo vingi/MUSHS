@@ -3289,6 +3289,7 @@ function job.Switch()
     -- 成长阶段任务
     -- ---------------------------------------------------------------
     -- 任务组计数, 用于节省每次任务结束的判断, 一些判断改为每个任务组(10次)进行一次检查
+    job.group.times = job.group.times or 0
     job.group.times = job.group.times + 1
 
     for p in pairs(weaponUsave) do

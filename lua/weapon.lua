@@ -672,7 +672,7 @@ armorRepairCun = function()
     end
     return armorRepairOver()
 end
-armorRepairOver = function()
+function armorRepairOver()
     DeleteTriggerGroup("armor")
     EnableTriggerGroup("repair", false)
     EnableTimer("repair", false)

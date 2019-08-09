@@ -40,7 +40,7 @@ function checklingwu()
 	if xxpot < hp.pot_max then
 		return lingwu()
 	end
-	return check_job()
+	return job.Switch()
 end
 function lingwu()
 	DeleteTemporaryTriggers()
