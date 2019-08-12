@@ -34156,7 +34156,7 @@ Room {
     {
         ["east"] = "village/shilu1",
     },
-    room_relative = "民房-----碎石路民房",
+    room_relative = "民房-----碎石路",
 }
 Room {
     id = "village/minfang2",
@@ -34165,7 +34165,7 @@ Room {
     {
         ["north"] = "village/shilu6",
     },
-    room_relative = "碎石路｜民房民房",
+    room_relative = "碎石路｜民房",
 }
 Room {
     id = "village/sexit",
@@ -34185,7 +34185,7 @@ Room {
         ["north"] = "village/shilu2",
         ["west"] = "village/minfang1",
     },
-    room_relative = "碎石路｜民房----碎石路｜南村口碎石路",
+    room_relative = "碎石路｜民房----碎石路｜南村口",
 }
 Room {
     id = "village/shilu2",
@@ -34196,7 +34196,7 @@ Room {
         ["north"] = "village/zhongxin",
         ["east"] = "village/tiejiangpu",
     },
-    room_relative = "村中心｜碎石路----铁匠铺｜碎石路碎石路",
+    room_relative = "村中心｜碎石路----铁匠铺｜碎石路",
 }
 Room {
     id = "village/shilu3",
@@ -34207,7 +34207,7 @@ Room {
         ["north"] = "village/jiusi",
         ["west"] = "village/shilu5",
     },
-    room_relative = "酒肆｜碎石路----碎石路----村中心碎石路",
+    room_relative = "酒肆｜碎石路----碎石路----村中心",
 }
 Room {
     id = "village/shilu4",
@@ -34218,7 +34218,7 @@ Room {
         ["east"] = "village/shilu6",
         ["west"] = "village/zhongxin",
     },
-    room_relative = "杂货铺｜村中心----碎石路----碎石路碎石路",
+    room_relative = "杂货铺｜村中心----碎石路----碎石路",
 }
 Room {
     id = "village/shilu5",
@@ -34229,7 +34229,7 @@ Room {
         ["northwest"] = "group/entry/caeroad3",
         ["east"] = "village/shilu3",
     },
-    room_relative = "土路↖碎石路----碎石路｜玄坛庙碎石路",
+    room_relative = "土路↖碎石路----碎石路｜玄坛庙",
 }
 Room {
     id = "village/shilu6",
@@ -34240,7 +34240,7 @@ Room {
         ["east"] = "village/eexit",
         ["west"] = "village/shilu4",
     },
-    room_relative = "碎石路----碎石路----东村口｜民房碎石路",
+    room_relative = "碎石路----碎石路----东村口｜民房",
 }
 Room {
     id = "village/tiejiangpu",
